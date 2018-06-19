@@ -15,6 +15,10 @@ namespace GolfCore
             public const string StartGame = "startgame";
             public const string JoinGame = "joingame";
             public const string EndGame = "endgame";
+            public const string ExitFromGame = "exitfromgame";
+            public const string SetAuth = "setauth";
+            public const string GetTask = "gettask";
+            public const string SetTaskMonitoringStatus = "settaskmonitoring";
         }
 
         public static class Settings

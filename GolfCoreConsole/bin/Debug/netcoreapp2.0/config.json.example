@@ -1,0 +1,8 @@
+﻿{
+  "API_KEY": "",
+  "Minute_Daemons": false,
+  "CONNECTION_STRING": "Data Source=localhost;Initial Catalog=TelegramGolfBot;Integrated Security=True",
+  "ConnectionStrings": {
+    "GolfDB": "Data Source=localhost;Initial Catalog=TelegramGolfBot;Integrated Security=True"
+  }
+}

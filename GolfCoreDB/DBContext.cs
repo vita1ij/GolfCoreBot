@@ -19,13 +19,7 @@ namespace GolfCoreDB
         {
             try
             {
-                string projectPath = AppDomain.CurrentDomain.BaseDirectory.Split(new String[] { @"bin\" }, StringSplitOptions.None)[0];
-                IConfigurationRoot configuration = new ConfigurationBuilder()
-                    .SetBasePath(projectPath)
-                    .AddJsonFile("config.json")
-                    .Build();
-                string connectionString = configuration.GetConnectionString("GolfDB");
-
+                string connectionString = Config.GetConnectionString("GolfDB");
                 optionsBuilder.UseSqlServer(connectionString);
             }
             catch (Exception ex)
@@ -46,10 +40,11 @@ namespace GolfCoreDB
         {
             get
             {
-                var c = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("config.json");
-                return c.Build();
+                string projectPath = AppDomain.CurrentDomain.BaseDirectory.Split(new String[] { @"bin\" }, StringSplitOptions.None)[0];
+                return new ConfigurationBuilder()
+                    .SetBasePath(projectPath)
+                    .AddJsonFile("config.json")
+                    .Build();
             }
         }
     }

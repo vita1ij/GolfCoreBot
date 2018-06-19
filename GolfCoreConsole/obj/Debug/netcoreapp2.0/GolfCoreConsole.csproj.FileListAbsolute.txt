@@ -32,3 +32,4 @@ C:\vg\git\golfcorebot\GolfCoreConsole\bin\Debug\netcoreapp2.0\GolfCoreDB.dll
 C:\vg\git\golfcorebot\GolfCoreConsole\bin\Debug\netcoreapp2.0\GolfCore.pdb
 C:\vg\git\golfcorebot\GolfCoreConsole\bin\Debug\netcoreapp2.0\GolfCoreDB.pdb
 C:\vg\git\golfcorebot\GolfCoreConsole\obj\Debug\netcoreapp2.0\GolfCoreConsole.csproj.CopyComplete
+C:\vg\git\golfcorebot\GolfCoreConsole\bin\Debug\netcoreapp2.0\config.json.example

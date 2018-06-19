@@ -12,6 +12,7 @@ namespace GolfCore.Processing
         public IReplyMarkup Markup { get; set; }
         public bool DisableWebPagePreview { get; set; }
         public bool IsHtml { get; set; }
+        public int? ReplyTo { get; set; }
 
         public ProcessingResult(string text, long chatId, bool disablePreview = true, bool isHtml = false)
         {
@@ -22,13 +23,14 @@ namespace GolfCore.Processing
             IsHtml = isHtml;
         }
 
-        public ProcessingResult(string text, long chatId, IReplyMarkup markup, bool disablePreview = true, bool isHtml = false)
+        public ProcessingResult(string text, long chatId, IReplyMarkup markup, bool disablePreview = true, bool isHtml = false, int? replyTo = null)
         {
             Text = text;
             ChatId = chatId;
             Markup = markup;
             DisableWebPagePreview = disablePreview;
             IsHtml = isHtml;
+            ReplyTo = replyTo;
         }
     }
 }

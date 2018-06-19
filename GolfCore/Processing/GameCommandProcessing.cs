@@ -20,11 +20,11 @@ namespace GolfCore.Processing
                 case Constants.Commands.JoinGame:
                     return JoinGame(parameters, chatId);
 
-                case "exitfromgame":
+                case Constants.Commands.ExitFromGame:
                     GameManager.ExitFromCurrentGame(chatId);
                     return null;
 
-                case "setauth":
+                case Constants.Commands.SetAuth:
                     if (parameters == null || parameters.Count < 2)
                     {
                         return new ProcessingResult("enter auth info", chatId);
@@ -32,25 +32,33 @@ namespace GolfCore.Processing
                     GameManager.SetAuthToActiveGame(parameters[0], parameters[1], chatId);
                     return null;
 
-                case "gettask":
+                case Constants.Commands.GetTask:
                     Game game = GameManager.GetActiveGameByChatId(chatId);
                     if (game.Type == GameType.IgraLv)
                     {
                         IgraLvGameEngine engine = new IgraLvGameEngine(chatId);
                         return new ProcessingResult(engine.GetTask(), chatId);
-                        //return engine.GetTask();
                     }
                     return null;
 
-                case "settaskmonitoring":
+                case Constants.Commands.SetTaskMonitoringStatus:
                     int status;
                     if (parameters == null || parameters.Count != 1 || !int.TryParse(parameters[0], out status) || status > 2)
                         return new ProcessingResult(" 0 - no notifications; 1 - only change notification; 2 - with text", chatId);
                     GameManager.SetTaskMonitoring(chatId, status);
                     return null;
+
+                case Constants.Commands.EndGame:
+                    return EndGame(chatId);
                 default:
                     return null;
             }
+        }
+
+        private static ProcessingResult EndGame(long chatId)
+        {
+            GameManager.EndGame(chatId);
+            return null;
         }
 
         private static ProcessingResult JoinGame(List<string> list, long chatId)

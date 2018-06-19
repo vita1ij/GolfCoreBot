@@ -8,7 +8,7 @@ namespace GolfCore.Processing
 {
     public class MessageProcessing
     {
-        public static ProcessingResult Process(string message, long chatId, bool processRawText = true) //TODO[vg]: later change default processRawText value to false
+        public static ProcessingResult Process(string message, long chatId, int messageId, bool processRawText = true) //TODO[vg]: later change default processRawText value to false
         {
             if (String.IsNullOrEmpty(message)) return null;
 
@@ -20,7 +20,7 @@ namespace GolfCore.Processing
                     var param = message.Substring(command.Length + 1);
                     try
                     {
-                        return CommandProcessing.Process(command, param, chatId);
+                        return CommandProcessing.Process(command, param, chatId, messageId);
                     }
                     catch (Exception ex)
                     {

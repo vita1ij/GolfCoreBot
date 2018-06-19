@@ -21,7 +21,7 @@ namespace GolfCore.GameEngines
             string login, pass;
             using (var db = GolfCoreDB.DBContext.Instance)
             {
-                GameManager.GetAuthFromToActiveGame(chatId, out login, out pass);
+                GameManager.GetAuthForActiveGame(chatId, out login, out pass);
                 this.LoginPostData = String.Format("login={0}&password={1}", login, pass);
                 this.LoginUrl = "http://igra.lv/igra.php?s=login";
                 this.TaskUrl = "http://www.igra.lv/igra.php";

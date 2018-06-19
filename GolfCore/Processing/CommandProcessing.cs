@@ -5,17 +5,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace GolfCore.Processing
 {
     public class CommandProcessing
     {
-        public static ProcessingResult Process(string command, string parameters, long chatId)
+        public static ProcessingResult Process(string command, string parameters, long chatId, int messageId)
         {
             switch (command.ToLower())
             {
                 case "foo":
-                    return new ProcessingResult("bar", chatId);
+                    //return new ProcessingResult("bar", chatId);
+                    var markup = new ReplyKeyboardMarkup(new List<KeyboardButton>() {
+                        new KeyboardButton("foo - 1"),
+                        new KeyboardButton("foo - 2")
+                    });
+                    markup.Selective = true;
+
+                    return new ProcessingResult("bar", chatId, markup, true, false, messageId);
 
                 case Constants.Commands.ShowSettings:
                     return ShowSettings(chatId);

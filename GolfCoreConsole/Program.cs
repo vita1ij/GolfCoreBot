@@ -65,14 +65,17 @@ namespace GolfCoreConsole
                 {
                     message.Text = message.Text.Substring(0, message.Text.Length - "@SchrodingersGolfBot".Length);
                 }
-                var result = GolfCore.Processing.MessageProcessing.Process(message.Text, message.Chat.Id);
-                if (result == null) return;
+                
+                var result = GolfCore.Processing.MessageProcessing.Process(message.Text, message.Chat.Id, message.MessageId);
+                if (result == null || result.Text == null) return;
                 await Bot.SendTextMessageAsync(
                     result.ChatId,
                     result.Text,
                     result.IsHtml ? ParseMode.Html : ParseMode.Default,
                     replyMarkup: result.Markup,
-                    disableWebPagePreview: result.DisableWebPagePreview);
+                    disableWebPagePreview: result.DisableWebPagePreview,
+                    replyToMessageId: result.ReplyTo.HasValue ? result.ReplyTo.Value : 0
+                    );
             }
         }
     }

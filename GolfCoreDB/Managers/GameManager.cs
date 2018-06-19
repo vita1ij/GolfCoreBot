@@ -81,6 +81,16 @@ namespace GolfCoreDB.Managers
             }
         }
 
+        public static void EndGame(long chatId)
+        {
+            using (var db = DBContext.Instance)
+            {
+                var game = xGetActiveGameByChatId(chatId,db);
+                game.IsActive = false;
+                db.SaveChanges();
+            }
+        }
+
         public static string SetAuthToActiveGame(string login, string pass, long chatId)
         {
             using (var db = DBContext.Instance)
@@ -92,32 +102,6 @@ namespace GolfCoreDB.Managers
                 return "Updated Auth";
             }
         }
-
-        ///// <param name="status">
-        ///// 0 - no
-        ///// 1 - only change notification
-        ///// 2 - with text
-        ///// </param>
-        //public static void SetTaskMonitoring(string gameId, long chatId, int status)
-        //{
-        //    using (var db = DBContext.Instance)
-        //    {
-        //        var games = db.Games.Where(x => x.Id == gameId).Include("Participants");
-        //        if (games != null && games.Any())
-        //        {
-        //            var participants = games.ToList().SelectMany<Game, GameParticipant>(x => x.Participants);
-        //            var par = participants.Where(x => x.ChatId == chatId);
-        //            if (par != null && par.Any())
-        //            {
-        //                foreach(var p in par)
-        //                {
-        //                    p.MonitorUpdates = (status > 0);
-        //                    p.GetUpdates = (status == 2);
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
 
         /// <param name="status">
         /// 0 - no
@@ -144,7 +128,7 @@ namespace GolfCoreDB.Managers
             }
         }
 
-        public static void GetAuthFromToActiveGame(long chatId, out string login, out string pass)
+        public static void GetAuthForActiveGame(long chatId, out string login, out string pass)
         {
             using (var db = DBContext.Instance)
             {
