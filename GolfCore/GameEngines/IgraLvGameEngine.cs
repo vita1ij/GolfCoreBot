@@ -39,7 +39,7 @@ namespace GolfCore.GameEngines
             var data = WebConnectHelper.MakePostWithCookies(TaskUrl, this.connectionCookie);
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(data);
-            string taskContent = doc.GetElementbyId("general-puzzle").InnerText;
+            string taskContent = (doc.GetElementbyId("general-puzzle") ?? doc.GetElementbyId("general")).InnerText;
 
             return taskContent;
         }

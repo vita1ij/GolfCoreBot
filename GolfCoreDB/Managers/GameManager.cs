@@ -62,7 +62,7 @@ namespace GolfCoreDB.Managers
         {
             using (var db = DBContext.Instance)
             {
-                var game = db.Games.Where(x => x.Id == gameId);
+                var game = db.Games.Include("Participants").Where(x => x.Id == gameId);
                 if (game == null || !game.Any())
                 {
                     return "no such game";
@@ -71,13 +71,20 @@ namespace GolfCoreDB.Managers
                 {
                     game.First().Participants = new List<GameParticipant>();
                 }
-                (game.First().Participants).Add(new GameParticipant()
+                if (game.First().Participants.Exists(x => x.ChatId == chatId))
                 {
-                    ChatId = chatId,
-                    Game = game.First()
-                });
-                db.SaveChanges();
-                return "Joined";
+                    return "You are already joined to game. If you wanna change game, exit from current.";
+                }
+                else
+                {
+                    (game.First().Participants).Add(new GameParticipant()
+                    {
+                        ChatId = chatId,
+                        Game = game.First()
+                    });
+                    db.SaveChanges();
+                    return "Joined";
+                }
             }
         }
 

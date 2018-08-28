@@ -16,11 +16,11 @@ namespace GolfCore.Processing
             {
                 //Commands
                 case '/':
-                    var command = message.TrimStart('/').Split(' ')[0];
+                    var command = message.TrimStart('/').Split(' ')[0].Split('_')[0];
                     var param = message.Substring(command.Length + 1);
                     try
                     {
-                        return CommandProcessing.Process(command, param, chatId, messageId);
+                        return CommandProcessing.Process(command, param.TrimStart('_'), chatId, messageId);
                     }
                     catch (Exception ex)
                     {

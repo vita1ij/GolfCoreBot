@@ -5,6 +5,7 @@ using GolfCoreDB.Data;
 using GolfCoreDB.Managers;
 using GolfCore.GameEngines;
 using System.Linq;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace GolfCore.Processing
 {
@@ -50,6 +51,9 @@ namespace GolfCore.Processing
 
                 case Constants.Commands.EndGame:
                     return EndGame(chatId);
+
+                case Constants.Commands.Game:
+                    return GameStatus(chatId);
                 default:
                     return null;
             }
@@ -59,6 +63,30 @@ namespace GolfCore.Processing
         {
             GameManager.EndGame(chatId);
             return null;
+        }
+
+        public static ProcessingResult GameStatus(long chatId)
+        {
+            Game game = GameManager.GetActiveGameByChatId(chatId);
+            ProcessingResult result;
+
+            if (game == null )
+            {
+                result = new ProcessingResult("No active Games. Feel free to create one.", chatId, Constants.Keyboards.NoActiveGame, true, false, null);
+            }
+            else //(game != null)
+            {
+                if (game.Login == null)
+                {
+                    result = new ProcessingResult("Please, set auth for the game", chatId, Constants.Keyboards.NoAuthGame, true, false, null);
+                }
+                else //game.Login == null
+                {
+                    var participant = game.Participants.Where(x => x.ChatId == chatId).FirstOrDefault();
+                    result = new ProcessingResult("Game settings:", chatId, Constants.Keyboards.ActiveGame(participant.TaskMonitoring, 0), true, false, null);
+                }
+            }
+            return result;
         }
 
         private static ProcessingResult JoinGame(List<string> list, long chatId)

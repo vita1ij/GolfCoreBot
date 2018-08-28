@@ -13,5 +13,15 @@ namespace GolfCoreDB.Data
         public long ChatId { get; set; }
         public bool MonitorUpdates { get; set; }
         public bool GetUpdates { get; set; }
+
+        public int TaskMonitoring
+        {
+            get
+            {
+                if (!MonitorUpdates) return 0;
+                return GetUpdates ? 2 : 1;
+            }
+        }
+
     }
 }

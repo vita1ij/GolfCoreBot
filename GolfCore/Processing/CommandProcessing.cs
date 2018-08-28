@@ -17,11 +17,23 @@ namespace GolfCore.Processing
             {
                 case "foo":
                     //return new ProcessingResult("bar", chatId);
-                    var markup = new ReplyKeyboardMarkup(new List<KeyboardButton>() {
-                        new KeyboardButton("foo - 1"),
-                        new KeyboardButton("foo - 2")
+                    var markup = new InlineKeyboardMarkup(new List<List<InlineKeyboardButton>>() {
+                        new List<InlineKeyboardButton>()
+                        {
+                            new InlineKeyboardButton(){Text="1", CallbackData = "1"},
+                            new InlineKeyboardButton(){Text="2", CallbackData = "1"}
+                        },
+                        new List<InlineKeyboardButton>()
+                        {
+                            new InlineKeyboardButton(){Text="3", CallbackData = "1"},
+                            new InlineKeyboardButton(){Text="4", CallbackData = "1"}
+                        }
                     });
-                    markup.Selective = true;
+                    //var markup = new ReplyKeyboardMarkup(new List<KeyboardButton>() {
+                    //    new KeyboardButton("foo - 1"),
+                    //    new KeyboardButton("foo - 2")
+                    //});
+                    //markup.Selective = true;
 
                     return new ProcessingResult("bar", chatId, markup, true, false, messageId);
 
