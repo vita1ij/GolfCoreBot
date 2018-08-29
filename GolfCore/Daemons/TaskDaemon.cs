@@ -28,20 +28,7 @@ namespace GolfCore.Daemons
                             string newTask = null;
                             foreach (var participant in game.Participants.Where(x => x.MonitorUpdates))
                             {
-                                IGameEngine engine;
-
-                                switch (game.Type)
-                                {
-                                    case GolfCoreDB.Data.GameType.IgraLv:
-                                        engine = new IgraLvGameEngine(participant.ChatId);
-                                        break;
-                                    //case GolfCoreDB.Data.GameType.EnCx:
-                                    //    engine = new 
-                                    //    break;
-                                    default:
-                                        engine = new IgraLvGameEngine(participant.ChatId);
-                                        break;
-                                }
+                                IGameEngine engine = IGameEngine.Get(participant);
 
                                 newTask = engine.GetTask();
 

@@ -35,12 +35,8 @@ namespace GolfCore.Processing
 
                 case Constants.Commands.GetTask:
                     Game game = GameManager.GetActiveGameByChatId(chatId);
-                    if (game.Type == GameType.IgraLv)
-                    {
-                        IgraLvGameEngine engine = new IgraLvGameEngine(chatId);
-                        return new ProcessingResult(engine.GetTask(), chatId);
-                    }
-                    return null;
+                    IGameEngine engine = IGameEngine.Get(game, chatId);
+                    return new ProcessingResult(engine.GetTask(), chatId);
 
                 case Constants.Commands.SetTaskMonitoringStatus:
                     int status;

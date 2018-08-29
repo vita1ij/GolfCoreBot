@@ -73,26 +73,7 @@ namespace GolfCore.Helpers
             http.CookieContainer.Add(cookies);
             HttpWebResponse response = http.GetResponse() as HttpWebResponse;
 
-            string data = null;
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                Stream receiveStream = response.GetResponseStream();
-                StreamReader readStream = null;
-
-                if (response.CharacterSet == null)
-                {
-                    readStream = new StreamReader(receiveStream);
-                }
-                else
-                {
-                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-                }
-
-                data = readStream.ReadToEnd();
-
-                response.Close();
-                readStream.Close();
-            }
+            string data = GetContentsFromResponse(response);
 
             return data;
         }
@@ -116,7 +97,7 @@ namespace GolfCore.Helpers
 
         public static string GetContentsFromResponse(HttpWebResponse response)
         {
-            string data = "";
+            string data = null;
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 Stream receiveStream = response.GetResponseStream();

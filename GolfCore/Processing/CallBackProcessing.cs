@@ -46,7 +46,7 @@ namespace GolfCore.Processing
                     break;
                 case "GetTask":
                     game = GameManager.GetActiveGameByChatId(chatId);
-                    engine = game.Type == GameType.IgraLv ? new IgraLvGameEngine(chatId) : null;
+                    engine = IGameEngine.Get(game, chatId);
                     result = new ProcessingResult(engine.GetTask(), chatId);
                     break;
                 case "DisableTaskUpdates":

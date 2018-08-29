@@ -40,14 +40,9 @@ namespace GolfCore.Processing
 
         public static ProcessingResult ProcessText(string message, long chatId)
         {
-            //try first
             ProcessingResult result = null;
             result = TryCoordinates(message, chatId);
-            if (result != null)
-            {
-                return result;
-            }
-            return null;
+            return result;
         }
 
         public static ProcessingResult TryCoordinates(string message, long chatId)

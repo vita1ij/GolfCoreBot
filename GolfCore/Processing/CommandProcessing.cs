@@ -16,35 +16,17 @@ namespace GolfCore.Processing
             switch (command.ToLower())
             {
                 case "foo":
-                    //return new ProcessingResult("bar", chatId);
-                    var markup = new InlineKeyboardMarkup(new List<List<InlineKeyboardButton>>() {
-                        new List<InlineKeyboardButton>()
-                        {
-                            new InlineKeyboardButton(){Text="1", CallbackData = "1"},
-                            new InlineKeyboardButton(){Text="2", CallbackData = "1"}
-                        },
-                        new List<InlineKeyboardButton>()
-                        {
-                            new InlineKeyboardButton(){Text="3", CallbackData = "1"},
-                            new InlineKeyboardButton(){Text="4", CallbackData = "1"}
-                        }
-                    });
-                    //var markup = new ReplyKeyboardMarkup(new List<KeyboardButton>() {
-                    //    new KeyboardButton("foo - 1"),
-                    //    new KeyboardButton("foo - 2")
-                    //});
-                    //markup.Selective = true;
-
-                    return new ProcessingResult("bar", chatId, markup, true, false, messageId);
+                    return new ProcessingResult("bar", chatId);
 
                 case Constants.Commands.ShowSettings:
                     return ShowSettings(chatId);
 
                 case Constants.Commands.UpdateSetting:
                     var values = GetParameters(parameters, 2);
-                    return UpdateSetting(values, chatId);
+                    SettingsManager.UpdateSetting(values[0], values[1], chatId);
+                    return null;
 
-                case "help":
+                case Constants.Commands.Help:
                     return new ProcessingResult(Constants.Help, chatId);
 
                 default:
@@ -52,42 +34,12 @@ namespace GolfCore.Processing
             }
         }
 
-
-
-        private static ProcessingResult ShowSettings(long chatId)
+        public static ProcessingResult ShowSettings(long chatId)
         {
-            using (var db = new DBContext())
-            {
-                var s = db.Settings.ToList();
-                return new ProcessingResult("Data:\r\n" + String.Join("\r\n", s.Select<Setting, string>(x => x.Name + " = " + x.Value))
-                    ,chatId);
-            }
+            var data = SettingsManager.GetSettings(chatId);
+            return new ProcessingResult("Data:\r\n" + String.Join("\r\n", data.Select<Tuple<string,string>, string>(x => x.Item1 + " = " + x.Item2)), chatId);
         }
 
-        private static ProcessingResult UpdateSetting(List<string> values, long chatId)
-        {
-            using (var db = new DBContext())
-            {
-                var s = db.Settings.ToList();
-                if (s.Where(x => x.Name == values[0]).Any())
-                {
-                    Setting setting = s.Where(x => x.Name == values[0]).First();
-                    setting.Value = values[1];
-                    db.SaveChanges();
-                }
-                else
-                {
-                    db.Settings.Add(new Setting()
-                    {
-                        Name = values[0],
-                        Value = values[1],
-                        ChatId = chatId
-                    });
-                    db.SaveChanges();
-                }
-                return null;
-            }
-        }
 
         #region Helpers
         public static List<String> GetParameters(string input, int? count)

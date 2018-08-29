@@ -1,4 +1,5 @@
 ﻿using GolfCore.Helpers;
+using GolfCoreDB.Data;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -35,5 +36,28 @@ namespace GolfCore.GameEngines
 
         public abstract string GetTask();
         public abstract string GetStatistics();
+
+        public static IGameEngine Get(GameParticipant player)
+        {
+            var game = player.Game;
+            switch(game.Type)
+            {
+                case GameType.IgraLv:
+                    return new IgraLvGameEngine(player.ChatId);
+                default:
+                    return null;
+            }
+        }
+
+        public static IGameEngine Get(Game game, long chatId)
+        {
+            switch (game.Type)
+            {
+                case GameType.IgraLv:
+                    return new IgraLvGameEngine(chatId);
+                default:
+                    return null;
+            }
+        }
     }
 }

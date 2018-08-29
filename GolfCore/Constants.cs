@@ -18,6 +18,7 @@ namespace GolfCore
         {
             public const string ShowSettings = "showsettings";
             public const string UpdateSetting = "updatesetting";
+            public const string Help = "help";
             public const string StartGame = "startgame";
             public const string JoinGame = "joingame";
             public const string EndGame = "endgame";
@@ -84,6 +85,8 @@ namespace GolfCore
         }
 
         public const string Help = "Commands:\r\n" +
+            "/game - game settings\r\n" +
+            "\r\n" + 
             "/startgame\r\n" +
             "/joingame\r\n" +
             "/exitfromgame\r\n" +
