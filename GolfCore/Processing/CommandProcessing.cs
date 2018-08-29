@@ -1,4 +1,5 @@
-﻿using GolfCoreDB;
+﻿using GolfCore.Helpers;
+using GolfCoreDB;
 using GolfCoreDB.Data;
 using GolfCoreDB.Managers;
 using System;
@@ -13,18 +14,27 @@ namespace GolfCore.Processing
     {
         public static ProcessingResult Process(string command, string parameters, long chatId, int messageId)
         {
+            List<string> values;
             switch (command.ToLower())
             {
                 case "foo":
                     return new ProcessingResult("bar", chatId);
 
+                case "updatedb":
+                    LocationsHelper.UpdateDatabase();
+                    break;
+
                 case Constants.Commands.ShowSettings:
                     return ShowSettings(chatId);
 
                 case Constants.Commands.UpdateSetting:
-                    var values = GetParameters(parameters, 2);
+                    values = GetParameters(parameters, 2);
                     SettingsManager.UpdateSetting(values[0], values[1], chatId);
                     return null;
+
+                case Constants.Commands.CheckLocation:
+                    //return new ProcessingResult(LocationsManager.Distance(56.9263798, 24.0846039, 56.9636838, 24.2346644).ToString(), chatId);
+                    return new ProcessingResult(LocationsHelper.CheckLocation(parameters), chatId);
 
                 case Constants.Commands.Help:
                     return new ProcessingResult(Constants.Help, chatId);
@@ -32,6 +42,7 @@ namespace GolfCore.Processing
                 default:
                     return GameCommandProcessing.Process(command, GetParameters(parameters, null), chatId);
             }
+            return null;
         }
 
         public static ProcessingResult ShowSettings(long chatId)

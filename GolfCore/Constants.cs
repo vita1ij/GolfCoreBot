@@ -18,6 +18,7 @@ namespace GolfCore
         {
             public const string ShowSettings = "showsettings";
             public const string UpdateSetting = "updatesetting";
+            public const string CheckLocation = "checklocation";
             public const string Help = "help";
             public const string StartGame = "startgame";
             public const string JoinGame = "joingame";

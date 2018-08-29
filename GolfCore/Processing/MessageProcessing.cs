@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GolfCore.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -47,50 +48,8 @@ namespace GolfCore.Processing
 
         public static ProcessingResult TryCoordinates(string message, long chatId)
         {
-            var match = Regex.Match(message, @"^[0-9., бю]+$");
-            if (match.Success)
-            {
-                message = message.Replace('б', ',');
-                message = message.Replace('ю', '.');
-                string lat, lon;
-
-                message = message.Trim();
-                if (message.Contains(' ') && message.Split(' ').Count() == 2)
-                {
-                    lat = message.Split(' ')[0];
-                    lon = message.Split(' ')[1];
-                }
-                else if (message.Contains(',') && message.Split(',').Count() == 2)
-                {
-                    lat = message.Split(',')[0];
-                    lon = message.Split(',')[1];
-                }
-                else if (message.Contains('.') && message.Split('.').Count() == 2)
-                {
-                    lat = message.Split('.')[0];
-                    lon = message.Split('.')[1];
-                }
-                else
-                {
-                    message = message.Replace(",", "").Replace(".", "").Replace(" ", "");
-                    lat = message.Substring(0, message.Length / 2);
-                    lon = message.Substring(message.Length / 2);
-                }
-
-                lat = lat.Trim('.').Trim(',');
-                lon = lon.Trim('.').Trim(',');
-
-                lat = lat.Replace(',', '.');
-                lon = lon.Replace(',', '.');
-
-                if (!lat.Contains(".") && lat.Length > 1) lat = lat[0].ToString() + lat[1].ToString() + "." + lat.Substring(2);
-                if (!lon.Contains(".") && lon.Length > 1) lon = lon[0].ToString() + lon[1].ToString() + "." + lon.Substring(2);
-
-                if (!(lat.Length > 3 && lon.Length > 3))
-                {
-                    return null;
-                }
-
+            if (LocationsHelper.GetCoordinates(message, out string lat, out string lon))
+            { 
                 return new ProcessingResult(
                     String.Format(Constants.CoordinatesString, lat, lon),
                     chatId,

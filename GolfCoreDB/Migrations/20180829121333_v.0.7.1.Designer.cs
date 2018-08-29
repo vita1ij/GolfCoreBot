@@ -4,14 +4,16 @@ using GolfCoreDB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GolfCoreDB.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20180829121333_v.0.7.1")]
+    partial class v071
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,9 +70,11 @@ namespace GolfCoreDB.Migrations
 
                     b.Property<string>("Address");
 
-                    b.Property<double>("Lat");
+                    b.Property<decimal>("Lat")
+                        .HasColumnType("decimal(10, 6)");
 
-                    b.Property<double>("Lon");
+                    b.Property<decimal>("Lon")
+                        .HasColumnType("decimal(10, 6)");
 
                     b.Property<string>("Status");
 

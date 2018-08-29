@@ -95,6 +95,28 @@ namespace GolfCore.Helpers
             return result;
         }
 
+        public static string MakePost(string url, string postData, string accept = null)
+        {
+            HttpWebRequest http = WebRequest.Create(url) as HttpWebRequest;
+            http.KeepAlive = true;
+            http.Method = "POST";
+            http.ContentType = "application/x-www-form-urlencoded";
+            if (accept != null) http.Accept = accept;
+
+            if (postData != null)
+            {
+                byte[] dataBytes = UTF8Encoding.UTF8.GetBytes(postData);
+                http.ContentLength = dataBytes.Length;
+                using (Stream postStream = http.GetRequestStream())
+                {
+                    postStream.Write(dataBytes, 0, dataBytes.Length);
+                }
+            }
+            HttpWebResponse httpResponse = http.GetResponse() as HttpWebResponse;
+
+            return GetContentsFromResponse(httpResponse);
+        }
+
         public static string GetContentsFromResponse(HttpWebResponse response)
         {
             string data = null;
@@ -103,7 +125,7 @@ namespace GolfCore.Helpers
                 Stream receiveStream = response.GetResponseStream();
                 StreamReader readStream = null;
 
-                if (response.CharacterSet == null)
+                if (String.IsNullOrWhiteSpace(response.CharacterSet))
                 {
                     readStream = new StreamReader(receiveStream);
                 }

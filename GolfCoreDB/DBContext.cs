@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace GolfCoreDB
 {
@@ -30,10 +31,18 @@ namespace GolfCoreDB
 
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Game> Games { get; set; }
+        public DbSet<KnownLocation> Locations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+            foreach (var property in modelBuilder.Model.GetEntityTypes()
+                .SelectMany(t => t.GetProperties())
+                .Where(p => p.ClrType == typeof(decimal)))
+            {
+                property.Relational().ColumnType = "decimal(10, 6)";
+            }
+
+            base.OnModelCreating(modelBuilder);
         }
 
         public static IConfiguration Config
