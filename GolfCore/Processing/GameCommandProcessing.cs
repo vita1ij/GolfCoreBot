@@ -74,12 +74,32 @@ namespace GolfCore.Processing
             {
                 if (game.Login == null)
                 {
-                    result = new ProcessingResult("Please, set auth for the game", chatId, Constants.Keyboards.NoAuthGame, true, false, null);
+                    result = new ProcessingResult(String.Format("You are in active game. ({0} - {1})\r\n  Please, set auth for the game",game.Type.ToString(),game.Id), chatId, Constants.Keyboards.NoAuthGame, true, false, null);
                 }
                 else //game.Login == null
                 {
-                    var participant = game.Participants.Where(x => x.ChatId == chatId).FirstOrDefault();
-                    result = new ProcessingResult("Game settings:", chatId, Constants.Keyboards.ActiveGame(participant.TaskMonitoring, 0), true, false, null);
+                    if (game.Type == GameType.EnCx && String.IsNullOrEmpty(game.EnCxId))
+                    {
+                        var activeGames = (new EnCxQuestEngine(chatId)).GetAllEnCxActiveGames();
+                        var keyboardData = new List<List<InlineKeyboardButton>>();
+                        foreach (var activeGame in activeGames)
+                        {
+                            keyboardData.Add(new List<InlineKeyboardButton>()
+                            {
+                                new InlineKeyboardButton()
+                                {
+                                    Text = activeGame.Title,
+                                    CallbackData = String.Format("EnCxActiveGame|{0}", activeGame.EnCxId)
+                                }
+                            });
+                        }
+                        result = new ProcessingResult("Choose Active Game:", chatId, new InlineKeyboardMarkup(keyboardData), true, false, null);
+                    }
+                    else
+                    {
+                        var participant = game.Participants.Where(x => x.ChatId == chatId).FirstOrDefault();
+                        result = new ProcessingResult("Game settings:", chatId, Constants.Keyboards.ActiveGame(participant.TaskMonitoring, 0), true, false, null);
+                    }
                 }
             }
             return result;

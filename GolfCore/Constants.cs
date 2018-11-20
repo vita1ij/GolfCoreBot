@@ -11,7 +11,8 @@ namespace GolfCore
 
         public static class Text
         {
-            public const string SetAuth = "To Set auth, write '/setauth login pass'. It is better to use private chat for that.";
+            public const string SetAuthInGroup = "Use Private chat for that.";
+            public const string SetAuthInPrivate = "To Set auth, write '/setauth login pass'. It is better to use private chat for that.";
         }
 
         public static class Commands

@@ -10,7 +10,7 @@ namespace GolfCore.Processing
 {
     public class CallBackProcessing
     {
-        public static ProcessingResult Process(string data, long chatId, out ProcessingResult editMessage)
+        public static ProcessingResult Process(string data, long chatId, bool isPrivate, out ProcessingResult editMessage)
         {
             ProcessingResult result = null;
             ProcessingResult edit = null;
@@ -34,7 +34,14 @@ namespace GolfCore.Processing
                     edit = GameCommandProcessing.GameStatus(chatId);
                     break;
                 case "SetAuth":
-                    result = new ProcessingResult(Constants.Text.SetAuth, chatId);
+                    if (isPrivate)
+                    {
+                        result = new ProcessingResult(Constants.Text.SetAuthInPrivate, chatId);
+                    }
+                    else
+                    {
+                        result = new ProcessingResult(Constants.Text.SetAuthInGroup, chatId);
+                    }
                     break;
                 case "Joinlink":
                     game = GameManager.GetActiveGameByChatId(chatId);
@@ -67,7 +74,28 @@ namespace GolfCore.Processing
                 case "DisableStatisticUpdates":
                 case "EnableStatisticLvl":
                 case "EnableStatistics":
+                    break;
                 default:
+                    if (data.Contains("|"))
+                    {
+                        var command = data.Split("|")[0];
+                        var parameter = data.Split("|")[1];
+                        switch(command)
+                        {
+                            case "EnCxActiveGame":
+                                var activeGames = (new EnCxQuestEngine(chatId)).GetAllEnCxActiveGames();
+                                var activeGame = activeGames.Where(x => x.EnCxId == parameter).FirstOrDefault();
+                                game = GameManager.GetActiveGameByChatId(chatId);
+                                game.EnCxId = activeGame.EnCxId;
+                                game.Title = activeGame.Title;
+                                game.Href = activeGame.Href;
+                                GameManager.UpdateGame(game);
+                                edit = GameCommandProcessing.GameStatus(chatId);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                     break;
             }
 

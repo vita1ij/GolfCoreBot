@@ -24,6 +24,10 @@ namespace GolfCoreDB.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("EnCxId");
+
+                    b.Property<string>("Href");
+
                     b.Property<bool>("IsActive");
 
                     b.Property<string>("LastTask");
@@ -31,6 +35,8 @@ namespace GolfCoreDB.Migrations
                     b.Property<string>("Login");
 
                     b.Property<string>("Password");
+
+                    b.Property<string>("Title");
 
                     b.Property<int>("Type");
 

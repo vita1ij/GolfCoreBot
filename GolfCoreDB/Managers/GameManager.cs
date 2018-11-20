@@ -161,6 +161,13 @@ namespace GolfCoreDB.Managers
             }
         }
 
-        //public static string F
+        public static void UpdateGame(Game game)
+        {
+            using (var db = DBContext.Instance)
+            {
+                db.Games.Update(game);
+                db.SaveChanges();
+            }
+        }
     }
 }

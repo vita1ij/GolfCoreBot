@@ -18,7 +18,8 @@ namespace GolfCore.GameEngines
 
         public string LoginUrl;
         public string StatisticsUrl;
-        public string TaskUrl;
+        public string TaskUrl { get; set; }
+        public string GamesUrl;
 
         public string LoginPostData;
 
@@ -44,6 +45,8 @@ namespace GolfCore.GameEngines
             {
                 case GameType.IgraLv:
                     return new IgraLvGameEngine(player.ChatId);
+                case GameType.EnCx:
+                    return new EnCxQuestEngine(player.ChatId);
                 default:
                     return null;
             }
@@ -55,6 +58,8 @@ namespace GolfCore.GameEngines
             {
                 case GameType.IgraLv:
                     return new IgraLvGameEngine(chatId);
+                case GameType.EnCx:
+                    return new EnCxQuestEngine(chatId);
                 default:
                     return null;
             }

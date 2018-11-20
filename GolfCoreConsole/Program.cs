@@ -84,7 +84,11 @@ namespace GolfCoreConsole
         private static async void BotOnCallBackReceived(object sender, CallbackQueryEventArgs e)
         {
             ProcessingResult edit;
-            ProcessingResult result = CallBackProcessing.Process(e.CallbackQuery.Data, e.CallbackQuery.Message.Chat.Id, out edit);
+            ProcessingResult result = CallBackProcessing.Process(
+                                                            e.CallbackQuery.Data, 
+                                                            e.CallbackQuery.Message.Chat.Id, 
+                                                            e.CallbackQuery.Message.Chat.Type == ChatType.Private ? true : false,
+                                                            out edit);
             
             if (edit != null)
             {

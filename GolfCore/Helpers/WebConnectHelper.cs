@@ -47,8 +47,8 @@ namespace GolfCore.Helpers
                             continue;
                         httpResponse.Cookies.Add(
                             new Cookie(
-                                match.Groups[1].ToString(),
-                                match.Groups[2].ToString(),
+                                match.Groups[1].ToString().Trim(),
+                                match.Groups[2].ToString().Trim(),
                                 "/",
                                 httpResponse.ResponseUri.Host.Split(':')[0]));
                     }
