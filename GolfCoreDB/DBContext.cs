@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace GolfCoreDB
 {
-    public class DBContext : DbContext
+    public class DBContext : DbContext, IDisposable
     {
         public static DBContext Instance {
             get

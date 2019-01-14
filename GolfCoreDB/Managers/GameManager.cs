@@ -23,6 +23,14 @@ namespace GolfCoreDB.Managers
             return games.FirstOrDefault();
         }
 
+        public static List<Game> GetAllActiveWithMonitoring()
+        {
+            using (var db = DBContext.Instance)
+            {
+                return db.Games.Where(x => x.IsActive && x.Participants.Any(y => y.MonitorUpdates)).Include("Participants").ToList();
+            }
+        }
+
         public static string CreateGame(GameType type, long chatId, string login = null, string pass = null)
         {
             string newId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8);
@@ -137,12 +145,9 @@ namespace GolfCoreDB.Managers
 
         public static void GetAuthForActiveGame(long chatId, out string login, out string pass)
         {
-            using (var db = DBContext.Instance)
-            {
-                var game = xGetActiveGameByChatId(chatId, db);
-                login = game.Login;
-                pass = game.Password;
-            }
+            var game = GetActiveGameByChatId(chatId);
+            login = game.Login;
+            pass = game.Password;
 
         }
 

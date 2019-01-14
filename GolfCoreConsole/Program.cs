@@ -44,7 +44,7 @@ namespace GolfCoreConsole
             Console.WriteLine($"Start listening for @{me.Username}");
 
             while (!Console.KeyAvailable) {
-                if (Config["Minute_Daemons"].ToString() == "true//todo")
+                if (Config["Minute_Daemons"].ToString() == "true")
                 {
                     taskDaemon.RunAsync(Bot).Wait();
                 }
@@ -69,7 +69,7 @@ namespace GolfCoreConsole
                     message.Text = message.Text.Substring(0, message.Text.Length - "@SchrodingersGolfBot".Length);
                 }
                 
-                var result = GolfCore.Processing.MessageProcessing.Process(message.Text, message.Chat.Id, message.MessageId);
+                var result = GolfCore.Processing.MessageProcessing.Process(message.Text, message.Chat.Id, message.MessageId, true, message.Chat.Type == ChatType.Private);
                 if (result == null) return;
                 if (result.Image != null)
                 {

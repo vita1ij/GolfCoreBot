@@ -12,7 +12,7 @@ namespace GolfCore.Processing
 {
     public class CommandProcessing
     {
-        public static ProcessingResult Process(string command, string parameters, long chatId, int messageId)
+        public static ProcessingResult Process(string command, string parameters, long chatId, int messageId, bool isPrivate)
         {
             List<string> values;
             switch (command.ToLower())
@@ -40,7 +40,7 @@ namespace GolfCore.Processing
                     return new ProcessingResult(Constants.Help, chatId);
 
                 default:
-                    return GameCommandProcessing.Process(command, GetParameters(parameters, null), chatId);
+                    return GameCommandProcessing.Process(command, GetParameters(parameters, null), chatId, isPrivate);
             }
             return null;
         }

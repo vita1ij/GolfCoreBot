@@ -11,7 +11,7 @@ namespace GolfCore.Processing
 {
     public class GameCommandProcessing
     {
-        public static ProcessingResult Process(string command, List<string> parameters, long chatId)
+        public static ProcessingResult Process(string command, List<string> parameters, long chatId, bool isPrivate)
         {
             switch (command.ToLower())
             {

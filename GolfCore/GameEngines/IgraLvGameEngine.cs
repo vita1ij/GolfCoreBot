@@ -22,15 +22,12 @@ namespace GolfCore.GameEngines
         public IgraLvGameEngine(long chatId)
         {
             string login, pass;
-            using (var db = GolfCoreDB.DBContext.Instance)
-            {
-                GameManager.GetAuthForActiveGame(chatId, out login, out pass);
-                this.LoginPostData = String.Format("login={0}&password={1}", login, pass);
-                this.LoginUrl = "http://igra.lv/igra.php?s=login";
-                this.TaskUrl = "http://www.igra.lv/igra.php";
-                this.StatisticsUrl = "http://igra.lv/img_level_times.php";
-                this.Login();
-            }
+            GameManager.GetAuthForActiveGame(chatId, out login, out pass);
+            this.LoginPostData = String.Format("login={0}&password={1}", login, pass);
+            this.LoginUrl = "http://igra.lv/igra.php?s=login";
+            this.TaskUrl = "http://www.igra.lv/igra.php";
+            this.StatisticsUrl = "http://igra.lv/img_level_times.php";
+            this.Login();
         }
 
         public override Image<Rgba32> GetStatistics()
