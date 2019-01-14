@@ -24,7 +24,8 @@ namespace GolfCore.Processing
                 case Constants.Commands.ExitFromGame:
                     GameManager.ExitFromCurrentGame(chatId);
                     return null;
-
+                case Constants.Commands.GetStatistics:
+                    return GetStatistics(chatId);
                 case Constants.Commands.SetAuth:
                     if (parameters == null || parameters.Count < 2)
                     {
@@ -53,6 +54,15 @@ namespace GolfCore.Processing
                 default:
                     return null;
             }
+        }
+
+        private static ProcessingResult GetStatistics(long chatId)
+        {
+            Game game = GameManager.GetActiveGameByChatId(chatId);
+            var engine = IGameEngine.Get(game, chatId);
+            var result = new ProcessingResult("stats", chatId);
+            result.Image = engine.GetStatistics();
+            return result;
         }
 
         private static ProcessingResult EndGame(long chatId)

@@ -2,8 +2,11 @@
 using GolfCoreDB.Data;
 using GolfCoreDB.Managers;
 using HtmlAgilityPack;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace GolfCore.GameEngines
@@ -29,7 +32,7 @@ namespace GolfCore.GameEngines
             }
         }
 
-        public override string GetStatistics()
+        public override Image<Rgba32> GetStatistics()
         {
             throw new NotImplementedException();
         }

@@ -69,8 +69,11 @@ namespace GolfCore.Helpers
         {
             // Probably want to inspect the http.Headers here first
             HttpWebRequest http = WebRequest.Create(url) as HttpWebRequest;
-            http.CookieContainer = new CookieContainer();
-            http.CookieContainer.Add(cookies);
+            if (cookies != null)
+            {
+                http.CookieContainer = new CookieContainer();
+                http.CookieContainer.Add(cookies);
+            }
             HttpWebResponse response = http.GetResponse() as HttpWebResponse;
 
             string data = GetContentsFromResponse(response);
@@ -95,7 +98,7 @@ namespace GolfCore.Helpers
             return result;
         }
 
-        public static string MakePost(string url, string postData, string accept = null)
+        public static HttpWebResponse MakePostRaw(string url, string postData, string accept = null)
         {
             HttpWebRequest http = WebRequest.Create(url) as HttpWebRequest;
             http.KeepAlive = true;
@@ -113,6 +116,14 @@ namespace GolfCore.Helpers
                 }
             }
             HttpWebResponse httpResponse = http.GetResponse() as HttpWebResponse;
+
+            return httpResponse;
+        }
+
+        public static string MakePost(string url, string postData, string accept = null)
+        {
+
+            HttpWebResponse httpResponse = MakePostRaw(url, postData, accept);
 
             return GetContentsFromResponse(httpResponse);
         }

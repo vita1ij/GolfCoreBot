@@ -1,7 +1,10 @@
 ﻿using GolfCore.Helpers;
 using GolfCoreDB.Data;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Text;
 
@@ -36,7 +39,7 @@ namespace GolfCore.GameEngines
         }
 
         public abstract string GetTask();
-        public abstract string GetStatistics();
+        public abstract Image<Rgba32> GetStatistics();
 
         public static IGameEngine Get(GameParticipant player)
         {

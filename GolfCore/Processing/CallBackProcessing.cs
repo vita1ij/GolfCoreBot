@@ -1,8 +1,11 @@
 ﻿using GolfCore.GameEngines;
 using GolfCoreDB.Data;
 using GolfCoreDB.Managers;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -70,6 +73,13 @@ namespace GolfCore.Processing
                     game = GameManager.GetActiveGameByChatId(chatId);
                     GameManager.SetTaskMonitoring(chatId, 2);
                     edit = GameCommandProcessing.GameStatus(chatId);
+                    break;
+                case "GetStatistics":
+                    game = GameManager.GetActiveGameByChatId(chatId);
+                    engine = IGameEngine.Get(game, chatId);
+                    Image<Rgba32> stat = engine.GetStatistics();
+                    result = new ProcessingResult("Stats", chatId);
+                    result.Image = stat;
                     break;
                 case "DisableStatisticUpdates":
                 case "EnableStatisticLvl":

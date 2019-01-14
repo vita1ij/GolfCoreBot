@@ -6,6 +6,9 @@ using System.Text;
 using GolfCoreDB.Managers;
 using HtmlAgilityPack;
 using GolfCore.Helpers;
+using System.IO;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace GolfCore.GameEngines
 {
@@ -25,13 +28,19 @@ namespace GolfCore.GameEngines
                 this.LoginPostData = String.Format("login={0}&password={1}", login, pass);
                 this.LoginUrl = "http://igra.lv/igra.php?s=login";
                 this.TaskUrl = "http://www.igra.lv/igra.php";
+                this.StatisticsUrl = "http://igra.lv/img_level_times.php";
                 this.Login();
             }
         }
 
-        public override string GetStatistics()
+        public override Image<Rgba32> GetStatistics()
         {
-            throw new NotImplementedException();
+            var response = WebConnectHelper.MakePostRaw(StatisticsUrl, "");
+            Stream receiveStream = response.GetResponseStream();
+
+            Image<Rgba32> image = Image.Load(receiveStream);
+
+            return image;
         }
 
         public override string GetTask()

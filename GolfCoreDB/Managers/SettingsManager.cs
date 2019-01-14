@@ -17,6 +17,20 @@ namespace GolfCoreDB.Managers
             }
         }
 
+        public static string GetSetting(long chatId, string name)
+        {
+            using (var db = new DBContext())
+            {
+                var s = db.Settings.ToList();
+                if (s.Any(x => x.Name == name))
+                {
+                    var setting = s.Where(x => x.Name == name).FirstOrDefault();
+                    return setting.Value;
+                }
+                return null;
+            }
+        }
+
         public static void UpdateSetting(string name, string value, long chatId)
         {
             using (var db = new DBContext())

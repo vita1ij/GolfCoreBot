@@ -1,5 +1,8 @@
-﻿using System;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -13,6 +16,7 @@ namespace GolfCore.Processing
         public bool DisableWebPagePreview { get; set; }
         public bool IsHtml { get; set; }
         public int? ReplyTo { get; set; }
+        public Image<Rgba32> Image { get; set; }
 
         public ProcessingResult(string text, long chatId, bool disablePreview = true, bool isHtml = false)
         {

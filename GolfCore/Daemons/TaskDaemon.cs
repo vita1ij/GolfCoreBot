@@ -45,7 +45,7 @@ namespace GolfCore.Daemons
                             if (game.LastTask != newTask)
                             {
                                 game.LastTask = newTask;
-                                await db.SaveChangesAsync();
+                                db.SaveChanges();
                             }
                         }
                     }

@@ -8,6 +8,7 @@ using System.IO;
 using GolfCore.Daemons;
 using System.Threading.Tasks;
 using GolfCore.Processing;
+using SixLabors.ImageSharp;
 
 namespace GolfCoreConsole
 {
@@ -43,7 +44,7 @@ namespace GolfCoreConsole
             Console.WriteLine($"Start listening for @{me.Username}");
 
             while (!Console.KeyAvailable) {
-                if (Config["Minute_Daemons"].ToString() == "true")
+                if (Config["Minute_Daemons"].ToString() == "true//todo")
                 {
                     taskDaemon.RunAsync(Bot).Wait();
                 }
@@ -69,6 +70,27 @@ namespace GolfCoreConsole
                 }
                 
                 var result = GolfCore.Processing.MessageProcessing.Process(message.Text, message.Chat.Id, message.MessageId);
+                if (result == null) return;
+                if (result.Image != null)
+                {
+                    try
+                    {
+                        using (MemoryStream memoryStream = new MemoryStream())
+                        {
+                            result.Image.SaveAsJpeg(memoryStream);
+                            var arr = memoryStream.ToArray();
+                            var imageFile = new Telegram.Bot.Types.InputFiles.InputOnlineFile(new MemoryStream(arr));
+                            await Bot.SendPhotoAsync(
+                                   message.Chat.Id,
+                                   imageFile
+                                   );
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        //do nothing
+                    }
+                }
                 if (result == null || result.Text == null) return;
                 await Bot.SendTextMessageAsync(
                     result.ChatId,
@@ -100,6 +122,27 @@ namespace GolfCoreConsole
                     replyMarkup: (InlineKeyboardMarkup)edit.Markup,
                     disableWebPagePreview: edit.DisableWebPagePreview
                     );
+            }
+            if (result == null) return;
+            if (result.Image != null)
+            {
+                try
+                {
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                        result.Image.SaveAsJpeg(memoryStream);
+                        var arr = memoryStream.ToArray();
+                        var imageFile = new Telegram.Bot.Types.InputFiles.InputOnlineFile(new MemoryStream(arr));
+                        await Bot.SendPhotoAsync(
+                               e.CallbackQuery.Message.Chat.Id,
+                               imageFile
+                               );
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //do nothing
+                }
             }
 
             if (result == null || result.Text == null) return;

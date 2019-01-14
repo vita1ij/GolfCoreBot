@@ -7,7 +7,7 @@ namespace GolfCore
 {
     public class Constants
     {
-        public static string CoordinatesString = "<a href =\"https://www.waze.com/location?ll={0},{1}&navigate=yes\">Waze</a>, <a href =\"https://www.google.com/maps/search/?api=1&query={0},{1}\"> Google</a>  ({0},{1})";
+        public static string CoordinatesString = "<a href =\"https://www.waze.com/ul?ll={0},{1}&navigate=yes\">Waze</a>, <a href =\"https://www.google.com/maps/search/?api=1&query={0},{1}\"> Google</a>  ({0},{1})";
 
         public static class Text
         {
@@ -26,6 +26,7 @@ namespace GolfCore
             public const string EndGame = "endgame";
             public const string Game = "game";
             public const string ExitFromGame = "exitfromgame";
+            public const string GetStatistics = "gamestats";
             public const string SetAuth = "setauth";
             public const string GetTask = "gettask";
             public const string SetTaskMonitoringStatus = "settaskmonitoring";
@@ -35,6 +36,10 @@ namespace GolfCore
         {
             public const string GameLogin = "GameLogin";
             public const string GamePass = "GamePass";
+            public static string EmptySetting(string name)
+            {
+                return String.Format("Value is empty. You can set it this way: '/updatesetting {0} value'", name);
+            }
         }
 
         public static class Exceptions
@@ -77,6 +82,7 @@ namespace GolfCore
                     },
                     new List<InlineKeyboardButton>()
                     {
+                        new InlineKeyboardButton() { Text = "Get Statistics", CallbackData = "GetStatistics" },
                         new InlineKeyboardButton() { Text = statisticsDaemon == 0 ? "[[No Statistics]]" : "No Statistics", CallbackData = "DisableStatisticUpdates" },
                         new InlineKeyboardButton() { Text = statisticsDaemon == 1 ? "[[Same lvl]]" : "Same lvl", CallbackData = "EnableStatisticLvl" },
                         new InlineKeyboardButton() { Text = statisticsDaemon == 2 ? "[[All Statistics]]" : "All Statistics", CallbackData = "EnableStatistics" }
