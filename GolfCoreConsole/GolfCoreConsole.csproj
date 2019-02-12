@@ -27,4 +27,8 @@
     </None>
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(TargetPath)&quot; &quot;C:\inetpub\wwwroot\GolfCore&quot; /Y" />
+  </Target>
+
 </Project>

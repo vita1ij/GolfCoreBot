@@ -12,8 +12,12 @@ namespace GolfCore.GameEngines
 {
     public abstract class IGameEngine
     {
+#pragma warning disable CS0169 // The field 'IGameEngine._login' is never used
         private string _login;
+#pragma warning restore CS0169 // The field 'IGameEngine._login' is never used
+#pragma warning disable CS0169 // The field 'IGameEngine._pass' is never used
         private string _pass;
+#pragma warning restore CS0169 // The field 'IGameEngine._pass' is never used
 
         public CookieCollection connectionCookie;
 
@@ -35,7 +39,7 @@ namespace GolfCore.GameEngines
         public bool Login()
         {
             connectionCookie = WebConnectHelper.MakePost4Cookies(LoginUrl, LoginPostData);
-            return (connectionCookie != null);
+            return (connectionCookie != null && connectionCookie.Count > 0);
         }
 
         public abstract string GetTask();

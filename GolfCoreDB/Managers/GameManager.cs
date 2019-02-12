@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using GolfCoreDB.Data;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,14 @@ namespace GolfCoreDB.Managers
             using (var db = DBContext.Instance)
             {
                 return db.Games.Where(x => x.IsActive && x.Participants.Any(y => y.MonitorUpdates)).Include("Participants").ToList();
+            }
+        }
+
+        public static List<Game> GetAllActiveWithStatsMonitoring()
+        {
+            using (var db = DBContext.Instance)
+            {
+                return db.Games.Where(x => x.IsActive && x.Participants.Any(y => y.MonitorStatistics)).Include("Participants").ToList();
             }
         }
 
@@ -66,7 +75,7 @@ namespace GolfCoreDB.Managers
             return newId;
         }
 
-        public static string JoinGame(string gameId, long chatId)
+        public static string JoinGame(string gameId, long chatId, bool force = false)
         {
             using (var db = DBContext.Instance)
             {
@@ -81,18 +90,28 @@ namespace GolfCoreDB.Managers
                 }
                 if (game.First().Participants.Exists(x => x.ChatId == chatId))
                 {
-                    return "You are already joined to game. If you wanna change game, exit from current.";
-                }
-                else
-                {
-                    (game.First().Participants).Add(new GameParticipant()
+                    if (force)
                     {
-                        ChatId = chatId,
-                        Game = game.First()
-                    });
-                    db.SaveChanges();
-                    return "Joined";
+                        ExitFromCurrentGame(chatId);
+                    }
+                    else
+                    {
+                        return "You are already joined to game. If you wanna change game, exit from current.";
+                    }
                 }
+                
+                if (db.Games.Where(x => x.Participants.Exists(y => y.ChatId == chatId)).Any() && force)
+                {
+                    ExitFromCurrentGame(chatId);
+                }
+                (game.First().Participants).Add(new GameParticipant()
+                {
+                    ChatId = chatId,
+                    Game = game.First()
+                });
+                db.SaveChanges();
+                return "Joined";
+                
             }
         }
 
@@ -156,13 +175,16 @@ namespace GolfCoreDB.Managers
             using (var db = DBContext.Instance)
             {
                 var game = xGetActiveGameByChatId(chatId, db);
-                
-                game.Participants.RemoveAll(x => x.ChatId == chatId);
-                if (!game.Participants.Any())
+
+                if (game != null && game.Participants != null && game.Participants.Any())
                 {
-                    game.IsActive = false;
+                    game.Participants.RemoveAll(x => x.ChatId == chatId);
+                    if (!game.Participants.Any())
+                    {
+                        game.IsActive = false;
+                    }
+                    db.SaveChanges();
                 }
-                db.SaveChanges();
             }
         }
 
@@ -173,6 +195,21 @@ namespace GolfCoreDB.Managers
                 db.Games.Update(game);
                 db.SaveChanges();
             }
+        }
+
+        public static string GetStatisticsHash(byte[] stats)
+        {
+            string result = "";
+
+            if (stats != null && stats.Length > 0)
+            {
+                using (SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider())
+                {
+                    result = Convert.ToBase64String(sha1.ComputeHash(stats));
+                }
+            }
+
+            return result;
         }
     }
 }

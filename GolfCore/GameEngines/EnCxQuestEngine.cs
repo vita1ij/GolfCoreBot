@@ -15,11 +15,17 @@ namespace GolfCore.GameEngines
     {
         public const string HTMLPATH_ACTIVE_GAMES = "boxCenterActiveGames";
         public const string HTMLPATH_ACTIVE_GAME = "div.boxGameInfo table.gameInfo table tr::first td table ";
+#pragma warning disable CS0108 // 'EnCxQuestEngine.TaskUrl' hides inherited member 'IGameEngine.TaskUrl'. Use the new keyword if hiding was intended.
         public string TaskUrl = "";
+#pragma warning restore CS0108 // 'EnCxQuestEngine.TaskUrl' hides inherited member 'IGameEngine.TaskUrl'. Use the new keyword if hiding was intended.
 
         public EnCxQuestEngine(long chatId)
         {
+#pragma warning disable CS0168 // The variable 'pass' is declared but never used
+#pragma warning disable CS0168 // The variable 'login' is declared but never used
             string login, pass;
+#pragma warning restore CS0168 // The variable 'login' is declared but never used
+#pragma warning restore CS0168 // The variable 'pass' is declared but never used
             using (var db = GolfCoreDB.DBContext.Instance)
             {
                 //GameManager.GetAuthForActiveGame(chatId, out login, out pass);

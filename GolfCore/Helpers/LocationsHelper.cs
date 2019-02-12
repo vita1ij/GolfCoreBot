@@ -7,6 +7,8 @@ using GolfCoreDB.Managers;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
+using Nominatim.API;
+using Nominatim.API.Geocoders;
 
 namespace GolfCore.Helpers
 {
@@ -15,6 +17,7 @@ namespace GolfCore.Helpers
         public const string GRAUSTI_URL  = "http://grausti.riga.lv/";
         public const string GRAUSTI_URL2 = "http://grausti.riga.lv/ajax/module:constructions/";
         private const string GRAUSTI_POST = "owner=&region=&page=1&sortfield=&sortorder=&status=&filter=1&csv=1&action=getConstructions";
+        private const string PbfPath = @"C:\vg\git\golfcorebot\GolfCore\Helpers\latvia-latest.osm.pbf";
 
         public static void UpdateDatabase()
         {
@@ -50,7 +53,9 @@ namespace GolfCore.Helpers
                     }
                 }
             }
+#pragma warning disable CS0168 // The variable 'ex' is declared but never used
             catch(Exception ex)
+#pragma warning restore CS0168 // The variable 'ex' is declared but never used
             {
                 //who cares
             }
@@ -58,7 +63,7 @@ namespace GolfCore.Helpers
 
         public static string CheckLocation(string locationInput)
         {
-            if (GetCoordinates(locationInput, out string slat, out string slon)
+            if (ParseCoordinates(locationInput, out string slat, out string slon)
                 && double.TryParse(slat, out double lat)
                 && double.TryParse(slon, out double lon)
                 )
@@ -70,7 +75,7 @@ namespace GolfCore.Helpers
             return null;
         }
 
-        public static bool GetCoordinates(string input, out string lat, out string lon)
+        public static bool ParseCoordinates(string input, out string lat, out string lon)
         {
             var match = Regex.Match(input, @"^[0-9., бю]+$");
             if (match.Success)
@@ -121,6 +126,61 @@ namespace GolfCore.Helpers
             {
                 lat = lon = null;
                 return false;
+            }
+        }
+        public static bool ParseCoordinates(string input, out double lat, out double lon)
+        {
+            string slat, slon;
+            if (ParseCoordinates(input, out slat, out slon))
+            {
+                lat = double.Parse(slat);
+                lon = double.Parse(slon);
+                return true;
+            }
+            else
+            {
+                lat = lon = 0;
+                return false;
+            }
+        }
+
+        public static string GetCoordinates(string query, string city = "")
+        {
+            var foo = new Nominatim.API.Models.ForwardGeocodeRequest();
+            foo.Country = "Latvia";
+            foo.City = city;
+            foo.queryString = query;
+            var c = new  Nominatim.API.Geocoders.ForwardGeocoder();
+            var r = c.Geocode(foo);
+            //r.Result[0].
+            var res = r.GetAwaiter().GetResult();
+            string result = "";
+            if (res.Count() == 0) return null;
+            foreach(var rr in res)
+            {
+                result += String.Format(Constants.CoordinatesStringWithName, rr.Latitude, rr.Longitude,rr.DisplayName);
+            }
+            return result;
+        }
+
+        public static string GetAddress(string query)
+        {
+            double lat;
+            double lon;
+            if (ParseCoordinates(query, out lat, out lon))
+            {
+                var foo = new Nominatim.API.Models.ReverseGeocodeRequest();
+                foo.Latitude = lat;
+                foo.Longitude = lon;
+                var c = new ReverseGeocoder();
+                var r = c.ReverseGeocode(foo);
+                var res = r.GetAwaiter().GetResult();
+                var result =  res.Address.Country + ", " +  (res.Address.City ?? res.Address.Town) + ", " +  res.Address.Road + " " +  res.Address.HouseNumber ;
+                return result;
+            }
+            else
+            {
+                return "";
             }
         }
     }

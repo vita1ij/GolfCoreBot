@@ -8,11 +8,12 @@ namespace GolfCore
     public class Constants
     {
         public static string CoordinatesString = "<a href =\"https://www.waze.com/ul?ll={0},{1}&navigate=yes\">Waze</a>, <a href =\"https://www.google.com/maps/search/?api=1&query={0},{1}\"> Google</a>  ({0},{1})";
+        public static string CoordinatesStringWithName = "{2}\r\n<a href =\"https://www.waze.com/ul?ll={0},{1}&navigate=yes\">Waze</a>, <a href =\"https://www.google.com/maps/search/?api=1&query={0},{1}\"> Google</a>  ({0},{1})\r\n";
 
         public static class Text
         {
-            public const string SetAuthInGroup = "Use Private chat for that.";
-            public const string SetAuthInPrivate = "To Set auth, write '/setauth login pass'. It is better to use private chat for that.";
+            public const string SetAuthInGroup = "Let's Private chat for that. Use following link: /starttalk_login";
+            public const string SetAuthInPrivate = "Ok, let's auth 4 this game. Please, enter {login}:";
         }
 
         public static class Commands

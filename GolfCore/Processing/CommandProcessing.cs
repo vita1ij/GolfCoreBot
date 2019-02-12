@@ -18,7 +18,27 @@ namespace GolfCore.Processing
             switch (command.ToLower())
             {
                 case "foo":
+                    //LocationsHelper.TestOSM();
                     return new ProcessingResult("bar", chatId);
+                case "a":
+                    double lon, lat;
+                    if(LocationsHelper.ParseCoordinates(parameters, out lat, out lon))
+                    {
+                        return new ProcessingResult(LocationsHelper.GetAddress(parameters), chatId);
+                    }
+                    else
+                    {
+                        return new ProcessingResult(LocationsHelper.GetCoordinates(parameters), chatId, true, true);
+                    }
+                case "aa":
+                    
+                case "hidekeyboard":
+                    return new ProcessingResult("ok", chatId, new ReplyKeyboardRemove());
+                case "sendprivate":
+                    return new ProcessingResult("ok", -1);
+                case "starttalk":
+                    return ConversationsProcessing.StartConversation(GetParameters(parameters, 1)[0], chatId);
+
 
                 case "updatedb":
                     LocationsHelper.UpdateDatabase();

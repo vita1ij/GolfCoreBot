@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace GolfCoreDB.Data
@@ -15,9 +16,13 @@ namespace GolfCoreDB.Data
         public string Login { get; set; }
         public string Password { get; set; }
         public string LastTask { get; set; }
+        public byte[] LastStatistics { get; set; }
+        public int? LastStatisticsHash { get; set; }
 
         public string Title { get; set; }
         public string Href { get; set; }
         public string EnCxId { get; set; }
+
+        
     }
 }

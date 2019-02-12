@@ -8,18 +8,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace GolfCore.Processing
 {
     public class CallBackProcessing
     {
-        public static ProcessingResult Process(string data, long chatId, bool isPrivate, out ProcessingResult editMessage)
+        public static ProcessingResult Process(string data, long chatId, bool isPrivate, long sender, out ProcessingResult editMessage)
         {
             ProcessingResult result = null;
             ProcessingResult edit = null;
             Game game = null;
             IGameEngine engine = null;
+#pragma warning disable CS0219 // The variable 'participant' is assigned but its value is never used
             GameParticipant participant = null;
+#pragma warning restore CS0219 // The variable 'participant' is assigned but its value is never used
             string res;
 
             switch(data)
@@ -39,11 +42,13 @@ namespace GolfCore.Processing
                 case "SetAuth":
                     if (isPrivate)
                     {
-                        result = new ProcessingResult(Constants.Text.SetAuthInPrivate, chatId);
+                        result = new ProcessingResult(Constants.Text.SetAuthInPrivate, chatId, new ForceReplyMarkup());
                     }
                     else
                     {
-                        result = new ProcessingResult(Constants.Text.SetAuthInGroup, chatId);
+                        var currentGame = GameManager.GetActiveGameByChatId(chatId);
+                        GameManager.JoinGame(currentGame.Id, sender, true);
+                        result = new ProcessingResult(Constants.Text.SetAuthInGroup, sender,new ForceReplyMarkup());
                     }
                     break;
                 case "Joinlink":

@@ -48,7 +48,7 @@ namespace GolfCore.Processing
 
         public static ProcessingResult TryCoordinates(string message, long chatId)
         {
-            if (LocationsHelper.GetCoordinates(message, out string lat, out string lon))
+            if (LocationsHelper.ParseCoordinates(message, out string lat, out string lon))
             { 
                 return new ProcessingResult(
                     String.Format(Constants.CoordinatesString, lat, lon),

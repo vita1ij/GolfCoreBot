@@ -30,7 +30,7 @@ namespace GolfCoreConsole
         public static void Main(string[] args)
         {
             //Daemons
-            TaskDaemon taskDaemon = new TaskDaemon();
+            //TaskDaemon taskDaemon = new TaskDaemon();
 
             Bot.OnMessage += BotOnMessageReceived;
             Bot.OnCallbackQuery += BotOnCallBackReceived;
@@ -43,12 +43,12 @@ namespace GolfCoreConsole
             Bot.StartReceiving();
             Console.WriteLine($"Start listening for @{me.Username}");
 
-            while (!Console.KeyAvailable) {
-                if (Config["Minute_Daemons"].ToString() == "true")
-                {
-                    taskDaemon.RunAsync(Bot).Wait();
-                }
-            }
+            //while (!Console.KeyAvailable) {
+            //    if (Config["Minute_Daemons"].ToString() == "true")
+            //    {
+            //        taskDaemon.RunAsync(Bot).Wait();
+            //    }
+            //}
 
             Console.ReadLine();
             Bot.StopReceiving();
@@ -68,9 +68,27 @@ namespace GolfCoreConsole
                 {
                     message.Text = message.Text.Substring(0, message.Text.Length - "@SchrodingersGolfBot".Length);
                 }
-                
-                var result = GolfCore.Processing.MessageProcessing.Process(message.Text, message.Chat.Id, message.MessageId, true, message.Chat.Type == ChatType.Private);
+
+                ProcessingResult result = null;
+
+                string replyToText = null;
+                if (messageEventArgs.Message.ReplyToMessage != null
+                    && messageEventArgs.Message.ReplyToMessage.From.Username == "SchrodingersGolfBot"
+                    && messageEventArgs.Message.ReplyToMessage.From.IsBot)
+                {
+                    replyToText = messageEventArgs.Message.ReplyToMessage.Text;
+                    result = ConversationsProcessing.Process(replyToText, message.Text, message.Chat.Id);
+                }
+                else
+                {
+                    result = MessageProcessing.Process(message.Text, message.Chat.Id, message.MessageId, true, message.Chat.Type == ChatType.Private);
+                }
+                //if chat.Id == -1 ==> send private to person.
                 if (result == null) return;
+                if (result.ChatId == -1)
+                {
+                    result.ChatId = messageEventArgs.Message.From.Id;
+                }
                 if (result.Image != null)
                 {
                     try
@@ -86,7 +104,9 @@ namespace GolfCoreConsole
                                    );
                         }
                     }
+#pragma warning disable CS0168 // The variable 'ex' is declared but never used
                     catch (Exception ex)
+#pragma warning restore CS0168 // The variable 'ex' is declared but never used
                     {
                         //do nothing
                     }
@@ -107,9 +127,10 @@ namespace GolfCoreConsole
         {
             ProcessingResult edit;
             ProcessingResult result = CallBackProcessing.Process(
-                                                            e.CallbackQuery.Data, 
-                                                            e.CallbackQuery.Message.Chat.Id, 
+                                                            e.CallbackQuery.Data,
+                                                            e.CallbackQuery.Message.Chat.Id,
                                                             e.CallbackQuery.Message.Chat.Type == ChatType.Private ? true : false,
+                                                            e.CallbackQuery.From.Id,
                                                             out edit);
             
             if (edit != null)
@@ -124,6 +145,10 @@ namespace GolfCoreConsole
                     );
             }
             if (result == null) return;
+            if (result.ChatId == -1)
+            {
+                result.ChatId = e.CallbackQuery.From.Id;
+            }
             if (result.Image != null)
             {
                 try
@@ -139,7 +164,9 @@ namespace GolfCoreConsole
                                );
                     }
                 }
+#pragma warning disable CS0168 // The variable 'ex' is declared but never used
                 catch (Exception ex)
+#pragma warning restore CS0168 // The variable 'ex' is declared but never used
                 {
                     //do nothing
                 }

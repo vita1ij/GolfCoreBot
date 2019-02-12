@@ -23,7 +23,9 @@ namespace GolfCoreDB
                 string connectionString = Config.GetConnectionString("GolfDB");
                 optionsBuilder.UseSqlServer(connectionString);
             }
+#pragma warning disable CS0168 // The variable 'ex' is declared but never used
             catch (Exception ex)
+#pragma warning restore CS0168 // The variable 'ex' is declared but never used
             {
 
             }

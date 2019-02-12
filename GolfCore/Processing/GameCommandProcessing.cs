@@ -13,6 +13,9 @@ namespace GolfCore.Processing
     {
         public static ProcessingResult Process(string command, List<string> parameters, long chatId, bool isPrivate)
         {
+            Game game = GameManager.GetActiveGameByChatId(chatId);
+            IGameEngine engine = IGameEngine.Get(game, chatId);
+
             switch (command.ToLower())
             {
                 case Constants.Commands.StartGame:
@@ -31,12 +34,19 @@ namespace GolfCore.Processing
                     {
                         return new ProcessingResult("enter auth info", chatId);
                     }
+                    //save
                     GameManager.SetAuthToActiveGame(parameters[0], parameters[1], chatId);
+                    engine = IGameEngine.Get(game, chatId); //update data - needless
+                    //check if can connect
+                    if (!engine.Login())
+                    {
+                        //delete wrong auth data
+                        GameManager.SetAuthToActiveGame(null, null, chatId);
+                    }
+                    
                     return null;
 
                 case Constants.Commands.GetTask:
-                    Game game = GameManager.GetActiveGameByChatId(chatId);
-                    IGameEngine engine = IGameEngine.Get(game, chatId);
                     return new ProcessingResult(engine.GetTask(), chatId);
 
                 case Constants.Commands.SetTaskMonitoringStatus:

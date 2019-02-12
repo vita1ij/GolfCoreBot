@@ -30,6 +30,10 @@ namespace GolfCoreDB.Migrations
 
                     b.Property<bool>("IsActive");
 
+                    b.Property<byte[]>("LastStatistics");
+
+                    b.Property<int?>("LastStatisticsHash");
+
                     b.Property<string>("LastTask");
 
                     b.Property<string>("Login");
@@ -55,7 +59,11 @@ namespace GolfCoreDB.Migrations
 
                     b.Property<string>("GameId");
 
+                    b.Property<bool>("GetStatistics");
+
                     b.Property<bool>("GetUpdates");
+
+                    b.Property<bool>("MonitorStatistics");
 
                     b.Property<bool>("MonitorUpdates");
 
