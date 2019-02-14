@@ -25,31 +25,51 @@ namespace GolfCoreConsole
             }
         }
 
-        public static readonly TelegramBotClient Bot = new TelegramBotClient(Config["API_KEY"].ToString());
+        public static TelegramBotClient Bot;
 
         public static void Main(string[] args)
         {
+            try
+            {
+                if (Config == null) throw new Exception("No config");
+                if (Config["API_KEY"] == null) throw new Exception("No API key");
+                if (String.IsNullOrEmpty(Config["API_KEY"])) throw new Exception("Empty API key");
+                try
+                {
+                    Bot = new TelegramBotClient(Config["API_KEY"].ToString());
+                }
+                catch(Exception ex)
+                {
+                    throw new Exception(String.Format("Cannot initialise Bot: {0}---------------{1}", ex.Message, ex.InnerException));
+                }
+                try
+                {
+                    Bot.OnMessage += BotOnMessageReceived;
+                    Bot.OnCallbackQuery += BotOnCallBackReceived;
+                    var me = Bot.GetMeAsync().Result;
+                    Console.Title = me.Username;
+                    Bot.StartReceiving();
+                    Console.WriteLine($"Start listening for @{me.Username}");
+                }
+                catch(Exception ex)
+                {
+                    throw new Exception(String.Format("Cannot set up Bot: {0}---------------{1}", ex.Message, ex.InnerException));
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             //Daemons
             //TaskDaemon taskDaemon = new TaskDaemon();
-
-            Bot.OnMessage += BotOnMessageReceived;
-            Bot.OnCallbackQuery += BotOnCallBackReceived;
             //Bot.OnMessageEdited += BotOnMessageReceived;
-
-            var me = Bot.GetMeAsync().Result;
-
-            Console.Title = me.Username;
-
-            Bot.StartReceiving();
-            Console.WriteLine($"Start listening for @{me.Username}");
-
+            
             //while (!Console.KeyAvailable) {
             //    if (Config["Minute_Daemons"].ToString() == "true")
             //    {
             //        taskDaemon.RunAsync(Bot).Wait();
             //    }
             //}
-
             Console.ReadLine();
             Bot.StopReceiving();
         }
