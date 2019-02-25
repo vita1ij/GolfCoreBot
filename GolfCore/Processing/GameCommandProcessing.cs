@@ -14,7 +14,8 @@ namespace GolfCore.Processing
         public static ProcessingResult Process(string command, List<string> parameters, long chatId, bool isPrivate)
         {
             Game game = GameManager.GetActiveGameByChatId(chatId);
-            IGameEngine engine = IGameEngine.Get(game, chatId);
+            IGameEngine engine = null;
+            if (game != null ) engine = IGameEngine.Get(game, chatId);
 
             switch (command.ToLower())
             {

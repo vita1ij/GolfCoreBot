@@ -21,10 +21,11 @@ namespace GolfCore.Processing
                     var param = message.Substring(command.Length + 1);
                     try
                     {
-                        return CommandProcessing.Process(command, param.TrimStart('_'), chatId, messageId, isPrivate);
+                        return CommandProcessing.Process(command, param?.TrimStart('_'), chatId, messageId, isPrivate);
                     }
                     catch (Exception ex)
                     {
+                        Log.New(ex);
                         return new ProcessingResult(ex.Message, chatId);
                     }
                 case '#':

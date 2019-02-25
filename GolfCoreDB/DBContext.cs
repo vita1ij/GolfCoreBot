@@ -18,20 +18,10 @@ namespace GolfCoreDB
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            try
-            {
-                string connectionString = Config.GetConnectionString("GolfDB");
-                optionsBuilder.UseSqlServer(connectionString);
-            }
-#pragma warning disable CS0168 // The variable 'ex' is declared but never used
-            catch (Exception ex)
-#pragma warning restore CS0168 // The variable 'ex' is declared but never used
-            {
-
-            }
+            string connectionString = Config.GetConnectionString("GolfDB");
+            optionsBuilder.UseSqlServer(connectionString);
         }
 
-        public DbSet<Setting> Settings { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<KnownLocation> Locations { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using GolfCore.Daemons;
+using GolfCore.Helpers;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
@@ -19,7 +20,7 @@ namespace GC.GetTaskService
                 }
                 catch (Exception ex)
                 {
-                    File.AppendAllText(Config["ERROR_FOLDER"] + DateTime.Now.ToLongDateString() + ".log", ex.Message);
+                    Log.New(ex);
                 }
             }
             Console.ReadLine();

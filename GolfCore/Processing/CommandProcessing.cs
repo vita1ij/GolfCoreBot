@@ -14,12 +14,8 @@ namespace GolfCore.Processing
     {
         public static ProcessingResult Process(string command, string parameters, long chatId, int messageId, bool isPrivate)
         {
-            List<string> values;
             switch (command.ToLower())
             {
-                case "foo":
-                    //LocationsHelper.TestOSM();
-                    return new ProcessingResult("bar", chatId);
                 case "a":
                     double lon, lat;
                     if(LocationsHelper.ParseCoordinates(parameters, out lat, out lon))
@@ -38,19 +34,9 @@ namespace GolfCore.Processing
                     return new ProcessingResult("ok", -1);
                 case "starttalk":
                     return ConversationsProcessing.StartConversation(GetParameters(parameters, 1)[0], chatId);
-
-
                 case "updatedb":
                     LocationsHelper.UpdateDatabase();
                     break;
-
-                case Constants.Commands.ShowSettings:
-                    return ShowSettings(chatId);
-
-                case Constants.Commands.UpdateSetting:
-                    values = GetParameters(parameters, 2);
-                    SettingsManager.UpdateSetting(values[0], values[1], chatId);
-                    return null;
 
                 case Constants.Commands.CheckLocation:
                     //return new ProcessingResult(LocationsManager.Distance(56.9263798, 24.0846039, 56.9636838, 24.2346644).ToString(), chatId);
@@ -63,12 +49,6 @@ namespace GolfCore.Processing
                     return GameCommandProcessing.Process(command, GetParameters(parameters, null), chatId, isPrivate);
             }
             return null;
-        }
-
-        public static ProcessingResult ShowSettings(long chatId)
-        {
-            var data = SettingsManager.GetSettings(chatId);
-            return new ProcessingResult("Data:\r\n" + String.Join("\r\n", data.Select<Tuple<string,string>, string>(x => x.Item1 + " = " + x.Item2)), chatId);
         }
 
 

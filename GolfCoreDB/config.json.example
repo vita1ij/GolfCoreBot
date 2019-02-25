@@ -1,5 +1,0 @@
-﻿{
-  "ConnectionStrings": {
-    "GolfDB": "Data Source=localhost;Initial Catalog=TelegramGolfBot;Integrated Security=True"
-  },
-}

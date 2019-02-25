@@ -9,6 +9,7 @@ using GolfCore.Daemons;
 using System.Threading.Tasks;
 using GolfCore.Processing;
 using SixLabors.ImageSharp;
+using GolfCore.Helpers;
 
 namespace GolfCoreConsole
 {
@@ -61,15 +62,15 @@ namespace GolfCoreConsole
                 Console.WriteLine(ex.Message);
             }
             //Daemons
-            //TaskDaemon taskDaemon = new TaskDaemon();
+            TaskDaemon taskDaemon = new TaskDaemon();
             //Bot.OnMessageEdited += BotOnMessageReceived;
             
-            //while (!Console.KeyAvailable) {
-            //    if (Config["Minute_Daemons"].ToString() == "true")
-            //    {
-            //        taskDaemon.RunAsync(Bot).Wait();
-            //    }
-            //}
+            while (!Console.KeyAvailable) {
+                if (Config["Minute_Daemons"].ToString() == "true")
+                {
+                    taskDaemon.RunAsync(Bot).Wait();
+                }
+            }
             Console.ReadLine();
             Bot.StopReceiving();
         }
@@ -124,11 +125,9 @@ namespace GolfCoreConsole
                                    );
                         }
                     }
-#pragma warning disable CS0168 // The variable 'ex' is declared but never used
                     catch (Exception ex)
-#pragma warning restore CS0168 // The variable 'ex' is declared but never used
                     {
-                        //do nothing
+                        Log.New(ex);
                     }
                 }
                 if (result == null || result.Text == null) return;
@@ -184,11 +183,9 @@ namespace GolfCoreConsole
                                );
                     }
                 }
-#pragma warning disable CS0168 // The variable 'ex' is declared but never used
                 catch (Exception ex)
-#pragma warning restore CS0168 // The variable 'ex' is declared but never used
                 {
-                    //do nothing
+                    Log.New(ex);
                 }
             }
 

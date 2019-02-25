@@ -16,12 +16,13 @@ namespace GolfCore.Helpers
 
         public List<String> GetFollowingPages(long chatId)
         {
-            var pages = SettingsManager.GetSetting(chatId, FB_PAGES_SETTING);
-            if (pages != null)
-            {
-                return pages.Split("|").ToList();
-            }
-            return null;
+            throw new NotImplementedException();
+            //var pages = SettingsManager.GetSetting(chatId, FB_PAGES_SETTING);
+            //if (pages != null)
+            //{
+            //    return pages.Split("|").ToList();
+            //}
+            //return null;
         }
 
         public List<string> GetUpcommingEvents(long chatId)

@@ -14,11 +14,6 @@ namespace GolfCore.GameEngines
 {
     public class IgraLvGameEngine : IGameEngine
     {
-        public IgraLvGameEngine(string gameId)
-        {
-            
-        }
-
         public IgraLvGameEngine(long chatId)
         {
             string login, pass;

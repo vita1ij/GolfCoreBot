@@ -15,24 +15,17 @@ namespace GolfCore.GameEngines
     {
         public const string HTMLPATH_ACTIVE_GAMES = "boxCenterActiveGames";
         public const string HTMLPATH_ACTIVE_GAME = "div.boxGameInfo table.gameInfo table tr::first td table ";
-#pragma warning disable CS0108 // 'EnCxQuestEngine.TaskUrl' hides inherited member 'IGameEngine.TaskUrl'. Use the new keyword if hiding was intended.
-        public string TaskUrl = "";
-#pragma warning restore CS0108 // 'EnCxQuestEngine.TaskUrl' hides inherited member 'IGameEngine.TaskUrl'. Use the new keyword if hiding was intended.
 
-        public EnCxQuestEngine(long chatId)
+        public EnCxQuestEngine(long chatId, string url = "http://quest.en.cx")
         {
-#pragma warning disable CS0168 // The variable 'pass' is declared but never used
-#pragma warning disable CS0168 // The variable 'login' is declared but never used
-            string login, pass;
-#pragma warning restore CS0168 // The variable 'login' is declared but never used
-#pragma warning restore CS0168 // The variable 'pass' is declared but never used
+            url = url.TrimEnd('/').TrimEnd('\\');
             using (var db = GolfCoreDB.DBContext.Instance)
             {
                 //GameManager.GetAuthForActiveGame(chatId, out login, out pass);
                 var game = GameManager.GetActiveGameByChatId(chatId);
-                this.LoginPostData = String.Format("socialAssign=0&Login={0}&Password={1}&EnButton1=Sign In&ddlNetwork=1", game.Login, game.Password);
-                this.LoginUrl = "http://quest.en.cx/Login.aspx";
-                this.GamesUrl = "http://quest.en.cx";
+                this.LoginPostData =$"socialAssign=0&Login={game.Login}&Password={game.Password}&EnButton1=Sign In&ddlNetwork=1";
+                this.LoginUrl = $"{url}/Login.aspx";
+                this.GamesUrl = url;
                 this.TaskUrl = String.Format("/gameengines/encounter/play/{0}",game.EnCxId);
                 this.Login();
             }

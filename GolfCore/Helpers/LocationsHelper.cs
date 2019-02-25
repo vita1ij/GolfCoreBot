@@ -17,7 +17,6 @@ namespace GolfCore.Helpers
         public const string GRAUSTI_URL  = "http://grausti.riga.lv/";
         public const string GRAUSTI_URL2 = "http://grausti.riga.lv/ajax/module:constructions/";
         private const string GRAUSTI_POST = "owner=&region=&page=1&sortfield=&sortorder=&status=&filter=1&csv=1&action=getConstructions";
-        private const string PbfPath = @"C:\vg\git\golfcorebot\GolfCore\Helpers\latvia-latest.osm.pbf";
 
         public static void UpdateDatabase()
         {
@@ -53,11 +52,9 @@ namespace GolfCore.Helpers
                     }
                 }
             }
-#pragma warning disable CS0168 // The variable 'ex' is declared but never used
             catch(Exception ex)
-#pragma warning restore CS0168 // The variable 'ex' is declared but never used
             {
-                //who cares
+                Log.New(ex);
             }
         }
 

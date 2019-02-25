@@ -12,15 +12,7 @@ namespace GolfCore.GameEngines
 {
     public abstract class IGameEngine
     {
-#pragma warning disable CS0169 // The field 'IGameEngine._login' is never used
-        private string _login;
-#pragma warning restore CS0169 // The field 'IGameEngine._login' is never used
-#pragma warning disable CS0169 // The field 'IGameEngine._pass' is never used
-        private string _pass;
-#pragma warning restore CS0169 // The field 'IGameEngine._pass' is never used
-
         public CookieCollection connectionCookie;
-
         public string ConnectionCookieName;
 
         public string LoginUrl;
@@ -29,12 +21,6 @@ namespace GolfCore.GameEngines
         public string GamesUrl;
 
         public string LoginPostData;
-
-        //public IGameEngine(string login, string pass)
-        //{
-        //    _login = login;
-        //    _pass = pass;
-        //}
 
         public bool Login()
         {
@@ -48,15 +34,7 @@ namespace GolfCore.GameEngines
         public static IGameEngine Get(GameParticipant player)
         {
             var game = player.Game;
-            switch(game.Type)
-            {
-                case GameType.IgraLv:
-                    return new IgraLvGameEngine(player.ChatId);
-                case GameType.EnCx:
-                    return new EnCxQuestEngine(player.ChatId);
-                default:
-                    return null;
-            }
+            return Get(game, player.ChatId);
         }
 
         public static IGameEngine Get(Game game, long chatId)
@@ -67,8 +45,10 @@ namespace GolfCore.GameEngines
                     return new IgraLvGameEngine(chatId);
                 case GameType.EnCx:
                     return new EnCxQuestEngine(chatId);
+                case GameType.Demo:
+                    return new EnCxQuestEngine(chatId, "http://demo.en.cx");
                 default:
-                    return null;
+                    throw new Exception("Wrong game mode");
             }
         }
     }

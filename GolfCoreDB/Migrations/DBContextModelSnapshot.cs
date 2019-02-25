@@ -62,7 +62,7 @@ namespace GolfCoreDB.Migrations
                     b.Property<bool>("GetStatistics");
 
                     b.Property<bool>("GetUpdates");
-
+                    
                     b.Property<bool>("MonitorStatistics");
 
                     b.Property<bool>("MonitorUpdates");

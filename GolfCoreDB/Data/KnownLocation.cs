@@ -5,9 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GolfCoreDB.Data
 {
-#pragma warning disable CS0659 // 'KnownLocation' overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class KnownLocation
-#pragma warning restore CS0659 // 'KnownLocation' overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         [Key]
         public int? Id { get; set; }
@@ -21,6 +19,17 @@ namespace GolfCoreDB.Data
             var data = (KnownLocation)obj;
             if (this.Id.HasValue && data.Id.HasValue) return (this.Id.Value == data.Id.Value);
             return (this.Lat == data.Lat && this.Lon == data.Lon);
+        }
+
+        public override int GetHashCode()
+        {
+            int? result = this.Id ?? (int)(Math.Round(Lat * 100) * 100000 + Math.Round(Lon * 100));
+            return result.GetValueOrDefault();
+        }
+
+        public override string ToString()
+        {
+            return $"{Address} ({Lat}, {Lon})";
         }
     }
 }
