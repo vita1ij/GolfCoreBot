@@ -12,43 +12,30 @@ namespace GolfCore.Processing
 {
     public class CommandProcessing
     {
-        public static ProcessingResult Process(string command, string parameters, long chatId, int messageId, bool isPrivate)
+        public static ProcessingResult? Process(string command, string? parameters, long chatId)
         {
             switch (command.ToLower())
             {
-                case "a":
-                    double lon, lat;
-                    if(LocationsHelper.ParseCoordinates(parameters, out lat, out lon))
-                    {
-                        return new ProcessingResult(LocationsHelper.GetAddress(parameters), chatId);
-                    }
-                    else
-                    {
-                        return new ProcessingResult(LocationsHelper.GetCoordinates(parameters), chatId, true, true);
-                    }
-                case "aa":
-                    
-                case "hidekeyboard":
+
+                case Constants.Commands.CheckAddress:
+                    return (parameters == null) ?
+                        (ProcessingResult?)null :
+                        LocationsHelper.ParseCoordinates(parameters, out string _, out _) ?
+                            new ProcessingResult(LocationsHelper.GetAddress(parameters), chatId) :
+                            new ProcessingResult(LocationsHelper.GetCoordinates(parameters) ?? Constants.Text.NoResults, chatId, true, true);
+                case Constants.Commands.HideKeyboard:
                     return new ProcessingResult("ok", chatId, new ReplyKeyboardRemove());
-                case "sendprivate":
-                    return new ProcessingResult("ok", -1);
                 case "starttalk":
-                    return ConversationsProcessing.StartConversation(GetParameters(parameters, 1)[0], chatId);
-                case "updatedb":
-                    LocationsHelper.UpdateDatabase();
-                    break;
-
+                    return (parameters == null) ? null : ConversationsProcessing.StartConversation(parameters, chatId);
+                case Constants.Commands.UpdateKnownLocationsDB:
+                    return new ProcessingResult(LocationsHelper.UpdateDatabase(), chatId);
                 case Constants.Commands.CheckLocation:
-                    //return new ProcessingResult(LocationsManager.Distance(56.9263798, 24.0846039, 56.9636838, 24.2346644).ToString(), chatId);
-                    return new ProcessingResult(LocationsHelper.CheckLocation(parameters), chatId);
-
+                    return (parameters == null) ? null : new ProcessingResult(LocationsHelper.CheckLocation(parameters) ?? Constants.Text.NoResults, chatId);
                 case Constants.Commands.Help:
                     return new ProcessingResult(Constants.Help, chatId);
-
                 default:
-                    return GameCommandProcessing.Process(command, GetParameters(parameters, null), chatId, isPrivate);
+                    return GameCommandProcessing.Process(command, GetParameters(parameters??"",null), chatId);
             }
-            return null;
         }
 
 

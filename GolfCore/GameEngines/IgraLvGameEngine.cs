@@ -16,18 +16,19 @@ namespace GolfCore.GameEngines
     {
         public IgraLvGameEngine(long chatId)
         {
-            string login, pass;
-            GameManager.GetAuthForActiveGame(chatId, out login, out pass);
-            this.LoginPostData = String.Format("login={0}&password={1}", login, pass);
+            GameManager.GetAuthForActiveGame(chatId, out string login, out string pass);
+            this.LoginPostData = $"login={login}&password={pass}";
             this.LoginUrl = "http://igra.lv/igra.php?s=login";
             this.TaskUrl = "http://www.igra.lv/igra.php";
-            this.StatisticsUrl = "http://igra.lv/img_level_times.php";
+            base.StatisticsUrl = "http://igra.lv/img_level_times.php";
             this.Login();
         }
 
-        public override Image<Rgba32> GetStatistics()
+        public override Image<Rgba32>? GetStatistics()
         {
+            if (StatisticsUrl == null) return null;
             var response = WebConnectHelper.MakePostRaw(StatisticsUrl, "");
+            if (response == null) return null;
             Stream receiveStream = response.GetResponseStream();
 
             Image<Rgba32> image = Image.Load(receiveStream);
@@ -35,9 +36,16 @@ namespace GolfCore.GameEngines
             return image;
         }
 
-        public override string GetTask()
+        public override string? GetTask()
         {
-            var data = WebConnectHelper.MakePostWithCookies(TaskUrl, this.connectionCookie);
+            if (TaskUrl == null) return null;
+            if (ConnectionCookie == null)
+            {
+                if (LoginUrl == null || LoginPostData == null) return null;
+                ConnectionCookie = WebConnectHelper.MakePost4Cookies(LoginUrl, LoginPostData);
+                if (ConnectionCookie == null) return null;
+            }
+            var data = WebConnectHelper.MakePostWithCookies(TaskUrl, ConnectionCookie);
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(data);
             string taskContent = (doc.GetElementbyId("general-puzzle") ?? doc.GetElementbyId("general")).InnerText;

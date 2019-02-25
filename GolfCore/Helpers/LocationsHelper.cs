@@ -18,7 +18,7 @@ namespace GolfCore.Helpers
         public const string GRAUSTI_URL2 = "http://grausti.riga.lv/ajax/module:constructions/";
         private const string GRAUSTI_POST = "owner=&region=&page=1&sortfield=&sortorder=&status=&filter=1&csv=1&action=getConstructions";
 
-        public static void UpdateDatabase()
+        public static string UpdateDatabase()
         {
 
             var json = WebConnectHelper.MakePost(GRAUSTI_URL2, GRAUSTI_POST, "application/json, text/javascript");
@@ -51,14 +51,16 @@ namespace GolfCore.Helpers
                         LocationsManager.UpdateLocation(loc);
                     }
                 }
+                return "Complete";
             }
             catch(Exception ex)
             {
                 Log.New(ex);
+                return "Error";
             }
         }
 
-        public static string CheckLocation(string locationInput)
+        public static string? CheckLocation(string locationInput)
         {
             if (ParseCoordinates(locationInput, out string slat, out string slon)
                 && double.TryParse(slat, out double lat)
@@ -114,14 +116,14 @@ namespace GolfCore.Helpers
 
                 if (!(lat.Length > 3 && lon.Length > 3))
                 {
-                    lat = lon = null;
+                    lat = lon = "";
                     return false;
                 }
                 return true;
             }
             else
             {
-                lat = lon = null;
+                lat = lon = "";
                 return false;
             }
         }
@@ -141,7 +143,7 @@ namespace GolfCore.Helpers
             }
         }
 
-        public static string GetCoordinates(string query, string city = "")
+        public static string? GetCoordinates(string query, string city = "")
         {
             var foo = new Nominatim.API.Models.ForwardGeocodeRequest();
             foo.Country = "Latvia";

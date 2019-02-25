@@ -16,9 +16,11 @@ namespace GolfCore.Helpers
         /// <param name="url">url for login</param>
         /// <param name="postData">login / pass data</param>
         /// <returns></returns>
-        public static CookieCollection MakePost4Cookies(string url, string postData)
+        public static CookieCollection? MakePost4Cookies(string url, string postData)
         {
-            HttpWebRequest http = WebRequest.Create(url) as HttpWebRequest;
+            HttpWebRequest? http= (HttpWebRequest)WebRequest.Create(url);
+            if (http == null) return null;
+
             http.KeepAlive = true;
             http.Method = "POST";
             http.ContentType = "application/x-www-form-urlencoded";
@@ -29,7 +31,17 @@ namespace GolfCore.Helpers
             {
                 postStream.Write(dataBytes, 0, dataBytes.Length);
             }
-            HttpWebResponse httpResponse = http.GetResponse() as HttpWebResponse;
+            HttpWebResponse? httpResponse;
+            try
+            {
+                httpResponse = http.GetResponse() as HttpWebResponse;
+            }
+            catch(Exception ex)
+            {
+                Log.New(ex);
+                return null;
+            }
+            if (httpResponse == null) return null; 
 
             if (httpResponse.Headers.AllKeys.ToList().Contains("Set-Cookie"))
             {
@@ -65,25 +77,61 @@ namespace GolfCore.Helpers
         /// <param name="url"></param>
         /// <param name="cookies"></param>
         /// <returns></returns>
-        public static string MakePostWithCookies(string url, CookieCollection cookies)
+        public static string? MakePostWithCookies(string url, CookieCollection cookies)
         {
             // Probably want to inspect the http.Headers here first
-            HttpWebRequest http = WebRequest.Create(url) as HttpWebRequest;
+            HttpWebRequest? http = (HttpWebRequest)WebRequest.Create(url);
+            if (http == null) return null;
             if (cookies != null)
             {
                 http.CookieContainer = new CookieContainer();
                 http.CookieContainer.Add(cookies);
             }
-            HttpWebResponse response = http.GetResponse() as HttpWebResponse;
+            HttpWebResponse? response;
+            try
+            {
+                response = http.GetResponse() as HttpWebResponse;
+            }
+            catch(Exception ex)
+            {
+                Log.New(ex);
+                return null;
+            }
+            if (response == null) return null;
 
-            string data = GetContentsFromResponse(response);
-
-            return data;
+            return GetContentsFromResponse(response);
         }
 
-        public static string MakePost(string url, CookieCollection cookies, string loginUrl, string loginPostData, out CookieCollection newCookies)
+        /// <summary>
+        /// For retrieving common info
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="cookies"></param>
+        /// <returns></returns>
+        public static string? MakePostWithoutCookies(string url)
         {
-            string result = null;
+            // Probably want to inspect the http.Headers here first
+            HttpWebRequest? http = (HttpWebRequest)WebRequest.Create(url);
+            if (http == null) return null;
+            
+            HttpWebResponse? response;
+            try
+            {
+                response = http.GetResponse() as HttpWebResponse;
+            }
+            catch (Exception ex)
+            {
+                Log.New(ex);
+                return null;
+            }
+            if (response == null) return null;
+
+            return GetContentsFromResponse(response);
+        }
+
+        public static string? MakePost(string url, CookieCollection cookies, string loginUrl, string loginPostData, out CookieCollection? newCookies)
+        {
+            string? result = null;
             newCookies = null;
             if (cookies != null)
             {
@@ -98,9 +146,10 @@ namespace GolfCore.Helpers
             return result;
         }
 
-        public static HttpWebResponse MakePostRaw(string url, string postData, string accept = null)
+        public static HttpWebResponse? MakePostRaw(string url, string? postData, string? accept = null)
         {
-            HttpWebRequest http = WebRequest.Create(url) as HttpWebRequest;
+            HttpWebRequest? http = (HttpWebRequest)WebRequest.Create(url);
+            if (http == null) return null;
             http.KeepAlive = true;
             http.Method = "POST";
             http.ContentType = "application/x-www-form-urlencoded";
@@ -115,26 +164,35 @@ namespace GolfCore.Helpers
                     postStream.Write(dataBytes, 0, dataBytes.Length);
                 }
             }
-            HttpWebResponse httpResponse = http.GetResponse() as HttpWebResponse;
+            HttpWebResponse? httpResponse;
+            try
+            {
+                httpResponse = http.GetResponse() as HttpWebResponse;
+            }
+            catch(Exception ex)
+            {
+                Log.New(ex);
+                return null;
+            }
 
             return httpResponse;
         }
 
-        public static string MakePost(string url, string postData, string accept = null)
+        public static string? MakePost(string url, string? postData, string? accept = null)
         {
 
-            HttpWebResponse httpResponse = MakePostRaw(url, postData, accept);
-
+            HttpWebResponse? httpResponse = MakePostRaw(url, postData, accept);
+            if (httpResponse == null) return null;
             return GetContentsFromResponse(httpResponse);
         }
 
-        public static string GetContentsFromResponse(HttpWebResponse response)
+        public static string? GetContentsFromResponse(HttpWebResponse response)
         {
-            string data = null;
+            string? data = null;
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 Stream receiveStream = response.GetResponseStream();
-                StreamReader readStream = null;
+                StreamReader readStream;
 
                 if (String.IsNullOrWhiteSpace(response.CharacterSet))
                 {

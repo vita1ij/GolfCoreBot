@@ -14,32 +14,41 @@ namespace GolfCore
         {
             public const string SetAuthInGroup = "Let's Private chat for that. Use following link: /starttalk_login";
             public const string SetAuthInPrivate = "Ok, let's auth 4 this game. Please, enter {login}:";
+            public const string NoResults = "Sorry, no results";
+
+            public static class Conversation
+            {
+                public const string LoginResponse = "Ok, now tell me {{password}} for login[{0}].";
+                public const string PasswordSuccessResponse = "All Set";
+                public const string PasswordErrorResponse = "Username/Password is wrong";
+            }
         }
 
         public static class Commands
         {
-            public const string ShowSettings = "showsettings";
-            public const string UpdateSetting = "updatesetting";
             public const string CheckLocation = "checklocation";
             public const string Help = "help";
-            public const string StartGame = "startgame";
-            public const string JoinGame = "joingame";
-            public const string EndGame = "endgame";
-            public const string Game = "game";
-            public const string ExitFromGame = "exitfromgame";
-            public const string GetStatistics = "gamestats";
-            public const string SetAuth = "setauth";
-            public const string GetTask = "gettask";
-            public const string SetTaskMonitoringStatus = "settaskmonitoring";
-        }
+            public const string CheckAddress = "a";
+            public const string HideKeyboard = "hidekeyboard";
+            public const string UpdateKnownLocationsDB = "updatedb";
 
-        public static class Settings
-        {
-            public const string GameLogin = "GameLogin";
-            public const string GamePass = "GamePass";
-            public static string EmptySetting(string name)
+            public static class GameCommands
             {
-                return String.Format("Value is empty. You can set it this way: '/updatesetting {0} value'", name);
+                public const string StartGame = "startgame";
+                public const string JoinGame = "joingame";
+                public const string Game = "game";
+                public const string EndGame = "endgame";
+                public const string ExitFromGame = "exitfromgame";
+                public const string GetStatistics = "gamestats";
+                public const string SetAuth = "setauth";
+                public const string GetTask = "gettask";
+                public const string SetTaskMonitoringStatus = "settaskmonitoring";
+            }
+
+            public static class ConversationComands
+            {
+                public const string Login = "login";
+                public const string Password = "password";
             }
         }
 

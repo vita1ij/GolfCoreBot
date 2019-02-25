@@ -16,7 +16,7 @@ namespace GolfCore.Processing
         public bool DisableWebPagePreview { get; set; }
         public bool IsHtml { get; set; }
         public int? ReplyTo { get; set; }
-        public Image<Rgba32> Image { get; set; }
+        public Image<Rgba32>? Image { get; set; }
 
         public ProcessingResult(string text, long chatId, bool disablePreview = true, bool isHtml = false)
         {

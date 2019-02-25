@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using GolfCoreDB.Managers;
+using GolfCore.Helpers;
 
 namespace GolfCore.Daemons
 {
@@ -24,7 +25,7 @@ namespace GolfCore.Daemons
                     if (game.Participants != null &&
                             game.Participants.Any(x => x.MonitorUpdates))
                     {
-                        string newTask = null;
+                        string? newTask = null;
                         foreach (var participant in game.Participants.Where(x => x.MonitorUpdates))
                         {
                             IGameEngine engine = IGameEngine.Get(participant);
@@ -41,7 +42,7 @@ namespace GolfCore.Daemons
                             }
                         }
 
-                        if (game.LastTask != newTask)
+                        if (newTask != null && game.LastTask != newTask)
                         {
                             game.LastTask = newTask;
                             GameManager.UpdateGame(game);
@@ -51,7 +52,7 @@ namespace GolfCore.Daemons
             }
             catch(Exception ex)
             {
-
+                Log.New(ex);
             }
         }
     }

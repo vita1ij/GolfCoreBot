@@ -1,4 +1,5 @@
 ﻿using GolfCore.GameEngines;
+using GolfCoreDB.Data;
 using GolfCoreDB.Managers;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,13 @@ namespace GolfCore.Processing
             return new ProcessingResult(String.Format("So, lets talk about {{{0}}}...",topic), chatId, new ForceReplyMarkup());
         }
 
-        public static ProcessingResult Process(string replyTo, string text, long chatId)
+        public static ProcessingResult? Process(string replyTo, string text, long chatId)
         {
-            int start = -1, end = -1;
-            string replyToCommandText = null, param = null;
+            int start,end;
+            string? replyToCommandText = null;
+            string? param = null;
+            Game game;
+            IGameEngine engine;
 
             start = replyTo.IndexOf('{')+1;
             if (start > 0)
@@ -25,7 +29,8 @@ namespace GolfCore.Processing
                 end = replyTo.IndexOf('}', start);
                 if (end >= 0)
                 {
-                    replyToCommandText = replyTo.Substring(start, end - start);
+                    replyToCommandText = replyTo.Substring(start,end-start);
+                    //replyToCommandText = replyTo[start..end];
                 }
             }
             
@@ -40,27 +45,26 @@ namespace GolfCore.Processing
             }
             
 
-            switch (replyToCommandText)
+            switch (replyToCommandText ?? "")
             {
-                case "foo":
-                    return new ProcessingResult("bar", chatId);
-                case "login":
-                    return new ProcessingResult(String.Format("Ok, now tell me {{password}} for login [{0}].",text), chatId, new ForceReplyMarkup());
-                case "password":
-                    var game = GameManager.GetActiveGameByChatId(chatId);
+                case Constants.Commands.ConversationComands.Login :
+                    return new ProcessingResult(String.Format(Constants.Text.Conversation.LoginResponse,text), chatId, new ForceReplyMarkup());
+                case Constants.Commands.ConversationComands.Password:
+                    game = GameManager.GetActiveGameByChatId(chatId);
+                    GameManager.GetAuthForActiveGame(chatId, out var login, out var pass);
                     GameManager.SetAuthToActiveGame(param, text, chatId);
-                    var engine = IGameEngine.Get(game, chatId); //update data - needless
+                    engine = IGameEngine.Get(game, chatId);
                     //check if can connect
                     if (!engine.Login())
                     {
                         //delete wrong auth data
-                        GameManager.SetAuthToActiveGame(null, null, chatId);
-                        return new ProcessingResult("Wrong username/password", chatId);
+                        GameManager.SetAuthToActiveGame(login, pass, chatId);
+                        return new ProcessingResult(Constants.Text.Conversation.PasswordErrorResponse, chatId);
                     }
-                    return new ProcessingResult("All Set", chatId);
+                    return new ProcessingResult(Constants.Text.Conversation.PasswordSuccessResponse, chatId);
+                default:
+                    return null;
             }
-
-            return null;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using GolfCore.GameEngines;
+using GolfCore.Helpers;
 using GolfCoreDB.Managers;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -26,14 +27,14 @@ namespace GolfCore.Daemons
                     if (game.Participants != null &&
                             game.Participants.Any(x => x.MonitorUpdates))
                     {
-                        Image<Rgba32> newStat = null;
+                        Image<Rgba32>? newStat = null;
                         foreach (var participant in game.Participants.Where(x => x.MonitorUpdates))
                         {
                             IGameEngine engine = IGameEngine.Get(participant);
 
                             newStat = engine.GetStatistics();
 
-                            if ((game.LastStatisticsHash.HasValue ? game.LastStatisticsHash.Value : (int)-1) != newStat.GetHashCode())
+                            if (newStat != null && (game.LastStatisticsHash ?? (int)-1) != newStat.GetHashCode())
                             {
                                 using (var sold = new MemoryStream(game.LastStatistics))
                                 {
@@ -54,7 +55,7 @@ namespace GolfCore.Daemons
                             }
                         }
 
-                        if (needUpdate)
+                        if (needUpdate && newStat != null)
                         {
                             using (var s = new MemoryStream())
                             {
@@ -69,7 +70,7 @@ namespace GolfCore.Daemons
             }
             catch(Exception ex)
             {
-
+                Log.New(ex);
             }
         }
     }

@@ -9,7 +9,7 @@ namespace GolfCore.Processing
 {
     public class MessageProcessing
     {
-        public static ProcessingResult Process(string message, long chatId, int messageId, bool processRawText = true, bool isPrivate = false) //TODO[vg]: later change default processRawText value to false
+        public static ProcessingResult? Process(string message, long chatId, bool processRawText = true)
         {
             if (String.IsNullOrEmpty(message)) return null;
 
@@ -18,19 +18,17 @@ namespace GolfCore.Processing
                 //Commands
                 case '/':
                     var command = message.TrimStart('/').Split(' ')[0].Split('_')[0];
-                    var param = message.Substring(command.Length + 1);
+                    string? parameters = message.Substring(command.Length + 1).TrimStart('_');
+                    if (String.IsNullOrWhiteSpace(parameters)) parameters = null;
                     try
                     {
-                        return CommandProcessing.Process(command, param?.TrimStart('_'), chatId, messageId, isPrivate);
+                        return CommandProcessing.Process(command, parameters, chatId);
                     }
                     catch (Exception ex)
                     {
                         Log.New(ex);
                         return new ProcessingResult(ex.Message, chatId);
                     }
-                case '#':
-                    //TODO[vg]: implement Lists
-                    return null;
                 default:
                     if (processRawText)
                     {
@@ -40,14 +38,13 @@ namespace GolfCore.Processing
             }
         }
 
-        public static ProcessingResult ProcessText(string message, long chatId)
+        public static ProcessingResult? ProcessText(string message, long chatId)
         {
-            ProcessingResult result = null;
-            result = TryCoordinates(message, chatId);
+            ProcessingResult? result = TryCoordinates(message, chatId);
             return result;
         }
 
-        public static ProcessingResult TryCoordinates(string message, long chatId)
+        public static ProcessingResult? TryCoordinates(string message, long chatId)
         {
             if (LocationsHelper.ParseCoordinates(message, out string lat, out string lon))
             { 

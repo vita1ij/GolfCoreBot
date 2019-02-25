@@ -14,29 +14,26 @@ namespace GolfCore.Processing
 {
     public class CallBackProcessing
     {
-        public static ProcessingResult Process(string data, long chatId, bool isPrivate, long sender, out ProcessingResult editMessage)
+        public static ProcessingResult? Process(string data, long chatId, bool isPrivate, long sender, out ProcessingResult? editMessage)
         {
-            ProcessingResult result = null;
-            ProcessingResult edit = null;
-            Game game = null;
-            IGameEngine engine = null;
-#pragma warning disable CS0219 // The variable 'participant' is assigned but its value is never used
-            GameParticipant participant = null;
-#pragma warning restore CS0219 // The variable 'participant' is assigned but its value is never used
-            string res;
+            ProcessingResult? result = null;
+            ProcessingResult? edit = null;
+            Game game;
+            IGameEngine engine;
+            string? resultText;
 
             switch(data)
             {
                 case "":
                     break;
                 case "CreateEncx":
-                    res = GameManager.CreateGame(GameType.EnCx, chatId);
-                    result = new ProcessingResult(res, chatId);
+                    resultText = GameManager.CreateGame(GameType.EnCx, chatId);
+                    result = new ProcessingResult(resultText, chatId);
                     edit = GameCommandProcessing.GameStatus(chatId);
                     break;
                 case "CreateIgra":
-                    res = GameManager.CreateGame(GameType.IgraLv, chatId);
-                    result = new ProcessingResult(res, chatId);
+                    resultText = GameManager.CreateGame(GameType.IgraLv, chatId);
+                    result = new ProcessingResult(resultText, chatId);
                     edit = GameCommandProcessing.GameStatus(chatId);
                     break;
                 case "SetAuth":
@@ -53,7 +50,7 @@ namespace GolfCore.Processing
                     break;
                 case "Joinlink":
                     game = GameManager.GetActiveGameByChatId(chatId);
-                    result = new ProcessingResult($"/{Constants.Commands.JoinGame}_{game.Id}", chatId);
+                    result = new ProcessingResult($"/{Constants.Commands.GameCommands.JoinGame}_{game.Id}", chatId);
                     break;
                 case "ExitGame":
                     GameManager.ExitFromCurrentGame(chatId);
@@ -62,7 +59,8 @@ namespace GolfCore.Processing
                 case "GetTask":
                     game = GameManager.GetActiveGameByChatId(chatId);
                     engine = IGameEngine.Get(game, chatId);
-                    result = new ProcessingResult(engine.GetTask(), chatId);
+                    var task = engine.GetTask();
+                    result = (task == null) ? null : new ProcessingResult(task, chatId);
                     break;
                 case "DisableTaskUpdates":
                     game = GameManager.GetActiveGameByChatId(chatId);
@@ -82,9 +80,11 @@ namespace GolfCore.Processing
                 case "GetStatistics":
                     game = GameManager.GetActiveGameByChatId(chatId);
                     engine = IGameEngine.Get(game, chatId);
-                    Image<Rgba32> stat = engine.GetStatistics();
-                    result = new ProcessingResult("Stats", chatId);
-                    result.Image = stat;
+                    Image<Rgba32>? stat = engine.GetStatistics();
+                    result = (stat == null) ? null : new ProcessingResult("Stats", chatId)
+                    {
+                        Image = stat
+                    };
                     break;
                 case "DisableStatisticUpdates":
                 case "EnableStatisticLvl":

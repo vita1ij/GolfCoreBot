@@ -28,12 +28,13 @@ namespace GolfCoreConsole
 
         public static TelegramBotClient Bot;
 
-        public static void Main(string[] args)
+        public static void Main()
         {
             try
             {
                 if (Config == null) throw new Exception("No config");
                 if (Config["API_KEY"] == null) throw new Exception("No API key");
+                if (Config["ERROR_FOLDER"] == null) throw new Exception("No Error folder selected");
                 if (String.IsNullOrEmpty(Config["API_KEY"])) throw new Exception("Empty API key");
                 try
                 {
@@ -63,10 +64,9 @@ namespace GolfCoreConsole
             }
             //Daemons
             TaskDaemon taskDaemon = new TaskDaemon();
-            //Bot.OnMessageEdited += BotOnMessageReceived;
             
             while (!Console.KeyAvailable) {
-                if (Config["Minute_Daemons"].ToString() == "true")
+                if (Config["Daemons"].ToString() == "true")
                 {
                     taskDaemon.RunAsync(Bot).Wait();
                 }
@@ -83,16 +83,14 @@ namespace GolfCoreConsole
 
             if (message.Type == MessageType.Text)
             {
-
-                IReplyMarkup keyboard = new ReplyKeyboardRemove();
                 if (message.Text.EndsWith("@SchrodingersGolfBot"))
                 {
                     message.Text = message.Text.Substring(0, message.Text.Length - "@SchrodingersGolfBot".Length);
                 }
 
-                ProcessingResult result = null;
+                ProcessingResult? result;
 
-                string replyToText = null;
+                string? replyToText;
                 if (messageEventArgs.Message.ReplyToMessage != null
                     && messageEventArgs.Message.ReplyToMessage.From.Username == "SchrodingersGolfBot"
                     && messageEventArgs.Message.ReplyToMessage.From.IsBot)
@@ -102,7 +100,8 @@ namespace GolfCoreConsole
                 }
                 else
                 {
-                    result = MessageProcessing.Process(message.Text, message.Chat.Id, message.MessageId, true, message.Chat.Type == ChatType.Private);
+                    result = MessageProcessing.Process(message.Text, message.Chat.Id, true);
+                    //, message.Chat.Type == ChatType.Private
                 }
                 //if chat.Id == -1 ==> send private to person.
                 if (result == null) return;
@@ -130,28 +129,26 @@ namespace GolfCoreConsole
                         Log.New(ex);
                     }
                 }
-                if (result == null || result.Text == null) return;
                 await Bot.SendTextMessageAsync(
                     result.ChatId,
                     result.Text,
                     result.IsHtml ? ParseMode.Html : ParseMode.Default,
                     replyMarkup: result.Markup,
                     disableWebPagePreview: result.DisableWebPagePreview,
-                    replyToMessageId: result.ReplyTo.HasValue ? result.ReplyTo.Value : 0
+                    replyToMessageId: result.ReplyTo ?? 0
                     );
             }
         }
 
         private static async void BotOnCallBackReceived(object sender, CallbackQueryEventArgs e)
         {
-            ProcessingResult edit;
-            ProcessingResult result = CallBackProcessing.Process(
+            ProcessingResult? result = CallBackProcessing.Process(
                                                             e.CallbackQuery.Data,
                                                             e.CallbackQuery.Message.Chat.Id,
                                                             e.CallbackQuery.Message.Chat.Type == ChatType.Private ? true : false,
                                                             e.CallbackQuery.From.Id,
-                                                            out edit);
-            
+                                                            out ProcessingResult? edit);
+
             if (edit != null)
             {
                 //await Bot.EditMessageReplyMarkupAsync(e.CallbackQuery.Message.Chat.Id, e.CallbackQuery.Message.MessageId, (InlineKeyboardMarkup)edit.Markup);
@@ -196,7 +193,7 @@ namespace GolfCoreConsole
                 result.IsHtml ? ParseMode.Html : ParseMode.Default,
                 replyMarkup: result.Markup,
                 disableWebPagePreview: result.DisableWebPagePreview,
-                replyToMessageId: result.ReplyTo.HasValue ? result.ReplyTo.Value : 0
+                replyToMessageId: result.ReplyTo ?? 0
                 );
         }
     }

@@ -15,6 +15,7 @@ namespace GolfCore.GameEngines
     {
         public const string HTMLPATH_ACTIVE_GAMES = "boxCenterActiveGames";
         public const string HTMLPATH_ACTIVE_GAME = "div.boxGameInfo table.gameInfo table tr::first td table ";
+        public string GamesUrl;
 
         public EnCxQuestEngine(long chatId, string url = "http://quest.en.cx")
         {
@@ -31,12 +32,12 @@ namespace GolfCore.GameEngines
             }
         }
 
-        public override Image<Rgba32> GetStatistics()
+        public override Image<Rgba32>? GetStatistics()
         {
             throw new NotImplementedException();
         }
 
-        public override string GetTask()
+        public override string? GetTask()
         {
             throw new NotImplementedException();
         }
@@ -45,7 +46,7 @@ namespace GolfCore.GameEngines
         {
             List<Game> result = new List<Game>();
 
-            var data = WebConnectHelper.MakePostWithCookies(GamesUrl, connectionCookie);
+            var data = WebConnectHelper.MakePostWithoutCookies(GamesUrl);
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(data);
             HtmlNode allGamesHtml = doc.GetElementbyId(HTMLPATH_ACTIVE_GAMES);

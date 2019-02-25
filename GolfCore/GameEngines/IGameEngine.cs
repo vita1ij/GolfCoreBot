@@ -12,24 +12,22 @@ namespace GolfCore.GameEngines
 {
     public abstract class IGameEngine
     {
-        public CookieCollection connectionCookie;
-        public string ConnectionCookieName;
-
-        public string LoginUrl;
-        public string StatisticsUrl;
-        public string TaskUrl { get; set; }
-        public string GamesUrl;
-
-        public string LoginPostData;
+        public CookieCollection? ConnectionCookie { get; set; }
+        public string? ConnectionCookieName { get; set; }
+        public string? LoginUrl { get; set; }
+        public string? StatisticsUrl { get; set; }
+        public string? TaskUrl { get; set; }
+        public string? LoginPostData { get; set; }
 
         public bool Login()
         {
-            connectionCookie = WebConnectHelper.MakePost4Cookies(LoginUrl, LoginPostData);
-            return (connectionCookie != null && connectionCookie.Count > 0);
+            if (LoginUrl == null || LoginPostData == null) return false;
+            ConnectionCookie = WebConnectHelper.MakePost4Cookies(LoginUrl, LoginPostData);
+            return (ConnectionCookie != null && ConnectionCookie.Count > 0);
         }
 
-        public abstract string GetTask();
-        public abstract Image<Rgba32> GetStatistics();
+        public abstract string? GetTask();
+        public abstract Image<Rgba32>? GetStatistics();
 
         public static IGameEngine Get(GameParticipant player)
         {

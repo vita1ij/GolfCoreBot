@@ -18,7 +18,7 @@ namespace GolfCoreDB.Managers
             }
         }
 
-        public static Game xGetActiveGameByChatId(long chatId, DBContext db)
+        private static Game xGetActiveGameByChatId(long chatId, DBContext db)
         {
             var games = db.Games.Where(x => x.Participants.Any(y => y.ChatId == chatId) && x.IsActive).Include("Participants");
             return games.FirstOrDefault();
@@ -40,7 +40,7 @@ namespace GolfCoreDB.Managers
             }
         }
 
-        public static string CreateGame(GameType type, long chatId, string login = null, string pass = null)
+        public static string CreateGame(GameType type, long chatId)
         {
             string newId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 8);
 
