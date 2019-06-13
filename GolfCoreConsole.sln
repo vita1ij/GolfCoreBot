@@ -1,21 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2024
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GolfCoreConsole", "GolfCoreConsole\GolfCoreConsole.csproj", "{45B28660-C422-4B7D-B4CF-BCA5349C03A6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GolfCoreDB", "GolfCoreDB\GolfCoreDB.csproj", "{25A6333B-BFCC-4B45-9CA1-0524F10B608A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GolfCore", "GolfCore\GolfCore.csproj", "{82BCCFCC-DC92-4831-A4EF-C29732B153BE}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GolfCoreServices", "GolfCoreServices", "{4D1AF2A5-70AC-4C3A-99CE-5BECC305205D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GC.GetTaskService", "GC.GetTaskService\GC.GetTaskService.csproj", "{05C18E2F-32DC-4302-AE6D-4116A440B9B4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GC.StatidticsService", "GC.StatidticsService\GC.StatidticsService.csproj", "{5A30E568-BA46-4AA1-A7CC-AF78FCCCB021}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GC.FBService", "GC.FBService\GC.FBService.csproj", "{B11CBC00-0F4B-4B12-ADD1-AE0730C9FD53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,26 +27,9 @@ Global
 		{82BCCFCC-DC92-4831-A4EF-C29732B153BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82BCCFCC-DC92-4831-A4EF-C29732B153BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82BCCFCC-DC92-4831-A4EF-C29732B153BE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{05C18E2F-32DC-4302-AE6D-4116A440B9B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{05C18E2F-32DC-4302-AE6D-4116A440B9B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{05C18E2F-32DC-4302-AE6D-4116A440B9B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{05C18E2F-32DC-4302-AE6D-4116A440B9B4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5A30E568-BA46-4AA1-A7CC-AF78FCCCB021}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5A30E568-BA46-4AA1-A7CC-AF78FCCCB021}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5A30E568-BA46-4AA1-A7CC-AF78FCCCB021}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5A30E568-BA46-4AA1-A7CC-AF78FCCCB021}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B11CBC00-0F4B-4B12-ADD1-AE0730C9FD53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B11CBC00-0F4B-4B12-ADD1-AE0730C9FD53}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B11CBC00-0F4B-4B12-ADD1-AE0730C9FD53}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B11CBC00-0F4B-4B12-ADD1-AE0730C9FD53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{05C18E2F-32DC-4302-AE6D-4116A440B9B4} = {4D1AF2A5-70AC-4C3A-99CE-5BECC305205D}
-		{5A30E568-BA46-4AA1-A7CC-AF78FCCCB021} = {4D1AF2A5-70AC-4C3A-99CE-5BECC305205D}
-		{B11CBC00-0F4B-4B12-ADD1-AE0730C9FD53} = {4D1AF2A5-70AC-4C3A-99CE-5BECC305205D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AFEE30C5-A9B3-4889-815C-80C41CCF5D96}

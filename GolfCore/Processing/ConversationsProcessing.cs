@@ -50,6 +50,7 @@ namespace GolfCore.Processing
                 case Constants.Commands.ConversationComands.Login :
                     return new ProcessingResult(String.Format(Constants.Text.Conversation.LoginResponse,text), chatId, new ForceReplyMarkup());
                 case Constants.Commands.ConversationComands.Password:
+                    if (param == null) return null;
                     game = GameManager.GetActiveGameByChatId(chatId);
                     GameManager.GetAuthForActiveGame(chatId, out var login, out var pass);
                     GameManager.SetAuthToActiveGame(param, text, chatId);

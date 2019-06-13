@@ -59,12 +59,24 @@ namespace GolfCore
             public static string WrongParameterCount(long count) { return String.Format("There should be {0} parameters", count.ToString()); }
         }
 
+        public static class Buttons
+        {
+            public const string CancelButtonCallbackText = "__Cancel";
+            public const string CancelButtonText = "Cancel";
+            public static InlineKeyboardButton CancelButton(string parameter)
+            {
+                return new InlineKeyboardButton() { Text = CancelButtonText, CallbackData = $"{CancelButtonCallbackText}|{parameter}" };
+            }
+        }
+
         public static class Keyboards
         {
             public static InlineKeyboardMarkup NoActiveGame = new InlineKeyboardMarkup(new List<InlineKeyboardButton>()
             {
                 new InlineKeyboardButton() { Text = "En.cx", CallbackData = "CreateEncx" },
-                new InlineKeyboardButton() { Text = "Igra.lv", CallbackData = "CreateIgra" }
+                new InlineKeyboardButton() { Text = "Igra.lv", CallbackData = "CreateIgra" },
+                new InlineKeyboardButton() { Text = "Demo", CallbackData = "CreateDemo" },
+                new InlineKeyboardButton() { Text = "LvlUp", CallbackData = "CreateLvlUp" }
             });
 
             public static InlineKeyboardMarkup NoAuthGame = new InlineKeyboardMarkup(new List<InlineKeyboardButton>()

@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Linq;
 using Nominatim.API;
 using Nominatim.API.Geocoders;
+using System.Globalization;
 
 namespace GolfCore.Helpers
 {
@@ -35,20 +36,21 @@ namespace GolfCore.Helpers
                     while (csv.Read())
                     {
                         var row = csv.GetRecord<dynamic>();
-                        var loc = new KnownLocation()
-                        {
-                            Address = row.Adrese,
-                            Status = row.Buves_status
-                        };
                         string cord = row.Koordinates;
                         //"56.945937, 24.106495"
+                        double lat, lon;
                         if (!string.IsNullOrWhiteSpace(cord) && cord.Contains(","))
                         {
-                            loc.Lat = double.Parse(cord.Split(",", StringSplitOptions.None)[0].Trim());
-                            loc.Lon = double.Parse(cord.Split(",", StringSplitOptions.None)[1].Trim());
-                        }
+                            lat = double.Parse(cord.Split(",", StringSplitOptions.None)[0].Trim());
+                            lon = double.Parse(cord.Split(",", StringSplitOptions.None)[1].Trim());
 
-                        LocationsManager.UpdateLocation(loc);
+                            var loc = new KnownLocation(row.Adrese, lat, lon)
+                            {
+                                Status = row.Buves_status
+                            };
+                            LocationsManager.UpdateLocation(loc);
+                        }
+                        
                     }
                 }
                 return "Complete";
@@ -68,6 +70,7 @@ namespace GolfCore.Helpers
                 )
             {
                 var location = LocationsManager.CheckLocation(lat, lon, out double distance);
+                if (location == null) return null;
 
                 return $"Nearest location is in {distance}km. - {location.Address} ({lat}, {lon})";
             }
@@ -129,8 +132,7 @@ namespace GolfCore.Helpers
         }
         public static bool ParseCoordinates(string input, out double lat, out double lon)
         {
-            string slat, slon;
-            if (ParseCoordinates(input, out slat, out slon))
+            if (ParseCoordinates(input, out string slat, out string slon))
             {
                 lat = double.Parse(slat);
                 lon = double.Parse(slon);
@@ -145,10 +147,12 @@ namespace GolfCore.Helpers
 
         public static string? GetCoordinates(string query, string city = "")
         {
-            var foo = new Nominatim.API.Models.ForwardGeocodeRequest();
-            foo.Country = "Latvia";
-            foo.City = city;
-            foo.queryString = query;
+            var foo = new Nominatim.API.Models.ForwardGeocodeRequest
+            {
+                Country = "Latvia",
+                City = city,
+                queryString = query
+            };
             var c = new  Nominatim.API.Geocoders.ForwardGeocoder();
             var r = c.Geocode(foo);
             //r.Result[0].
@@ -164,23 +168,54 @@ namespace GolfCore.Helpers
 
         public static string GetAddress(string query)
         {
-            double lat;
-            double lon;
-            if (ParseCoordinates(query, out lat, out lon))
+            if (ParseCoordinates(query, out double lat, out double lon))
             {
-                var foo = new Nominatim.API.Models.ReverseGeocodeRequest();
-                foo.Latitude = lat;
-                foo.Longitude = lon;
+                var foo = new Nominatim.API.Models.ReverseGeocodeRequest
+                {
+                    Latitude = lat,
+                    Longitude = lon
+                };
                 var c = new ReverseGeocoder();
                 var r = c.ReverseGeocode(foo);
                 var res = r.GetAwaiter().GetResult();
-                var result =  res.Address.Country + ", " +  (res.Address.City ?? res.Address.Town) + ", " +  res.Address.Road + " " +  res.Address.HouseNumber ;
+                var result = res.Address.Country + ", " + (res.Address.City ?? res.Address.Town) + ", " + res.Address.Road + " " + res.Address.HouseNumber;
                 return result;
             }
             else
             {
                 return "";
             }
+        }
+
+        private static double DegreeToRadian(double angle)
+        {
+            return Math.PI * angle / 180.0;
+        }
+
+        public static double CalculateDistance(string _lat1, string _lon1, string _lat2, string _lon2)
+        {
+            if (   double.TryParse(_lat1.Trim('.',',',' ').Replace('.',',').Replace(",",CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator), out var lat1)
+                && double.TryParse(_lat2.Trim('.',',',' ').Replace('.',',').Replace(",",CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator), out var lat2)
+                && double.TryParse(_lon1.Trim('.',',',' ').Replace('.',',').Replace(",",CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator), out var lon1)
+                && double.TryParse(_lon2.Trim('.',',',' ').Replace('.',',').Replace(",",CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator), out var lon2))
+                return CalculateDistance(lat1, lon1, lat2, lon2);
+            else return 0;
+        }
+
+        public static double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
+        {
+            var earthRadiusKm = 6371;
+
+            var dLat = DegreeToRadian(lat2 - lat1);
+            var dLon = DegreeToRadian(lon2 - lon1);
+
+            lat1 = DegreeToRadian(lat1);
+            lat2 = DegreeToRadian(lat2);
+
+            var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                    Math.Sin(dLon / 2) * Math.Sin(dLon / 2) * Math.Cos(lat1) * Math.Cos(lat2);
+            var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            return earthRadiusKm * c;
         }
     }
 }

@@ -25,5 +25,13 @@ namespace GolfCoreDB.Data
             }
         }
 
+        public GameParticipant(Game g)
+        {
+            Game = g;
+        }
+        public GameParticipant()
+        {
+
+        }
     }
 }

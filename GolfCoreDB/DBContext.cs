@@ -7,7 +7,9 @@ using System.Linq;
 
 namespace GolfCoreDB
 {
+#pragma warning disable CS8618 // Non-nullable field is uninitialized.
     public class DBContext : DbContext, IDisposable
+#pragma warning restore CS8618 // Non-nullable field is uninitialized.
     {
         public static DBContext Instance {
             get
@@ -24,6 +26,7 @@ namespace GolfCoreDB
 
         public DbSet<Game> Games { get; set; }
         public DbSet<KnownLocation> Locations { get; set; }
+        public DbSet<GameTask> Tasks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

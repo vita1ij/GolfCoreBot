@@ -10,6 +10,11 @@ using System.Threading.Tasks;
 using GolfCore.Processing;
 using SixLabors.ImageSharp;
 using GolfCore.Helpers;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Reactive.Concurrency;
+using GolfCore;
+using GolfCoreDB.Managers;
 
 namespace GolfCoreConsole
 {
@@ -62,17 +67,48 @@ namespace GolfCoreConsole
             {
                 Console.WriteLine(ex.Message);
             }
-            //Daemons
-            TaskDaemon taskDaemon = new TaskDaemon();
-            
-            while (!Console.KeyAvailable) {
-                if (Config["Daemons"].ToString() == "true")
-                {
-                    taskDaemon.RunAsync(Bot).Wait();
-                }
-            }
+
+            var tasksDaemon = DaemonManager.Create(TaskDaemon.Function, Bot);
+            var d = tasksDaemon.Subscribe();
+
             Console.ReadLine();
             Bot.StopReceiving();
+            d.Dispose();
+        }
+
+        private static async Task ProcessResult(ProcessingResult result)
+        {
+            //if chat.Id == -1 ==> send private to person.
+            if (result == null) return;
+            
+            if (result.Image != null)
+            {
+                try
+                {
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                        result.Image.SaveAsJpeg(memoryStream);
+                        var arr = memoryStream.ToArray();
+                        var imageFile = new Telegram.Bot.Types.InputFiles.InputOnlineFile(new MemoryStream(arr));
+                        await Bot.SendPhotoAsync(
+                               result.ChatId,
+                               imageFile
+                               );
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.New(ex);
+                }
+            }
+            await Bot.SendTextMessageAsync(
+                result.ChatId,
+                result.Text,
+                result.IsHtml ? ParseMode.Html : ParseMode.Default,
+                replyMarkup: result.Markup,
+                disableWebPagePreview: result.DisableWebPagePreview,
+                replyToMessageId: result.ReplyTo ?? 0
+                );
         }
 
         private static async void BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
@@ -103,40 +139,18 @@ namespace GolfCoreConsole
                     result = MessageProcessing.Process(message.Text, message.Chat.Id, true);
                     //, message.Chat.Type == ChatType.Private
                 }
-                //if chat.Id == -1 ==> send private to person.
+
+                if (result?.Text == Constants.Text.Conversation.PasswordSuccessResponse)
+                {
+                    result = GameCommandProcessing.GameStatus(message.Chat.Id);
+                }
                 if (result == null) return;
                 if (result.ChatId == -1)
                 {
                     result.ChatId = messageEventArgs.Message.From.Id;
                 }
-                if (result.Image != null)
-                {
-                    try
-                    {
-                        using (MemoryStream memoryStream = new MemoryStream())
-                        {
-                            result.Image.SaveAsJpeg(memoryStream);
-                            var arr = memoryStream.ToArray();
-                            var imageFile = new Telegram.Bot.Types.InputFiles.InputOnlineFile(new MemoryStream(arr));
-                            await Bot.SendPhotoAsync(
-                                   message.Chat.Id,
-                                   imageFile
-                                   );
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.New(ex);
-                    }
-                }
-                await Bot.SendTextMessageAsync(
-                    result.ChatId,
-                    result.Text,
-                    result.IsHtml ? ParseMode.Html : ParseMode.Default,
-                    replyMarkup: result.Markup,
-                    disableWebPagePreview: result.DisableWebPagePreview,
-                    replyToMessageId: result.ReplyTo ?? 0
-                    );
+
+                await ProcessResult(result);
             }
         }
 

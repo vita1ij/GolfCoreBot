@@ -22,7 +22,7 @@ namespace GolfCore.Processing
                         (ProcessingResult?)null :
                         LocationsHelper.ParseCoordinates(parameters, out string _, out _) ?
                             new ProcessingResult(LocationsHelper.GetAddress(parameters), chatId) :
-                            new ProcessingResult(LocationsHelper.GetCoordinates(parameters) ?? Constants.Text.NoResults, chatId, true, true);
+                            new ProcessingResult(LocationsHelper.GetCoordinates(parameters,"Riga") ?? Constants.Text.NoResults, chatId, true, true);
                 case Constants.Commands.HideKeyboard:
                     return new ProcessingResult("ok", chatId, new ReplyKeyboardRemove());
                 case "starttalk":
@@ -33,6 +33,16 @@ namespace GolfCore.Processing
                     return (parameters == null) ? null : new ProcessingResult(LocationsHelper.CheckLocation(parameters) ?? Constants.Text.NoResults, chatId);
                 case Constants.Commands.Help:
                     return new ProcessingResult(Constants.Help, chatId);
+                case "dist":
+                    if (parameters == null || String.IsNullOrWhiteSpace(parameters) || parameters.Split(' ',StringSplitOptions.RemoveEmptyEntries).Count() != 4) return null;
+                    var p = parameters.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    return new ProcessingResult(LocationsHelper.CalculateDistance(p[0], p[1], p[2], p[3]).ToString(), chatId);
+                case "alltasks":
+                    var result = TasksManager.GetAllTasks(chatId);
+                    if (result == null || !result.Any()) return null;
+                    return new ProcessingResult(
+                            String.Join(" \r\n\r\n ", result.Select(x => x.TaskText ?? ""))
+                        , chatId);
                 default:
                     return GameCommandProcessing.Process(command, GetParameters(parameters??"",null), chatId);
             }

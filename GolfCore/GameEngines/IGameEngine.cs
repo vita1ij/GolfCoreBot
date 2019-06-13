@@ -26,6 +26,10 @@ namespace GolfCore.GameEngines
             return (ConnectionCookie != null && ConnectionCookie.Count > 0);
         }
 
+        public abstract bool IsLoginPage(string data);
+
+        public abstract bool EnterCode(string code);
+
         public abstract string? GetTask();
         public abstract Image<Rgba32>? GetStatistics();
 
@@ -44,7 +48,9 @@ namespace GolfCore.GameEngines
                 case GameType.EnCx:
                     return new EnCxQuestEngine(chatId);
                 case GameType.Demo:
-                    return new EnCxQuestEngine(chatId, "http://demo.en.cx");
+                    return new EncxDemoEngine(chatId);
+                case GameType.LvlUp:
+                    return new LvlUpEngine(chatId);
                 default:
                     throw new Exception("Wrong game mode");
             }

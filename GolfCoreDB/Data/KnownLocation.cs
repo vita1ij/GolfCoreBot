@@ -8,6 +8,7 @@ namespace GolfCoreDB.Data
     public class KnownLocation
     {
         [Key]
+        [Required]
         public int? Id { get; set; }
         public string Address { get; set; }
         public double Lon { get; set; }
@@ -30,6 +31,14 @@ namespace GolfCoreDB.Data
         public override string ToString()
         {
             return $"{Address} ({Lat}, {Lon})";
+        }
+
+        public KnownLocation(string address, double lat, double lon)
+        {
+            Address = address;
+            Lat = lat;
+            Lon = lon;
+            Status = "";
         }
     }
 }

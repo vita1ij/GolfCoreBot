@@ -51,9 +51,8 @@ namespace GolfCoreDB.Managers
                     return "End existing game";
                 }
 
-                var newGame = new Game()
+                var newGame = new Game(newId)
                 {
-                    Id = newId,
                     Type = type,
                     IsActive = true,
                     LastTask = DateTime.UtcNow.Date.AddMinutes(DateTime.Now.Minute).ToString()
@@ -61,10 +60,9 @@ namespace GolfCoreDB.Managers
 
                 newGame.Participants = new List<GameParticipant>()
                     {
-                        new GameParticipant()
+                        new GameParticipant(newGame)
                         {
-                            ChatId = chatId,
-                            Game = newGame
+                            ChatId = chatId
                         }
                     };
 
@@ -104,10 +102,9 @@ namespace GolfCoreDB.Managers
                 {
                     ExitFromCurrentGame(chatId);
                 }
-                (game.First().Participants).Add(new GameParticipant()
+                (game.First().Participants).Add(new GameParticipant(game.First())
                 {
-                    ChatId = chatId,
-                    Game = game.First()
+                    ChatId = chatId
                 });
                 db.SaveChanges();
                 return "Joined";
@@ -125,13 +122,24 @@ namespace GolfCoreDB.Managers
             }
         }
 
-        public static string SetAuthToActiveGame(string login, string pass, long chatId)
+        public static string SetAuthToActiveGame(string? login, string? pass, long chatId)
         {
             using (var db = DBContext.Instance)
             {
                 var game = xGetActiveGameByChatId(chatId, db);
                 game.Login = login;
                 game.Password = pass;
+                db.SaveChanges();
+                return "Updated Auth";
+            }
+        }
+        public static string DeleteAuthOfActiveGame(long chatId)
+        {
+            using (var db = DBContext.Instance)
+            {
+                var game = xGetActiveGameByChatId(chatId, db);
+                game.Login = null;
+                game.Password = null;
                 db.SaveChanges();
                 return "Updated Auth";
             }
@@ -162,7 +170,7 @@ namespace GolfCoreDB.Managers
             }
         }
 
-        public static void GetAuthForActiveGame(long chatId, out string login, out string pass)
+        public static void GetAuthForActiveGame(long chatId, out string? login, out string? pass)
         {
             var game = GetActiveGameByChatId(chatId);
             login = game.Login;
@@ -210,6 +218,19 @@ namespace GolfCoreDB.Managers
             }
 
             return result;
+        }
+
+        public static string SetEnCxType(string? type, string? status, string? zone)
+        {
+            return $"{zone ?? " "}|{type ?? " "}|{status ?? " "}";
+        }
+
+        public static void GetEnCxType(string? input, out string? type, out string? status, out string? zone)
+        {
+            var data = input?.Split('|')?.ToList();
+            type = (data?.Count() < 2) ? null : data?[1];
+            status = (data?.Count() < 3) ? null : data?[2];
+            zone = (data?.Count() < 1) ? null : data?[0];
         }
     }
 }

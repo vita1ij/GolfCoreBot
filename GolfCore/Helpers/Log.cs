@@ -23,24 +23,24 @@ namespace GolfCore.Helpers
         public static void New(Exception ex)
         {
             var folder = Config["ERROR_FOLDER"].ToString().TrimEnd('/').TrimEnd('\\');
-            if (!Directory.Exists($"{folder}/{DateTime.Today.ToShortDateString()}"))
+            if (!Directory.Exists($"{folder}/{DateTime.Today.ToString("yyyyMMdd")}"))
             {
-                Directory.CreateDirectory($"{folder}/{DateTime.Today.ToShortDateString()}");
+                Directory.CreateDirectory($"{folder}/{DateTime.Today.ToString("yyyyMMdd")}");
             }
-            File.AppendAllLines($"{DateTime.Now.ToLongTimeString()}.log", new[] {
+            File.AppendAllLines($"{folder}/{DateTime.Today.ToString("yyyyMMdd")}/{DateTime.Now.ToString("hh-mm-ss")}.log", new[] {
                 DateTime.Now.ToLongTimeString(),
                 "",
                 "Message",
                 ex.Message,
                 "",
                 "Stack",
-                ex.StackTrace,
+                ex.StackTrace ?? "",
                 "",
                 "Inner message",
-                ex.InnerException.Message,
+                ex.InnerException?.Message ?? "",
                 "",
                 "Stack",
-                ex.InnerException.StackTrace
+                ex.InnerException?.StackTrace ?? ""
             });
         }
     }

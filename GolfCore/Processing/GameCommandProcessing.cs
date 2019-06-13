@@ -71,7 +71,7 @@ namespace GolfCore.Processing
             }
         }
 
-        private static ProcessingResult GetStatistics(long chatId)
+        public static ProcessingResult GetStatistics(long chatId)
         {
             Game game = GameManager.GetActiveGameByChatId(chatId);
             var engine = IGameEngine.Get(game, chatId);
@@ -82,16 +82,16 @@ namespace GolfCore.Processing
             return result;
         }
 
-        private static ProcessingResult? EndGame(long chatId)
+        public static ProcessingResult? EndGame(long chatId)
         {
             GameManager.EndGame(chatId);
             return null;
         }
 
-        public static ProcessingResult GameStatus(long chatId)
+        public static ProcessingResult? GameStatus(long chatId)
         {
             Game game = GameManager.GetActiveGameByChatId(chatId);
-            ProcessingResult result;
+            ProcessingResult? result = null;
 
             if (game == null )
             {
@@ -103,24 +103,61 @@ namespace GolfCore.Processing
                 {
                     result = new ProcessingResult(String.Format("You are in active game. ({0} - {1})\r\n  Please, set auth for the game",game.Type.ToString(),game.Id), chatId, Constants.Keyboards.NoAuthGame, true, false, null);
                 }
-                else //game.Login == null
+                else //game.Login != null
+
                 {
-                    if (game.Type == GameType.EnCx && String.IsNullOrEmpty(game.EnCxId))
+                    if ((game.Type == GameType.EnCx || game.Type == GameType.Demo) && String.IsNullOrEmpty(game.EnCxId))
                     {
-                        var activeGames = (new EnCxQuestEngine(chatId)).GetAllEnCxActiveGames();
-                        var keyboardData = new List<List<InlineKeyboardButton>>();
-                        foreach (var activeGame in activeGames)
+                        //If this is encx game, need more info to find needed game
+                        IEnCxEngine engine = (IEnCxEngine)IGameEngine.Get(game, chatId);
+                        GameManager.GetEnCxType(game.EnCxType, out var type, out var status, out var zone);
+                        if (String.IsNullOrWhiteSpace(zone))
                         {
-                            keyboardData.Add(new List<InlineKeyboardButton>()
-                            {
-                                new InlineKeyboardButton()
-                                {
-                                    Text = activeGame.Title,
-                                    CallbackData = String.Format("EnCxActiveGame|{0}", activeGame.EnCxId)
-                                }
-                            });
+                            var keyboardButtons = engine.GetAllGameZones().Select(x => new List<InlineKeyboardButton> { new InlineKeyboardButton() { Text = x, CallbackData = $"EnCxZone|{x}" } }).ToList();
+                            //keyboardButtons.Add(new List<InlineKeyboardButton> { Constants.Buttons.CancelButton("zone") });
+
+                            result = new ProcessingResult("Choose zone", chatId, new InlineKeyboardMarkup(keyboardButtons), true, false, null);
                         }
-                        result = new ProcessingResult("Choose Active Game:", chatId, new InlineKeyboardMarkup(keyboardData), true, false, null);
+                        else if (String.IsNullOrWhiteSpace(type))
+                        {
+                            var keyboardButtons = (new List<string> { "Single", "Team" })
+                                        .Select(x => new List<InlineKeyboardButton> { new InlineKeyboardButton() { Text = x, CallbackData = $"EnCxType|{x}" } }).ToList();
+                            keyboardButtons.Add(new List<InlineKeyboardButton> { Constants.Buttons.CancelButton("zone") });
+
+                            result = new ProcessingResult("Choose type", chatId, new InlineKeyboardMarkup(keyboardButtons), true, false, null);
+                        }
+                        else if (String.IsNullOrWhiteSpace(status))
+                        {
+                            var keyboardButtons = (new List<string> { "Active", "Coming", "Finished" })
+                                        .Select(x => new List<InlineKeyboardButton> { new InlineKeyboardButton() { Text = x, CallbackData = $"EnCxStatus|{x}" } }).ToList();
+                            keyboardButtons.Add(new List<InlineKeyboardButton> { Constants.Buttons.CancelButton("type") });
+
+                            result = new ProcessingResult("Choose status", chatId,new InlineKeyboardMarkup(keyboardButtons), true, false, null);
+                        }
+                        else
+                        {
+                            var keyboardButtons = engine.GetEnCxGames(type, status, zone, out var pages).Select(x => new List<InlineKeyboardButton> { new InlineKeyboardButton() { Text = x.Title, CallbackData = $"EnCxGame|{x.EnCxId}" } }).ToList();
+                            keyboardButtons.Add(
+                                pages.Select(x => new InlineKeyboardButton(){Text=x.Item2, CallbackData=$"Page|{x.Item1}" }).ToList()
+                            );
+                            keyboardButtons.Add(new List<InlineKeyboardButton> { Constants.Buttons.CancelButton("game") });
+
+                            result = new ProcessingResult("Choose zone", chatId, new InlineKeyboardMarkup(keyboardButtons), true, false, null);
+                        }
+                        //var activeGames = (new EnCxQuestEngine(chatId,)).GetAllEnCxActiveGames();
+                        //var keyboardData = new List<List<InlineKeyboardButton>>();
+                        //foreach (var activeGame in activeGames)
+                        //{
+                        //    keyboardData.Add(new List<InlineKeyboardButton>()
+                        //    {
+                        //        new InlineKeyboardButton()
+                        //        {
+                        //            Text = activeGame.Title,
+                        //            CallbackData = String.Format("EnCxActiveGame|{0}", activeGame.EnCxId)
+                        //        }
+                        //    });
+                        //}
+                        //result = new ProcessingResult("Choose Active Game:", chatId, new InlineKeyboardMarkup(keyboardData), true, false, null);
                     }
                     else
                     {
@@ -132,13 +169,13 @@ namespace GolfCore.Processing
             return result;
         }
 
-        private static ProcessingResult? JoinGame(string gameId, long chatId)
+        public static ProcessingResult? JoinGame(string gameId, long chatId)
         {
             var result = GameManager.JoinGame(gameId, chatId);
             return new ProcessingResult(result, chatId);
         }
 
-        private static ProcessingResult StartGame(List<string> list, long chatId)
+        public static ProcessingResult StartGame(List<string> list, long chatId)
         {
             if (list == null || !list.Any())
             {

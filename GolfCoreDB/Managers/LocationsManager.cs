@@ -15,10 +15,10 @@ namespace GolfCoreDB.Managers
         {
             using (var db = new DBContext())
             {
-                KnownLocation existing = null;
+                KnownLocation? existing = null;
                 if (location.Id.HasValue)
                 {
-                    existing = db.Locations.Where(x => x.Id == location.Id.Value).First();
+                    existing = db.Locations.Where(x => x.Id.HasValue && location.Id.HasValue && x.Id == location.Id.Value).First();
                 }
                 else
                 {
@@ -42,14 +42,16 @@ namespace GolfCoreDB.Managers
             }
         }
 
-        public static KnownLocation CheckLocation(double lat, double lon, out double distance)
+        public static KnownLocation? CheckLocation(double lat, double lon, out double distance)
         {
-            KnownLocation nearest = null;
+            KnownLocation nearest;
+            distance = 0;
             double minDistance;
 
             using (var db = new DBContext())
             {
                 var locations = db.Locations.ToList();
+                if (locations == null || !locations.Any()) return null;
                 nearest = locations[0];
                 minDistance = Distance(nearest.Lat, nearest.Lon, lat, lon);
                 locations.RemoveAt(0);
@@ -65,8 +67,8 @@ namespace GolfCoreDB.Managers
                 }
 
                 distance = minDistance;
-                return nearest;
             }
+            return nearest;
         }
 
         public static double Distance(double lat1, double lon1, double lat2, double lon2)
@@ -80,7 +82,7 @@ namespace GolfCoreDB.Managers
                 Math.Cos(rlat2) * Math.Cos(rtheta);
             dist = Math.Acos(dist);
 
-            dist = dist * MagicNumber;
+            dist *= MagicNumber;
 
             return dist;
         }

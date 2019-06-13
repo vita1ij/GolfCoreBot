@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <RuntimeFrameworkVersion>2.0.5</RuntimeFrameworkVersion>
     <LangVersion>8.0</LangVersion>
+    <NullableContextOptions>enable</NullableContextOptions>
   </PropertyGroup>
 
   <ItemGroup>

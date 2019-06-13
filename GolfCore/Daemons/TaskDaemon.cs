@@ -9,13 +9,18 @@ using System.Threading.Tasks;
 using Telegram.Bot;
 using GolfCoreDB.Managers;
 using GolfCore.Helpers;
+using GolfCoreDB.Data;
 
 namespace GolfCore.Daemons
 {
     public class TaskDaemon
     {
-        public async Task RunAsync(TelegramBotClient bot)
+        public static bool inProgress = false;
+
+        public static async Task Function(TelegramBotClient bot)
         {
+            if (inProgress) return;
+            inProgress = true;
             try
             {
                 var games = GameManager.GetAllActiveWithMonitoring();
@@ -45,15 +50,22 @@ namespace GolfCore.Daemons
                         if (newTask != null && game.LastTask != newTask)
                         {
                             game.LastTask = newTask;
+                            var gameTask = new GameTask(game.Id, newTask);
+                            TasksManager.AddNewTask(gameTask);
                             GameManager.UpdateGame(game);
                         }
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.New(ex);
             }
+            finally
+            {
+                inProgress = false;
+            }
         }
+
     }
 }

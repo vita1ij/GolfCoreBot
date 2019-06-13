@@ -16,12 +16,17 @@ namespace GolfCore.GameEngines
     {
         public IgraLvGameEngine(long chatId)
         {
-            GameManager.GetAuthForActiveGame(chatId, out string login, out string pass);
-            this.LoginPostData = $"login={login}&password={pass}";
+            GameManager.GetAuthForActiveGame(chatId, out string? login, out string? pass);
+            this.LoginPostData = $"login={login??""}&password={pass??""}";
             this.LoginUrl = "http://igra.lv/igra.php?s=login";
             this.TaskUrl = "http://www.igra.lv/igra.php";
             base.StatisticsUrl = "http://igra.lv/img_level_times.php";
             this.Login();
+        }
+
+        public override bool EnterCode(string code)
+        {
+            throw new NotImplementedException();
         }
 
         public override Image<Rgba32>? GetStatistics()
@@ -45,6 +50,11 @@ namespace GolfCore.GameEngines
                 ConnectionCookie = WebConnectHelper.MakePost4Cookies(LoginUrl, LoginPostData);
                 if (ConnectionCookie == null) return null;
             }
+            else
+            {
+                //fix    Expires: {1/1/0001 12:00:00 AM}
+                ConnectionCookie["agt_session"].Expires = DateTime.MinValue;
+            }
             var data = WebConnectHelper.MakePostWithCookies(TaskUrl, ConnectionCookie);
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(data);
@@ -52,5 +62,15 @@ namespace GolfCore.GameEngines
 
             return taskContent;
         }
+
+        public override bool IsLoginPage(string data)
+        {
+            return false;
+        }
+         
+        //new public bool Login()
+        //{
+
+        //}
     }
 }

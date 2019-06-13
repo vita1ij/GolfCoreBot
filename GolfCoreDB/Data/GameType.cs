@@ -8,6 +8,7 @@ namespace GolfCoreDB.Data
     {
         IgraLv = 1,
         EnCx = 2,
-        Demo = 3
+        Demo = 3,
+        LvlUp = 4
     }
 }

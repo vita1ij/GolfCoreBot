@@ -26,6 +26,8 @@ namespace GolfCoreDB.Migrations
 
                     b.Property<string>("EnCxId");
 
+                    b.Property<string>("EnCxType");
+
                     b.Property<string>("Href");
 
                     b.Property<bool>("IsActive");
@@ -39,6 +41,8 @@ namespace GolfCoreDB.Migrations
                     b.Property<string>("Login");
 
                     b.Property<string>("Password");
+
+                    b.Property<string>("Prefix");
 
                     b.Property<string>("Title");
 
@@ -62,7 +66,7 @@ namespace GolfCoreDB.Migrations
                     b.Property<bool>("GetStatistics");
 
                     b.Property<bool>("GetUpdates");
-                    
+
                     b.Property<bool>("MonitorStatistics");
 
                     b.Property<bool>("MonitorUpdates");
@@ -72,6 +76,20 @@ namespace GolfCoreDB.Migrations
                     b.HasIndex("GameId");
 
                     b.ToTable("GameParticipant");
+                });
+
+            modelBuilder.Entity("GolfCoreDB.Data.GameTask", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("GameId");
+
+                    b.Property<string>("TaskText");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("GolfCoreDB.Data.KnownLocation", b =>
@@ -91,22 +109,6 @@ namespace GolfCoreDB.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Locations");
-                });
-
-            modelBuilder.Entity("GolfCoreDB.Data.Setting", b =>
-                {
-                    b.Property<string>("Name")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long>("ChatId");
-
-                    b.Property<string>("GameId");
-
-                    b.Property<string>("Value");
-
-                    b.HasKey("Name");
-
-                    b.ToTable("Settings");
                 });
 
             modelBuilder.Entity("GolfCoreDB.Data.GameParticipant", b =>
