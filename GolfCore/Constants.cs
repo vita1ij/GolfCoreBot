@@ -7,9 +7,6 @@ namespace GolfCore
 {
     public class Constants
     {
-        public static string CoordinatesString = "<a href =\"https://www.waze.com/ul?ll={0},{1}&navigate=yes\">Waze</a>, <a href =\"https://www.google.com/maps/search/?api=1&query={0},{1}\"> Google</a>  ({0},{1})";
-        public static string CoordinatesStringWithName = "{2}\r\n<a href =\"https://www.waze.com/ul?ll={0},{1}&navigate=yes\">Waze</a>, <a href =\"https://www.google.com/maps/search/?api=1&query={0},{1}\"> Google</a>  ({0},{1})\r\n";
-
         public static class Text
         {
             public const string SetAuthInGroup = "Let's Private chat for that. Use following link: /starttalk_login";
@@ -122,5 +119,8 @@ namespace GolfCore
             "/exitfromgame\r\n" +
             "/setauth\r\n" +
             "/settaskmonitoring\r\n";
+
+        public static string CoordinatesString = "<a href =\"https://www.waze.com/ul?ll={0},{1}&navigate=yes\">Waze</a>, <a href =\"https://www.google.com/maps/search/?api=1&query={0},{1}\"> Google</a> ({0},{1})";
+        public static string CoordinatesStringWithName = "{2}\r\n<a href =\"https://www.waze.com/ul?ll={0},{1}&navigate=yes\">Waze</a>, <a href =\"https://www.google.com/maps/search/?api=1&query={0},{1}\"> Google</a>  ({0},{1})\r\n";
     }
 }

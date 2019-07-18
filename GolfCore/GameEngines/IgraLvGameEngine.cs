@@ -43,24 +43,31 @@ namespace GolfCore.GameEngines
 
         public override string? GetTask()
         {
-            if (TaskUrl == null) return null;
-            if (ConnectionCookie == null)
+            try
             {
-                if (LoginUrl == null || LoginPostData == null) return null;
-                ConnectionCookie = WebConnectHelper.MakePost4Cookies(LoginUrl, LoginPostData);
-                if (ConnectionCookie == null) return null;
-            }
-            else
-            {
-                //fix    Expires: {1/1/0001 12:00:00 AM}
-                ConnectionCookie["agt_session"].Expires = DateTime.MinValue;
-            }
-            var data = WebConnectHelper.MakePostWithCookies(TaskUrl, ConnectionCookie);
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(data);
-            string taskContent = (doc.GetElementbyId("general-puzzle") ?? doc.GetElementbyId("general")).InnerText;
+                if (TaskUrl == null) return null;
+                if (ConnectionCookie == null)
+                {
+                    if (LoginUrl == null || LoginPostData == null) return null;
+                    ConnectionCookie = WebConnectHelper.MakePost4Cookies(LoginUrl, LoginPostData);
+                    if (ConnectionCookie == null) return null;
+                }
+                else
+                {
+                    //fix    Expires: {1/1/0001 12:00:00 AM}
+                    ConnectionCookie["agt_session"].Expires = DateTime.MinValue;
+                }
+                var data = WebConnectHelper.MakePostWithCookies(TaskUrl, ConnectionCookie);
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(data);
+                string taskContent = (doc.GetElementbyId("general-puzzle") ?? doc.GetElementbyId("general")).InnerText;
 
-            return taskContent;
+                return taskContent;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
         }
 
         public override bool IsLoginPage(string data)

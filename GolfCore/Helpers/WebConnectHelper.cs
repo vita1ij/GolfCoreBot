@@ -16,7 +16,7 @@ namespace GolfCore.Helpers
         /// <param name="url">url for login</param>
         /// <param name="postData">login / pass data</param>
         /// <returns></returns>
-        public static CookieCollection? MakePost4Cookies(string url, string postData)
+        public static CookieCollection? MakePost4Cookies(string url, string postData, bool igra = false)
         {
             HttpWebRequest? http= (HttpWebRequest)WebRequest.Create(url);
             if (http == null) return null;
@@ -46,44 +46,51 @@ namespace GolfCore.Helpers
 
             if (httpResponse.Headers.AllKeys.ToList().Contains("Set-Cookie"))
             {
-                //agt_session
-                httpResponse.Cookies.Add(cookieJar.GetCookies(http.RequestUri));
-                //{
-                //    //Comment: ""
-                //    //CommentUri: null
-                //    //Discard: false
-                //    //Domain: "demo.en.cx"
-                //    //Expired: false
-                //    //Expires: { 4 / 20 / 2029 4:02:48 PM}
-                //    //            HttpOnly: true
-                //    //Name: "GUID"
-                //    //Path: "/"
-                //    //Port: ""
-                //    //Secure: false
-                //    //TimeStamp: { 4 / 20 / 2019 4:02:50 PM}
-                //    //            Value: "c907f797%2Ddaba%2D4af2%2Da176%2Da4557fb0122c"
-                //    //Version: 0
-                //}
-                //for (int i = 0; i < httpResponse.Headers.Count; i++)
-                //{
-                //    string name = httpResponse.Headers.GetKey(i);
-                //    if (name != "Set-Cookie")
-                //        continue;
-                //    string value = httpResponse.Headers.Get(i);
-                //    value = Regex.Replace(value, "(e|E)xpires=(.+?)(;|$)|(P|p)ath=(.+?);", "");
-                //    foreach (var singleCookie in value.Split(','))
-                //    {
-                //        Match match = Regex.Match(singleCookie, "(.+?)=(.+?);");
-                //        if (match.Captures.Count == 0)
-                //            continue;
-                //        httpResponse.Cookies.Add(
-                //            new Cookie(
-                //                match.Groups[1].ToString().Trim(),
-                //                match.Groups[2].ToString().Trim(),
-                //                "/",
-                //                httpResponse.ResponseUri.Host.Split(':')[0]));
-                //    }
-                //}
+                if (igra)
+                {
+                    for (int i = 0; i < httpResponse.Headers.Count; i++)
+                    {
+                        string name = httpResponse.Headers.GetKey(i);
+                        if (name != "Set-Cookie")
+                            continue;
+                        string value = httpResponse.Headers.Get(i);
+                        value = Regex.Replace(value, "(e|E)xpires=(.+?)(;|$)|(P|p)ath=(.+?);", "");
+                        foreach (var singleCookie in value.Split(','))
+                        {
+                            Match match = Regex.Match(singleCookie, "(.+?)=(.+?);");
+                            if (match.Captures.Count == 0)
+                                continue;
+                            httpResponse.Cookies.Add(
+                                new Cookie(
+                                    match.Groups[1].ToString().Trim(),
+                                    match.Groups[2].ToString().Trim(),
+                                    "/",
+                                    httpResponse.ResponseUri.Host.Split(':')[0]));
+                        }
+                    }
+                }
+                else
+                {
+                    //agt_session
+                    httpResponse.Cookies.Add(cookieJar.GetCookies(http.RequestUri));
+                    //{
+                    //    //Comment: ""
+                    //    //CommentUri: null
+                    //    //Discard: false
+                    //    //Domain: "demo.en.cx"
+                    //    //Expired: false
+                    //    //Expires: { 4 / 20 / 2029 4:02:48 PM}
+                    //    //            HttpOnly: true
+                    //    //Name: "GUID"
+                    //    //Path: "/"
+                    //    //Port: ""
+                    //    //Secure: false
+                    //    //TimeStamp: { 4 / 20 / 2019 4:02:50 PM}
+                    //    //            Value: "c907f797%2Ddaba%2D4af2%2Da176%2Da4557fb0122c"
+                    //    //Version: 0
+                    //}
+                    
+                }
             }
             //return null;
             CookieCollection result = httpResponse.Cookies;
