@@ -1,7 +1,0 @@
-{
-  "API_KEY": "453870474:AAHeC-wzHhLNphRPZPoEcTyPOK3b8DnCkoM",
-  "ERROR_FOLDER": "C:\\inetpub\\logs\\GolfCore\\TaskDaemon\\",
-  "ConnectionStrings": {
-    "GolfDB": "Data Source=localhost\\SQLEXPRESS;Initial Catalog=TelegramGolfBot;Integrated Security=True;MultipleActiveResultSets=true;"
-  }
-}
