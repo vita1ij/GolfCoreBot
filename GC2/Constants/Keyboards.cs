@@ -131,9 +131,9 @@ namespace GC2.Constants
             new List<InlineKeyboardButton>()
             {
                 new InlineKeyboardButton() { Text = "Get Task", CallbackData = $"/{Commands.GetTask}" },
-                new InlineKeyboardButton() { Text = "Disabled", CallbackData = "DisableTaskUpdates" },
-                new InlineKeyboardButton() { Text = "Up only", CallbackData = "EnableTaskUpdates" },
-                new InlineKeyboardButton() { Text = "With text", CallbackData = "EnableTaskTask" }
+                new InlineKeyboardButton() { Text = "Disabled", CallbackData = $"{Commands.GameTaskNoUpdates}" },
+                new InlineKeyboardButton() { Text = "Up only", CallbackData = $"{Commands.GameTaskUpdateStatus}" },
+                new InlineKeyboardButton() { Text = "With text", CallbackData = $"{Commands.GameTaskUpdateText}" }
             },
             new List<InlineKeyboardButton>()
             {

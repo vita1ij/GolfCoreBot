@@ -9,6 +9,28 @@ namespace GC2DB.Managers
 {
     public static class GameManager
     {
+        private static Player? xGetActivePlayer(long chatId, DBContext db)
+        {
+            return db.Players.FirstOrDefault(x => x.ChatId == chatId && x.isActive);
+        }
+
+        public static Player? GetActivePlayer(long chatId)
+        {
+            using (var db = DBContext.Instance)
+            {
+                return xGetActivePlayer(chatId, db);
+            }
+        }
+
+        public static void UpdatePlayer(Player p)
+        {
+            using (var db = DBContext.Instance)
+            {
+                db.Players.Update(p);
+                db.SaveChanges();
+            }
+        }
+
         private static Game? xGetActiveGameByChatId(long chatId, DBContext db)
         {
             var activePlayer = db.Players
@@ -20,6 +42,41 @@ namespace GC2DB.Managers
                 return activePlayer.First().Game;
             }
             return null;
+        }
+
+
+
+        public static List<Player> GetAllActivePlayersWithTaskMonitoring()
+        {
+            using (var db = DBContext.Instance)
+            {
+                return db.Players
+                    .Where(x => x.isActive && x.UpdateTaskInfo != Player.PlayerUpdateStatusInfo.DontUpdate)
+                    .Include(x => x.Game)
+                    .ToList();
+            }
+        }
+
+        public static void AddTask(Game game, string newTask, string title = "", int incrementNumber = 1)
+        {
+            using (var db = DBContext.Instance)
+            {
+                var maxNumber = db.Tasks.Where(x => x.Game == game).Max(x => x.Number);
+
+                db.Tasks.Add(new Task()
+                {
+                    Game = game,
+                    Text = newTask,
+                    Title = title,
+                    Number = maxNumber + incrementNumber
+                });
+
+                game.LastTask = newTask;
+
+                db.Games.Update(game);
+
+                db.SaveChanges();
+            }
         }
 
         public static Game? GetActiveGameByChatId(long chatId)

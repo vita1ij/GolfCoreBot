@@ -1,0 +1,32 @@
+2.0.7 Current
+2.1 - igra & en.cx previous f
+		+ login
+		+ task
+		+ stat
+		- automatic task
+	+ coordinates prev f
+2.2 - engines 
+		
+		- task structure simple analysis (img/link)
+		- task numbers / new vs update
+		- enter code (encx) (use of prefix)
+		- pin actual task
+2.3 - coordinates 
+		- save / lists / and so on
+		- add support N\\E
+		- consider coordinate actions
+		- Baltic maps
+2.4 - coordinates
+		- osm analyse
+		- use of radius
+		- grausti.riga.lv
+
+2.x - coordinates
+		- consider using live shared location
+	- tasks
+		- image processing
+			- qr code
+			- bar code
+			- google search
+		- smart brute force
+

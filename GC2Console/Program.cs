@@ -1,4 +1,5 @@
 ﻿using GC2;
+using GC2.Daemons;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace GC2Console
         }
 
         public static TelegramBotClient Bot;
-        public static Telegram.Bot.Types.User BotUser;
+        public static User BotUser;
         
         static void Main(string[] args)
         {
@@ -60,11 +61,20 @@ namespace GC2Console
                 throw new Exception(String.Format("Cannot set up Bot: {0}---------------{1}", ex.Message, ex.InnerException));
             }
 
+            try
+            {
+                new TaskDaemon().Create(Bot).Subscribe();
+            }
+            catch(Exception ex)
+            {
+                Log.New(ex);
+            }
+
             Console.ReadLine();
             Bot.StopReceiving();
         }
 
-        private static void BotOnCallBackReceived(object sender, CallbackQueryEventArgs e)
+        private static async void BotOnCallBackReceived(object sender, CallbackQueryEventArgs e)
         {
             var callback = e.CallbackQuery;
             if (callback == null) return;
@@ -81,8 +91,8 @@ namespace GC2Console
             receivedMessage.Normalise();
 
             var result = Processing.ProcessMessage(receivedMessage);
-
-            ProcessResult(result, receivedMessage);
+            if (result == null) return;
+            await result.Finish(Bot, receivedMessage);
         }
 
         private static async void BotOnMessageReceived(object sender, MessageEventArgs e)
@@ -131,94 +141,8 @@ namespace GC2Console
             }
 
             var result = Processing.ProcessMessage(receivedMessage);
-
-            ProcessResult(result, receivedMessage);
-        }
-
-        private static async void ProcessResult(ProcessingResult? result, ReceivedMessage receivedMessage)
-        {
             if (result == null) return;
-
-            //edit old messages
-            if (result.EditMessages != null)
-            {
-                foreach (var editResult in result.EditMessages)
-                {
-                    if (editResult.Text != null && editResult.MessageId.HasValue)
-                    {
-                        await Bot.EditMessageTextAsync(
-                            editResult.ChatId,
-                            editResult.MessageId.Value,
-                            editResult.Text,
-                            editResult.IsHtml ? ParseMode.Html : ParseMode.Default
-                            );
-                    }
-                    if (editResult.Markup != null && editResult.Markup is InlineKeyboardMarkup && editResult.MessageId.HasValue)
-                    {
-                        await Bot.EditMessageReplyMarkupAsync(
-                            editResult.ChatId,
-                            editResult.MessageId.Value,
-                            editResult.Markup as InlineKeyboardMarkup
-                            );
-                    }
-                }
-            }
-
-            //send reply
-            //if (result.Image != null)
-            //{
-            //
-            //}
-            //else 
-            if (result.Delete && result.MessageId.HasValue && !result.ReplaceOriginal)
-            {
-                try
-                {
-                    if (receivedMessage.Id == result.MessageId && receivedMessage.ReplyToBot && receivedMessage.ReplyTo.HasValue)
-                    {
-                        await Bot.DeleteMessageAsync(result.ChatId, receivedMessage.ReplyTo.Value);
-                    }
-                    await Bot.DeleteMessageAsync(result.ChatId, result.MessageId.Value);
-                }
-                catch(Exception ex)
-                {
-                    Log.New(ex);
-                }
-            }
-            if (result.Text != null)
-            {
-                if (result.ReplaceOriginal)
-                {
-                    if (result.Text != null && result.MessageId.HasValue)
-                    {
-                        await Bot.EditMessageTextAsync(
-                            result.ChatId,
-                            result.MessageId.Value,
-                            result.Text,
-                            result.IsHtml ? ParseMode.Html : ParseMode.Default
-                            );
-                    }
-                    if (result.Markup != null && result.Markup is InlineKeyboardMarkup)
-                    {
-                        await Bot.EditMessageReplyMarkupAsync(
-                            result.ChatId,
-                            result.MessageId ?? receivedMessage.Id,
-                            result.Markup as InlineKeyboardMarkup
-                            );
-                    }
-                }
-                else
-                {
-                    await Bot.SendTextMessageAsync(
-                        result.ChatId,
-                        result.Text,
-                        result.IsHtml ? ParseMode.Html : ParseMode.Default,
-                        replyMarkup: result.Markup,
-                        disableWebPagePreview: result.DisableWebPagePreview,
-                        replyToMessageId: result.ReplyTo ?? 0
-                        );
-                }
-            }
+            await result.Finish(Bot, receivedMessage);
         }
     }
 }

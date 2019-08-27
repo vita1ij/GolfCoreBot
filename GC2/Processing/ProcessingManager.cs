@@ -166,6 +166,26 @@ namespace GC2
             return result;
         }
 
+        internal static ProcessingResult? SetTaskUpdate(ReceivedMessage message)
+        {
+            var player = GameManager.GetActivePlayer(message.ChatId);
+            if (player == null) return null;
+            switch(message.Command)
+            {
+                case Constants.Commands.GameTaskNoUpdates:
+                    player.UpdateTaskInfo = Player.PlayerUpdateStatusInfo.DontUpdate;
+                    break;
+                case Constants.Commands.GameTaskUpdateStatus:
+                    player.UpdateTaskInfo = Player.PlayerUpdateStatusInfo.UpdateStatus;
+                    break;
+                case Constants.Commands.GameTaskUpdateText:
+                    player.UpdateTaskInfo = Player.PlayerUpdateStatusInfo.UpdateText;
+                    break;
+            }
+            GameManager.UpdatePlayer(player);
+            return null;
+        }
+
         internal static ProcessingResult? SetRadius(ReceivedMessage message)
         {
             if (message.Parameters == null || !message.Parameters.Any()) return null;
