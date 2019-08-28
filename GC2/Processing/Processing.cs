@@ -9,7 +9,7 @@ namespace GC2
 {
     public class Processing
     {
-        public static ProcessingResult? ProcessMessage(ReceivedMessage message)
+        public static ProcessingResult ProcessMessage(ReceivedMessage message)
         {
             try
             {

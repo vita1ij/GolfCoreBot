@@ -8,7 +8,7 @@ namespace GC2DB.Managers
 {
     public static class ListManager
     {
-        public static string? GetList(long chatId, bool sorted = false)
+        public static string GetList(long chatId, bool sorted = false)
         {
             using (var db = DBContext.Instance)
             {

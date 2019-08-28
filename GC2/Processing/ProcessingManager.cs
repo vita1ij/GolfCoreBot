@@ -26,7 +26,7 @@ namespace GC2
             }
         }
 
-        public static ProcessingResult? Foo(ReceivedMessage message)
+        public static ProcessingResult Foo(ReceivedMessage message)
         {
             return new ProcessingResult()
             {
@@ -51,7 +51,7 @@ namespace GC2
             };
         }
 
-        public static ProcessingResult? ProcessAddress(ReceivedMessage message)
+        public static ProcessingResult ProcessAddress(ReceivedMessage message)
         {
             var input = message.Parameter;
             if (String.IsNullOrEmpty(input)) return null;
@@ -85,14 +85,14 @@ namespace GC2
             return null;
         }
 
-        internal static ProcessingResult? SaveCoordinates(ReceivedMessage message)
+        internal static ProcessingResult SaveCoordinates(ReceivedMessage message)
         {
             return null;
         }
 
-        internal static ProcessingResult? GameSetup(ReceivedMessage message)
+        internal static ProcessingResult GameSetup(ReceivedMessage message)
         {
-            ProcessingResult? result = null;
+            ProcessingResult result = null;
             var activeGame = GameManager.GetActiveGameByChatId(message.ChatId);
             if (activeGame == null)
             {
@@ -166,7 +166,7 @@ namespace GC2
             return result;
         }
 
-        internal static ProcessingResult? SetTaskUpdate(ReceivedMessage message)
+        internal static ProcessingResult SetTaskUpdate(ReceivedMessage message)
         {
             var player = GameManager.GetActivePlayer(message.ChatId);
             if (player == null) return null;
@@ -186,7 +186,7 @@ namespace GC2
             return null;
         }
 
-        internal static ProcessingResult? SetRadius(ReceivedMessage message)
+        internal static ProcessingResult SetRadius(ReceivedMessage message)
         {
             if (message.Parameters == null || !message.Parameters.Any()) return null;
 
@@ -221,7 +221,7 @@ namespace GC2
             return null;
         }
 
-        internal static ProcessingResult? SetPrefix(ReceivedMessage message)
+        internal static ProcessingResult SetPrefix(ReceivedMessage message)
         {
             if (message.Parameters == null || !message.Parameters.Any()) return null;
 
@@ -256,7 +256,7 @@ namespace GC2
             return null;
         }
 
-        internal static ProcessingResult? FoundEncxGame(ReceivedMessage message)
+        internal static ProcessingResult FoundEncxGame(ReceivedMessage message)
         {
             if (String.IsNullOrEmpty(message.Parameter)) return null;
 
@@ -268,7 +268,7 @@ namespace GC2
             return GameSetup(message);
         }
 
-        internal static ProcessingResult? FindEnCxGame(ReceivedMessage message)
+        internal static ProcessingResult FindEnCxGame(ReceivedMessage message)
         {
             if (message.Parameter == null || message.Parameters == null || message.Parameters.Count == 0)
             {
@@ -315,7 +315,7 @@ namespace GC2
             }
         }
 
-        internal static ProcessingResult? GetTask(ReceivedMessage message)
+        internal static ProcessingResult GetTask(ReceivedMessage message)
         {
             var activeGame = GameManager.GetActiveGameByChatId(message.ChatId);
             if (activeGame == null) return null;
@@ -325,7 +325,7 @@ namespace GC2
             return ProcessingResult.CreateText(message, task);
         }
 
-        internal static ProcessingResult? ShowGameSettings(ReceivedMessage message)
+        internal static ProcessingResult ShowGameSettings(ReceivedMessage message)
         {
             var activeGame = GameManager.GetActiveGameByChatId(message.ChatId);
             if (activeGame == null) return null;
@@ -345,7 +345,7 @@ namespace GC2
             };
         }
 
-        internal static ProcessingResult? JoinGame(ReceivedMessage message)
+        internal static ProcessingResult JoinGame(ReceivedMessage message)
         {
             if (message.Parameter == null) return null;
             GameManager.JoinGame(null, message.Parameter, message.ChatId, true);
@@ -356,7 +356,7 @@ namespace GC2
             return result;
         }
 
-        internal static ProcessingResult? StartSetingAuth(ReceivedMessage message)
+        internal static ProcessingResult StartSetingAuth(ReceivedMessage message)
         {
             var activeGame = GameManager.GetActiveGameByChatId(message.ChatId);
             if (activeGame == null)
@@ -437,7 +437,7 @@ namespace GC2
             return null;
         }
 
-        internal static ProcessingResult? CreateGame(ReceivedMessage message, GameType type)
+        internal static ProcessingResult CreateGame(ReceivedMessage message, GameType type)
         {
             if (GameManager.GetActiveGameByChatId(message.ChatId) != null)
             {
@@ -447,7 +447,7 @@ namespace GC2
             return GameSetup(message);
         }
 
-        internal static ProcessingResult? ExitFromGame(ReceivedMessage message)
+        internal static ProcessingResult ExitFromGame(ReceivedMessage message)
         {
             GameManager.ExitFromGame(message.ChatId);
             return GameSetup(message);

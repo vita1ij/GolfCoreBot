@@ -11,7 +11,7 @@ namespace GC2DB.Data
         [Required]
         public long Id { get; set; }
         public long? Number { get; set; }
-        public string? Title { get; set; }
+        public string Title { get; set; }
         public string Text { get; set; }
         public virtual Game Game { get; set; }
 

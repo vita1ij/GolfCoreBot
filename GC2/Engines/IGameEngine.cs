@@ -10,13 +10,13 @@ namespace GC2.Engines
 {
     public abstract class IGameEngine
     {
-        protected string? _login;
-        protected string? _password;
+        protected string _login;
+        protected string _password;
 
-        public CookieCollection? ConnectionCookie { get; set; }
+        public CookieCollection ConnectionCookie { get; set; }
         public abstract string LoginUrl { get; }
         public abstract string TaskUrl { get; }
-        public string? StatisticsUrl { get; set; }
+        public string StatisticsUrl { get; set; }
         public abstract string LoginPostData { get; }
 
         public bool Login()
@@ -30,7 +30,7 @@ namespace GC2.Engines
 
         public abstract bool EnterCode(string code);
 
-        public abstract string? GetTask();
+        public abstract string GetTask();
         public abstract GameStatistics GetStatistics();
 
         public virtual void Init(Game game)
@@ -42,13 +42,23 @@ namespace GC2.Engines
 
         public static IGameEngine Get(Game game)
         {
-            var engine = game.Type switch
+            IGameEngine engine;
+            switch(game.Type)
             {
-                GameType.IgraLv => new IgraLvGameEngine(game) as IGameEngine,
-                GameType.Demo => new DemoEnCxGameEngine(game),
-                GameType.EnCx => new DemoEnCxGameEngine(game),
-                GameType.LvlUp => new DemoEnCxGameEngine(game),
-                _ => throw new NotImplementedException()
+                case GameType.IgraLv: 
+                    engine = new IgraLvGameEngine(game) as IGameEngine; 
+                    break;
+                case GameType.Demo:   
+                    engine = new DemoEnCxGameEngine(game); 
+                    break;
+                case GameType.EnCx:   
+                    engine = new DemoEnCxGameEngine(game); 
+                    break;
+                case GameType.LvlUp:
+                    engine = new DemoEnCxGameEngine(game);
+                    break;
+                default:
+                    throw new NotImplementedException();
             };
             engine.Init(game);
             return engine;

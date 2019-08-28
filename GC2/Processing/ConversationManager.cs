@@ -8,7 +8,7 @@ namespace GC2
 {
     public static class ConversationManager
     {
-        public static ProcessingResult? Process(ReceivedMessage message)
+        public static ProcessingResult Process(ReceivedMessage message)
         {
             if (!message.ReplyToBot || String.IsNullOrEmpty(message.ReplyToText)) return null;
             var match = Regex.Match(message.ReplyToText, @"\[([A-Za-z])*\]");

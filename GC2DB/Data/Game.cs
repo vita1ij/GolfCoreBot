@@ -13,16 +13,16 @@ namespace GC2DB.Data
         public long Id { get; set; }
         public string Guid { get; set; }
         public GameType Type { get; set; }
-        public string? Login { get; set; }
-        public string? Password { get; set; }
-        public string? LastTask { get; set; }
-        public string? Title { get; set; }
-        public string? Href { get; set; }
-        public string? EnCxId { get; set; }
-        public string? EnCxType { get; set; }
-        public string? Prefix { get; set; }
+        public string Login { get; set; }
+        public string Password { get; set; }
+        public string LastTask { get; set; }
+        public string Title { get; set; }
+        public string Href { get; set; }
+        public string EnCxId { get; set; }
+        public string EnCxType { get; set; }
+        public string Prefix { get; set; }
         public long? Radius { get; set; }
-        public string? CenterCoordinates { get; set; }
+        public string CenterCoordinates { get; set; }
         public bool isActive { get; set; } = true;
 
         public Game()

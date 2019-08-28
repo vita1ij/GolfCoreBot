@@ -9,12 +9,12 @@ namespace GC2DB.Managers
 {
     public static class GameManager
     {
-        private static Player? xGetActivePlayer(long chatId, DBContext db)
+        private static Player xGetActivePlayer(long chatId, DBContext db)
         {
             return db.Players.FirstOrDefault(x => x.ChatId == chatId && x.isActive);
         }
 
-        public static Player? GetActivePlayer(long chatId)
+        public static Player GetActivePlayer(long chatId)
         {
             using (var db = DBContext.Instance)
             {
@@ -31,7 +31,7 @@ namespace GC2DB.Managers
             }
         }
 
-        private static Game? xGetActiveGameByChatId(long chatId, DBContext db)
+        private static Game xGetActiveGameByChatId(long chatId, DBContext db)
         {
             var activePlayer = db.Players
                                     .Include(x => x.Game)
@@ -79,7 +79,7 @@ namespace GC2DB.Managers
             }
         }
 
-        public static Game? GetActiveGameByChatId(long chatId)
+        public static Game GetActiveGameByChatId(long chatId)
         {
             using (var db = DBContext.Instance)
             {
@@ -141,7 +141,7 @@ namespace GC2DB.Managers
             }
         }
 
-        public static void JoinGame(long? gameId, string? guid, long chatId, bool forceExit = false)
+        public static void JoinGame(long? gameId, string guid, long chatId, bool forceExit = false)
         {
             using (var db = DBContext.Instance)
             {
@@ -149,7 +149,7 @@ namespace GC2DB.Managers
                 if (xPlayerInGame(chatId, game.Id, db)) return;
                 
                 var player = db.Players.Where(x => x.ChatId == chatId).Include(x => x.Game);
-                if (player != null && player.Any() && player.First().Game?.Id != gameId)
+                if (player != null && player.Any() && player.First().Game.Id != gameId)
                 {
                     if (forceExit)
                     {
@@ -177,7 +177,7 @@ namespace GC2DB.Managers
             }
         }
 
-        public static Game? GetById(long gameId)
+        public static Game GetById(long gameId)
         {
             using (var db = DBContext.Instance)
             {

@@ -113,7 +113,7 @@ namespace GC2Console
                 SenderId = message.From.Id,
 
                 ReplyTo = (message.ReplyToMessage == null) ? (int?)null : message.ReplyToMessage.MessageId,
-                ReplyToText = (message.ReplyToMessage == null) ? (string?)null : message.ReplyToMessage.Text,
+                ReplyToText = (message.ReplyToMessage == null) ? (string)null : message.ReplyToMessage.Text,
                 ReplyToBot = (message.ReplyToMessage == null) ? false : (message.ReplyToMessage.From.IsBot && message.ReplyToMessage.From.Id == Bot.BotId),
             };
 
@@ -126,7 +126,7 @@ namespace GC2Console
                     var obj = message.Photo.GetValue(message.Photo.Length - 1);
                     if (obj != null && obj is PhotoSize)
                     {
-                        PhotoSize? ps = obj as PhotoSize;
+                        PhotoSize ps = obj as PhotoSize;
                         if (ps != null)
                         {
                             var imageId = ps.FileId;

@@ -58,7 +58,7 @@ namespace GC2.Helpers
         //    }
         //}
 
-        //public static string? CheckLocation(string locationInput)
+        //public static string CheckLocation(string locationInput)
         //{
         //    if (ParseCoordinates(locationInput, out string slat, out string slon)
         //        && double.TryParse(slat, out double lat)
@@ -74,7 +74,7 @@ namespace GC2.Helpers
         //}
 
 
-        public static string? GetCoordinates(string? query, string city = "")
+        public static string GetCoordinates(string query, string city = "")
         {
             if (String.IsNullOrWhiteSpace(query)) return null;
             var foo = new Nominatim.API.Models.ForwardGeocodeRequest

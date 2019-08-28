@@ -60,9 +60,9 @@ namespace GC2
             }
         }
 
-        public string? Address;//todo[gc2]
+        public string Address;//todo[gc2]
 
-        public static Coordinates? ParseCoordinates(string? input)
+        public static Coordinates ParseCoordinates(string input)
         {
             if (String.IsNullOrEmpty(input)) return null;
             try
