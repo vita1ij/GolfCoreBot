@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GC2DB.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20190711144626_v.2.0.4")]
-    partial class v204
+    [Migration("20190828104901_v.2.1.0")]
+    partial class v210
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -104,8 +104,6 @@ namespace GC2DB.Migrations
 
                     b.Property<string>("Address");
 
-                    b.Property<long>("ChatId");
-
                     b.Property<double>("Lat");
 
                     b.Property<double>("Lon");
@@ -138,6 +136,25 @@ namespace GC2DB.Migrations
                     b.HasIndex("GameId");
 
                     b.ToTable("Players");
+                });
+
+            modelBuilder.Entity("GC2DB.Data.PlayersLocation", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("ChatId");
+
+                    b.Property<int?>("LocationId");
+
+                    b.Property<string>("Title");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LocationId");
+
+                    b.ToTable("PlayersLocation");
                 });
 
             modelBuilder.Entity("GC2DB.Data.Task", b =>
@@ -177,6 +194,13 @@ namespace GC2DB.Migrations
                     b.HasOne("GC2DB.Data.Game", "Game")
                         .WithMany()
                         .HasForeignKey("GameId");
+                });
+
+            modelBuilder.Entity("GC2DB.Data.PlayersLocation", b =>
+                {
+                    b.HasOne("GC2DB.Data.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId");
                 });
 
             modelBuilder.Entity("GC2DB.Data.Task", b =>

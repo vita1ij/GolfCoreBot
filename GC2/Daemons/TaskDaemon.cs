@@ -34,7 +34,7 @@ namespace GC2.Daemons
                         {
                             ChatId = player.ChatId,
                             IsHtml = false,
-                            Text = newTask
+                            Text = player.UpdateTaskInfo == GC2DB.Data.Player.PlayerUpdateStatusInfo.UpdateText ? newTask : "UP!"
                         };
                         await result.Finish(bot);
                     }

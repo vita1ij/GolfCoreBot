@@ -1,12 +1,6 @@
-2.0.7 Current
-2.1 - igra & en.cx previous f
-		+ login
-		+ task
-		+ stat
-		- automatic task
-	+ coordinates prev f
+2.1.0 Current
+
 2.2 - engines 
-		
 		- task structure simple analysis (img/link)
 		- task numbers / new vs update
 		- enter code (encx) (use of prefix)
@@ -20,7 +14,12 @@
 		- osm analyse
 		- use of radius
 		- grausti.riga.lv
-
+2.5 - statistics
+		- get from igra.lv (standart)
+		- get from igra.lv (image)
+		- get from en.cx
+		- analyse
+		- daemons
 2.x - coordinates
 		- consider using live shared location
 	- tasks

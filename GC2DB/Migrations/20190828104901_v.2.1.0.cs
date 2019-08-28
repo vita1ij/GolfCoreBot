@@ -3,10 +3,37 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GC2DB.Migrations
 {
-    public partial class v207 : Migration
+    public partial class v210 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "ChatId",
+                table: "Locations");
+
+            migrationBuilder.AddColumn<bool>(
+                name: "isActive",
+                table: "Players",
+                nullable: false,
+                defaultValue: false);
+
+            migrationBuilder.AlterColumn<long>(
+                name: "Radius",
+                table: "Games",
+                nullable: true,
+                oldClrType: typeof(long));
+
+            migrationBuilder.AddColumn<string>(
+                name: "Guid",
+                table: "Games",
+                nullable: true);
+
+            migrationBuilder.AddColumn<bool>(
+                name: "isActive",
+                table: "Games",
+                nullable: false,
+                defaultValue: false);
+
             migrationBuilder.CreateTable(
                 name: "PlayersLocation",
                 columns: table => new
@@ -38,6 +65,31 @@ namespace GC2DB.Migrations
         {
             migrationBuilder.DropTable(
                 name: "PlayersLocation");
+
+            migrationBuilder.DropColumn(
+                name: "isActive",
+                table: "Players");
+
+            migrationBuilder.DropColumn(
+                name: "Guid",
+                table: "Games");
+
+            migrationBuilder.DropColumn(
+                name: "isActive",
+                table: "Games");
+
+            migrationBuilder.AddColumn<long>(
+                name: "ChatId",
+                table: "Locations",
+                nullable: false,
+                defaultValue: 0L);
+
+            migrationBuilder.AlterColumn<long>(
+                name: "Radius",
+                table: "Games",
+                nullable: false,
+                oldClrType: typeof(long),
+                oldNullable: true);
         }
     }
 }

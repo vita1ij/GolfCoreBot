@@ -2,7 +2,25 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <Version>2.1.0</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20190704092524_v.2.0.1.cs" />
+    <Compile Remove="Migrations\20190704092524_v.2.0.1.Designer.cs" />
+    <Compile Remove="Migrations\20190704134201_v.2.0.2.cs" />
+    <Compile Remove="Migrations\20190704134201_v.2.0.2.Designer.cs" />
+    <Compile Remove="Migrations\20190704143606_v.2.0.3.cs" />
+    <Compile Remove="Migrations\20190704143606_v.2.0.3.Designer.cs" />
+    <Compile Remove="Migrations\20190711144626_v.2.0.4.cs" />
+    <Compile Remove="Migrations\20190711144626_v.2.0.4.Designer.cs" />
+    <Compile Remove="Migrations\20190715113821_v.2.0.5.cs" />
+    <Compile Remove="Migrations\20190715113821_v.2.0.5.Designer.cs" />
+    <Compile Remove="Migrations\20190715114317_v.2.0.6.cs" />
+    <Compile Remove="Migrations\20190715114317_v.2.0.6.Designer.cs" />
+    <Compile Remove="Migrations\20190715114456_v.2.0.7.cs" />
+    <Compile Remove="Migrations\20190715114456_v.2.0.7.Designer.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
