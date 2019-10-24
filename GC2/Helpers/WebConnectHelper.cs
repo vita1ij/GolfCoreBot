@@ -16,9 +16,9 @@ namespace GC2.Helpers
         /// <param name="url">url for login</param>
         /// <param name="postData">login / pass data</param>
         /// <returns></returns>
-        public static CookieCollection? MakePost4Cookies(string url, string postData)
+        public static CookieCollection MakePost4Cookies(string url, string postData)
         {
-            HttpWebRequest? http = (HttpWebRequest)WebRequest.Create(url); //do we need query?
+            HttpWebRequest http = (HttpWebRequest)WebRequest.Create(url); //do we need query?
             if (http == null) return null;
             var cookieJar = new CookieContainer();
             http.KeepAlive = true;
@@ -31,7 +31,7 @@ namespace GC2.Helpers
             {
                 postStream.Write(dataBytes, 0, dataBytes.Length);
             }
-            HttpWebResponse? httpResponse;
+            HttpWebResponse httpResponse;
             try
             {
                 httpResponse = http.GetResponse() as HttpWebResponse;
@@ -56,10 +56,10 @@ namespace GC2.Helpers
         /// <param name="url"></param>
         /// <param name="cookies"></param>
         /// <returns></returns>
-        public static string? MakePost(string url, CookieCollection? cookies = null)
+        public static string MakePost(string url, CookieCollection cookies = null)
         {
             // Probably want to inspect the http.Headers here first
-            HttpWebRequest? http = (HttpWebRequest)WebRequest.Create(url); //do we need query?
+            HttpWebRequest http = (HttpWebRequest)WebRequest.Create(url); //do we need query?
             if (http == null) return null;
             if (cookies != null)
             {
@@ -75,7 +75,7 @@ namespace GC2.Helpers
                     });
                 }
             }
-            HttpWebResponse? response;
+            HttpWebResponse response;
             try
             {
                 response = http.GetResponse() as HttpWebResponse;
@@ -90,9 +90,9 @@ namespace GC2.Helpers
             return GetContentsFromResponse(response);
         }
 
-        public static string? GetContentsFromResponse(HttpWebResponse response)
+        public static string GetContentsFromResponse(HttpWebResponse response)
         {
-            string? data = null;
+            string data = null;
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 Stream receiveStream = response.GetResponseStream();

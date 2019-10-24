@@ -66,7 +66,7 @@ namespace GC2.Engines
             throw new NotImplementedException();
         }
 
-        public override string? GetTask()
+        public override string GetTask()
         {
             try
             {

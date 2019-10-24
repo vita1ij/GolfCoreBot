@@ -9,7 +9,7 @@ namespace GC2
 {
     public class Processing
     {
-        public static ProcessingResult? ProcessMessage(ReceivedMessage message)
+        public static ProcessingResult ProcessMessage(ReceivedMessage message)
         {
             try
             {
@@ -66,6 +66,10 @@ namespace GC2
                             return ProcessingManager.SetPrefix(message);
                         case Constants.Commands.SetRadius:
                             return ProcessingManager.SetRadius(message);
+                        case Constants.Commands.GameTaskNoUpdates:
+                        case Constants.Commands.GameTaskUpdateStatus:
+                        case Constants.Commands.GameTaskUpdateText:
+                            return ProcessingManager.SetTaskUpdate(message);
                         default:
                             break;
                     }

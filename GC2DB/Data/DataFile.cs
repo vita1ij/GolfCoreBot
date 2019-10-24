@@ -11,9 +11,9 @@ namespace GC2DB.Data
         [Key]
         [Required]
         public long Id { get; set; }
-        public byte[]? Content { get; set; }
-        public virtual Location? Location { get; set; }
-        public virtual Task? Task { get; set; }
+        public byte[] Content { get; set; }
+        public virtual Location Location { get; set; }
+        public virtual Task Task { get; set; }
         public long? ChatId { get; set; }
     }
 }

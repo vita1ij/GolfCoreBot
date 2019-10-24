@@ -1,0 +1,47 @@
+2.1.0 Current
+
+2.2 - engines 
+		- task structure simple analysis (img/link)
+		- task numbers / new vs update
+		- enter code (encx) 
+			- command
+			- prefix
+		- enter code (igra)
+		- pin actual task
+	+ Webhook
+	- /crack
+		- Morze
+		- Caesar
+		- vigenere
+		? Rail Fence 
+		? Route cipher
+		? Columnar
+
+2.3 - coordinates 
+		- save / lists / and so on
+		- add support N\\E
+		- consider coordinate actions
+		- Baltic maps
+2.4 - coordinates
+		- osm analyse
+		- use of radius
+		- grausti.riga.lv
+2.5 - statistics
+		- get from igra.lv (standart)
+		- get from igra.lv (image)
+		- get from en.cx
+		- analyse
+		- daemons
+2.x - coordinates
+		- consider using live shared location
+	- tasks
+		- image processing
+			- qr code
+			- bar code
+			- google search
+		- smart brute force
+ 3.x -
+	- VoiP
+	- Online Map
+		- 
+

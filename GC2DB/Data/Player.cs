@@ -13,8 +13,8 @@ namespace GC2DB.Data
         public virtual Game Game { get; set; }
         public long ChatId { get; set; }
         public bool isActive { get; set; }
-        public int UpdateTaskInfo { get; set; } = 0; //0/1/2
-        public int UpdateStatisticsInfo { get; set; } = 0;
+        public PlayerUpdateStatusInfo UpdateTaskInfo { get; set; } = 0; //0/1/2
+        public PlayerUpdateStatusInfo UpdateStatisticsInfo { get; set; } = 0;
 
         public Player(Game game, long chatId)
         {
@@ -22,12 +22,12 @@ namespace GC2DB.Data
             this.ChatId = chatId;
         }
 
-        //public Player(long gameId, long chatId)
-        //{
-        //    this.Game = new Game() { Id = gameId };
-        //    this.ChatId = ChatId;
-        //}
-
+        public enum PlayerUpdateStatusInfo
+        {
+            DontUpdate = 0,
+            UpdateStatus = 1,
+            UpdateText = 2
+        }
         /// <summary>
         /// only for EF. Do not use it
         /// </summary>

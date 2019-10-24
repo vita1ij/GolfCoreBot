@@ -35,6 +35,9 @@ namespace GC2.Constants
         public const string ShowGameSettings = "showgamesettings";
         public const string FindEncxGame = "findencxgame";
         public const string FoundEncxGame = "foundencxgame";
+        public const string GameTaskNoUpdates = "gametasknoupdates";
+        public const string GameTaskUpdateStatus = "gametaskupdatestatus";
+        public const string GameTaskUpdateText = "gametaskupdatetext";
 
         public const string GetTask = "gettask";
 

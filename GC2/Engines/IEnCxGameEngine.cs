@@ -9,7 +9,7 @@ namespace GC2.Engines
 {
     public abstract class IEnCxGameEngine : IGameEngine
     {
-        protected string? _enCxId;
+        protected string _enCxId;
         public abstract string MainUrlPart { get; }
         public string GamesCalendarUrl { get => $"{MainUrlPart}/GameCalendar.aspx"; }
 

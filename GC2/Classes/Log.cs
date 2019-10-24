@@ -9,7 +9,7 @@ namespace GC2
 {
     public static class Log
     {
-        public static IConfiguration Config
+        private static IConfiguration Config
         {
             get
             {
