@@ -62,7 +62,7 @@ namespace GC2WH
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=WebHook}/{action=Index}");
+                    template: "{controller=Home}/{action=Index}");
             });
         }
     }

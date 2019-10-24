@@ -15,21 +15,36 @@ namespace GC2WH.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Status()
         {
-            return View();
+            var sm = new StatusModel()
+            {
+                CanStartBot = true,
+                CanStopBot = true
+            };
+            var whInfo = await BotReference.Bot.GetWebhookInfoAsync();
+            sm.BotWebhookSet = !String.IsNullOrEmpty(whInfo?.Url);
+            sm.BotLocationDbLastUpdated = new DateTime(1);
+            return View("Status",sm);
         }
 
-        public IActionResult Status()
+        public async Task<IActionResult> StopBot()
         {
-            return View();
+            await BotReference.Bot.DeleteWebhookAsync();
+            return await Status();
         }
 
-        [Route(".well-known/acme-challenge/")]
-        public IActionResult Foo()
+        public async Task<IActionResult> StartBot()
         {
-            return View("Index");
+            await BotReference.Bot.SetWebhookAsync(Program.Config["WEBHOOK_URL"]);
+            return await Status();
         }
+
+        //[route(".well-known/acme-challenge/")]
+        //public iactionresult foo()
+        //{
+        //    return view("index");
+        //}
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

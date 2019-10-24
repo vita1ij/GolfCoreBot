@@ -1,0 +1,45 @@
+﻿@model GC2WH.Models.StatusModel
+
+@{
+    ViewData["Title"] = "Status";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var whSetClass = Model.BotWebhookSet ? "success" : "danger";
+    var whSetTitle = Model.BotWebhookSet ? "Online" : "Offline";
+}
+
+<div>
+    <div class="card border-@whSetClass bg-@whSetClass mb-3" style="max-width: 30rem;">
+        <div class="card-header">GolfBot - @whSetTitle</div>
+        <div class="card-body">
+            <h4 class="card-title">@Html.DisplayNameFor(model => model.BotLocationDbLastUpdated)</h4>
+            <p class="card-text">@Html.DisplayFor(model => model.BotLocationDbLastUpdated)</p>
+            <div>
+                @if (Model.CanStartBot)
+                {
+                    if (Model.BotWebhookSet)
+                    {
+                        <a class="btn btn-outline-primary">Start webhook</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-primary" href='@Url.Action("StartBot")'>Start webhook</a>
+                    }
+
+                }
+                @if (Model.CanStopBot)
+                {
+                    if (Model.BotWebhookSet)
+                    {
+                        <a class="btn btn-warning" href='@Url.Action("StopBot")'>Stop webhook</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-outline-warning">Stop webhook</a>
+                    }
+                    
+                }
+            </div>
+        </div>
+    </div>
+</div>

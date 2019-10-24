@@ -11,5 +11,6 @@ namespace GC2WH
     {
         public static TelegramBotClient Bot;
         public static User BotUser;
+        public static long? LastMessageId;
     }
 }
