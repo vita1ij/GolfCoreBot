@@ -27,6 +27,7 @@ namespace GC2Console
 
         public static TelegramBotClient Bot;
         public static User BotUser;
+        private static string WebhookUrl = "";
         
         static void Main(string[] args)
         {
@@ -49,6 +50,11 @@ namespace GC2Console
             }
             try
             {
+                var wht = Bot.GetWebhookInfoAsync();
+                wht.Wait();
+                var whinfo = wht.Result;
+                WebhookUrl = whinfo.Url;
+                Bot.DeleteWebhookAsync();
                 Bot.OnMessage += BotOnMessageReceived;
                 Bot.OnCallbackQuery += BotOnCallBackReceived;
                 BotUser = Bot.GetMeAsync().Result;
@@ -72,6 +78,7 @@ namespace GC2Console
 
             Console.ReadLine();
             Bot.StopReceiving();
+            Bot.SetWebhookAsync(WebhookUrl);
         }
 
         private static async void BotOnCallBackReceived(object sender, CallbackQueryEventArgs e)
