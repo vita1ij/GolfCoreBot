@@ -30,7 +30,7 @@ namespace GC2.Engines
 
         public abstract bool EnterCode(string code);
 
-        public abstract string GetTask();
+        public abstract string GetTask(out List<object> stuff);
         public abstract GameStatistics GetStatistics();
 
         public virtual void Init(Game game)

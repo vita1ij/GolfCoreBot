@@ -102,22 +102,23 @@ namespace GC2
             }
             catch(GCException ex)
             {
-                switch (ex.Level)
-                {
-                    case GCException.LevelType.Fatal:
-                        throw new Exception(ex.Message);
-                    case GCException.LevelType.Chat:
-                        return ProcessingResult.CreateText(message, ex.Message);
-                    case GCException.LevelType.ChatFull:
-                        return ProcessingResult.CreateText(message, $"Code:{ex.Code}, Message:{ex.Message}, Stack:{ex.StackTrace}");
-                    case GCException.LevelType.Log:
-                        Log.New(ex, message);
-                        break;
-                    case GCException.LevelType.Quiet:
-                        break;
-                }
+                //switch (ex.Level)
+                //{
+                //    case GCException.LevelType.Fatal:
+                //        throw new Exception(ex.Message);
+                //    case GCException.LevelType.Chat:
+                //        return ProcessingResult.CreateText(message, ex.Message);
+                //    case GCException.LevelType.ChatFull:
+                //        return ProcessingResult.CreateText(message, $"Code:{ex.Code}, Message:{ex.Message}, Stack:{ex.StackTrace}");
+                //    case GCException.LevelType.Log:
+                //        Log.New(ex, message);
+                //        break;
+                //    case GCException.LevelType.Quiet:
+                //        break;
+                //}
+                return ProcessingResult.CreateText(message, $"Message: {ex.Message??""}; StackTrace: {ex.StackTrace??""};");
             }
-            return null;
+            return ProcessingResult.CreateText(message, "Nothing to see here");
         }
         
     }

@@ -22,7 +22,7 @@ namespace GC2.Daemons
             foreach (var game in games)
             {
                 var engine = IGameEngine.Get(game);
-                string newTask = engine.GetTask();
+                string newTask = engine.GetTask(out List<object> stuff);
                 if (String.IsNullOrEmpty(newTask)) continue;
                 if (game.LastTask != newTask)
                 {

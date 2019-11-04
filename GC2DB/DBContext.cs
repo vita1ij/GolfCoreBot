@@ -48,12 +48,13 @@ namespace GC2DB
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            foreach (var property in modelBuilder.Model.GetEntityTypes()
-                .SelectMany(t => t.GetProperties())
-                .Where(p => p.ClrType == typeof(decimal)))
-            {
-                property.Relational().ColumnType = "decimal(10, 6)";
-            }
+            //foreach (var property in modelBuilder.Model.GetEntityTypes()
+            //    .SelectMany(t => t.GetProperties())
+            //    .Where(p => p.ClrType == typeof(decimal)))
+            //{
+            //    property.Relational().ColumnType = "decimal(10, 6)";
+            //}
+            //todo[vg] relational
 
             base.OnModelCreating(modelBuilder);
         }

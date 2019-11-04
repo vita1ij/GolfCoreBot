@@ -1,9 +1,13 @@
-﻿using System;
+﻿using GC2.Classes;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace GC2
@@ -19,7 +23,8 @@ namespace GC2
         public bool IsHtml { get; set; } = false;
         public int? ReplyTo { get; set; }
         //public Image<Rgba32>? Image { get; set; }
-        public object Image { get; set; }
+        public List<string> ImageUrls { get; set; } = new List<string>();
+        public List<ImageResult> Images { get; set; }
         public bool ReplaceOriginal { get; set; } = false;
         private List<ProcessingResult> editMessages;
         public List<ProcessingResult> EditMessages
@@ -95,7 +100,7 @@ namespace GC2
                             editResult.ChatId,
                             editResult.MessageId.Value,
                             editResult.Text,
-                            editResult.IsHtml ? ParseMode.Html : ParseMode.Default
+                            editResult.IsHtml ? ParseMode.Html : ParseMode.Markdown
                             );
                     }
                     if (editResult.Markup != null && editResult.Markup is InlineKeyboardMarkup && editResult.MessageId.HasValue)
@@ -140,7 +145,7 @@ namespace GC2
                             result.ChatId,
                             result.MessageId.Value,
                             result.Text,
-                            result.IsHtml ? ParseMode.Html : ParseMode.Default
+                            result.IsHtml ? ParseMode.Html : ParseMode.Markdown
                             );
                     }
                     if (result.Markup != null && result.Markup is InlineKeyboardMarkup)
@@ -157,12 +162,50 @@ namespace GC2
                     await Bot.SendTextMessageAsync(
                         result.ChatId,
                         result.Text,
-                        result.IsHtml ? ParseMode.Html : ParseMode.Default,
+                        result.IsHtml ? ParseMode.Html : ParseMode.Markdown,
                         replyMarkup: result.Markup,
                         disableWebPagePreview: result.DisableWebPagePreview,
                         replyToMessageId: result.ReplyTo ?? 0
                         );
                 }
+            }
+            if (result.ImageUrls.Any(x => !String.IsNullOrEmpty(x)))
+            {
+                for(int i = 0; i<result.ImageUrls.Count; i++)
+                {
+                    var imgUrl = result.ImageUrls[i];
+                    try
+                    {
+                        await Bot.SendPhotoAsync(result.ChatId, new Telegram.Bot.Types.InputFiles.InputOnlineFile(imgUrl), $"IMG.{i}");
+                    }
+                    catch(Exception ex)
+                    {
+
+                    }
+                }
+            }
+            if (result.Images != null && result.Images.Any())
+            {
+                foreach(var img in result.Images)
+                {
+                    try
+                    {
+                        InputOnlineFile imgFile = (!String.IsNullOrWhiteSpace(img.Url)) ?
+                                                    new InputOnlineFile(img.Url) :
+                                                    (img.Stream != null) ?
+                                                    new InputOnlineFile(img.Stream, img.Name) :
+                                                    null;
+                        if (imgFile != null)
+                        {
+                            await Bot.SendPhotoAsync(result.ChatId, imgFile, img.ReferenceName);
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+
+                    }
+                }
+                
             }
         }
     }

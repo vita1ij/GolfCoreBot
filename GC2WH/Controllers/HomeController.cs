@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using GC2WH.Models;
+using GC2DB;
 
 namespace GC2WH.Controllers
 {
@@ -17,14 +18,25 @@ namespace GC2WH.Controllers
 
         public async Task<IActionResult> Status()
         {
+            var whInfo = await BotReference.Bot.GetWebhookInfoAsync();
+
             var sm = new StatusModel()
             {
                 CanStartBot = true,
-                CanStopBot = true
+                CanStopBot = true,
+                PendingUpdates = whInfo.PendingUpdateCount,
+                LastErrorDate = whInfo.LastErrorDate,
+                LastErrorMessage = whInfo.LastErrorMessage,
+                MaxConnections = whInfo.MaxConnections,
+                AllowedUpdates = String.Join(" / ", whInfo.AllowedUpdates)
             };
-            var whInfo = await BotReference.Bot.GetWebhookInfoAsync();
+            
             sm.BotWebhookSet = !String.IsNullOrEmpty(whInfo?.Url);
             sm.BotLocationDbLastUpdated = new DateTime(1);
+
+            //Tests
+            sm.Tests.DBConnection = TestDbConnection();
+            
             return View("Status",sm);
         }
 
@@ -50,6 +62,22 @@ namespace GC2WH.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private static string TestDbConnection()
+        {
+            try
+            {
+                using (var db = DBContext.Instance)
+                {
+                    var lists = db.Lists.ToList();
+                }
+                return "Ok";
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
         }
     }
 }

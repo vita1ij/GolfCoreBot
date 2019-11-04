@@ -23,6 +23,10 @@ namespace GC2
 
         public static void New(Exception ex)
         {
+            if (String.IsNullOrWhiteSpace(Config["ERROR_FOLDER"]?.ToString()))
+            {
+                return;
+            }
             var folder = Config["ERROR_FOLDER"].ToString().TrimEnd('/').TrimEnd('\\');
             if (!Directory.Exists($"{folder}/{DateTime.Today.ToString("yyyyMMdd")}"))
             {
@@ -47,6 +51,10 @@ namespace GC2
 
         public static void New(GCException ex, ReceivedMessage message)
         {
+            if (String.IsNullOrWhiteSpace(Config["ERROR_FOLDER"]?.ToString()))
+            {
+                return;
+            }
             var folder = Config["ERROR_FOLDER"].ToString().TrimEnd('/').TrimEnd('\\');
             if (!Directory.Exists($"{folder}/{DateTime.Today.ToString("yyyyMMdd")}"))
             {

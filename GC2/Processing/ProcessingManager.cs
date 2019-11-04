@@ -10,6 +10,7 @@ using GC2.Engines;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Linq;
+using GC2.Classes;
 
 namespace GC2
 {
@@ -321,8 +322,17 @@ namespace GC2
             if (activeGame == null) return null;
 
             var engine = IGameEngine.Get(activeGame);
-            var task = engine.GetTask();
-            return ProcessingResult.CreateText(message, task);
+            var task = engine.GetTask(out var stuff);
+            var result = ProcessingResult.CreateHtml(message, task);
+            if (stuff != null)
+            {
+                result.Images = new List<ImageResult>();
+                foreach(ImageResult img in stuff.Where(x => x is ImageResult))
+                {
+                    result.Images.Add(img);
+                }
+            }
+            return result;
         }
 
         internal static ProcessingResult ShowGameSettings(ReceivedMessage message)
