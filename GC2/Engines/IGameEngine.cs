@@ -17,12 +17,12 @@ namespace GC2.Engines
         public abstract string LoginUrl { get; }
         public abstract string TaskUrl { get; }
         public string StatisticsUrl { get; set; }
-        public abstract string LoginPostData { get; }
+        public abstract List<KeyValuePair<string, string>> LoginPostValues { get; }
 
         public bool Login()
         {
-            if (LoginUrl == null || LoginPostData == null) return false;
-            ConnectionCookie = WebConnectHelper.MakePost4Cookies(LoginUrl, LoginPostData);
+            if (LoginUrl == null || LoginPostValues == null) return false;
+            ConnectionCookie = WebConnectHelper.MakePost4Cookies(LoginUrl, LoginPostValues);
             return (ConnectionCookie != null && ConnectionCookie.Count > 0);
         }
 

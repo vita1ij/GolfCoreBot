@@ -17,11 +17,17 @@ namespace GC2.Engines
 
         public override string LoginUrl
         {
-            get => "http://igra.lv/igra.php?s=login";
+            get => "https://igra.lv/igra.php?s=login";
         }
-        public override string LoginPostData
+        public override List<KeyValuePair<string, string>> LoginPostValues
         {
-            get => $"login={_login ?? ""}&password={_password ?? ""}";
+            get => (String.IsNullOrWhiteSpace(_login) || String.IsNullOrWhiteSpace(_password))
+                ? null
+                : new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("login", _login),
+                    new KeyValuePair<string, string>("password", _password)
+                };
         }
         public override string TaskUrl
         {
@@ -58,7 +64,7 @@ namespace GC2.Engines
 
         public override bool EnterCode(string code)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public override GameStatistics GetStatistics()
@@ -74,8 +80,8 @@ namespace GC2.Engines
                 if (TaskUrl == null) return null;
                 if (ConnectionCookie == null)
                 {
-                    if (LoginUrl == null || LoginPostData == null) return null;
-                    ConnectionCookie = WebConnectHelper.MakePost4Cookies(LoginUrl, LoginPostData);
+                    if (LoginUrl == null || LoginPostValues == null) return null;
+                    ConnectionCookie = WebConnectHelper.MakePost4Cookies(LoginUrl, LoginPostValues);
                     if (ConnectionCookie == null) return null;
                 }
                 else

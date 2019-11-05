@@ -3,8 +3,11 @@
 2.2 - engines 
 		+ task structure simple analysis (img/link)
 		- task numbers / new vs update
+			- en.cx
+			- igra.lv
 		- enter code (encx) 
 			- command
+			- special command
 			- prefix
 		- enter code (igra)
 		- pin actual task

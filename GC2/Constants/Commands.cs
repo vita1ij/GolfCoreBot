@@ -43,5 +43,7 @@ namespace GC2.Constants
 
         public const string SetRadius = "setradius";
         public const string SetPrefix = "setprefix";
+
+        public const string EnterCode = "c";
     }
 }

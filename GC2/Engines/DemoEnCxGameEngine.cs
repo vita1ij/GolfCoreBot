@@ -10,11 +10,6 @@ namespace GC2.Engines
     {
         public override string MainUrlPart => "http://demo.en.cx";
 
-        public override bool EnterCode(string code)
-        {
-            throw new NotImplementedException();
-        }
-
         public override GameStatistics GetStatistics()
         {
             throw new NotImplementedException();
