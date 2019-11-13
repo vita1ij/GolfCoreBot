@@ -70,6 +70,8 @@ namespace GC2
                         case Constants.Commands.GameTaskUpdateStatus:
                         case Constants.Commands.GameTaskUpdateText:
                             return ProcessingManager.SetTaskUpdate(message);
+                        case Constants.Commands.EnterCode:
+                            return ProcessingManager.EnterCode(message);
                         default:
                             break;
                     }
@@ -118,7 +120,8 @@ namespace GC2
                 //}
                 return ProcessingResult.CreateText(message, $"Message: {ex.Message??""}; StackTrace: {ex.StackTrace??""};");
             }
-            return ProcessingResult.CreateText(message, "Nothing to see here");
+            //return ProcessingResult.CreateText(message, "Nothing to see here");
+            return null;
         }
         
     }

@@ -77,7 +77,7 @@ namespace GC2.Engines
             return result;
         }
 
-        public override string GetTask(out List<object> stuff)
+        public override GameTask GetTask(out List<object> stuff)
         {
             Login();
             var data = WebConnectHelper.MakePost(TaskUrl, ConnectionCookie);
@@ -87,7 +87,10 @@ namespace GC2.Engines
             var taskNodes = doc.DocumentNode?.SelectNodes("//div[@class='content']");
             string taskContent = FormatTask(taskNodes, out var imageResults);
             stuff = imageResults.Select(x => x as object).ToList();
-            return taskContent;
+            return new GameTask()
+            {
+                Text = taskContent
+            };
         }
 
         public string FormatTask(HtmlNodeCollection input, out List<ImageResult> images)

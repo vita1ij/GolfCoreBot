@@ -57,21 +57,19 @@ namespace GC2DB.Managers
             }
         }
 
-        public static void AddTask(Game game, string newTask, string title = "", int incrementNumber = 1)
+        public static void AddTask(GameTask newTask)
         {
             using (var db = DBContext.Instance)
             {
-                var maxNumber = db.Tasks.Where(x => x.Game == game).Max(x => x.Number);
+                var maxNumber = db.Tasks.Where(x => x.Game == newTask.Game).Max(x => x.Number);
 
-                db.Tasks.Add(new Task()
-                {
-                    Game = game,
-                    Text = newTask,
-                    Title = title,
-                    Number = maxNumber + incrementNumber
-                });
+                newTask.Number = newTask.Number ?? maxNumber + 1;
 
-                game.LastTask = newTask;
+                var dbTask = db.Tasks.Add(newTask);
+                newTask.Id = dbTask.Entity.Id;
+
+                var game = newTask.Game;
+                game.LastTaskId = newTask.Id;
 
                 db.Games.Update(game);
 
@@ -186,6 +184,15 @@ namespace GC2DB.Managers
                     return db.Games.Where(x => x.Id == gameId).First();
                 }
                 return null;
+            }
+        }
+
+        public static GameTask GetTaskById(long taskId)
+        {
+            using (var db = DBContext.Instance)
+            {
+                var result = db.Tasks.Where(x => x.Id == taskId)?.ToList()?.First();
+                return result;
             }
         }
     }

@@ -22,11 +22,15 @@ namespace GC2.Daemons
             foreach (var game in games)
             {
                 var engine = IGameEngine.Get(game);
-                string newTask = engine.GetTask(out List<object> stuff);
-                if (String.IsNullOrEmpty(newTask)) continue;
-                if (game.LastTask != newTask)
+                var newTask = engine.GetTask(out List<object> stuff);
+                if (newTask == null) continue;
+                var lastTask = (game.LastTaskId.HasValue) 
+                    ? GameManager.GetTaskById(game.LastTaskId.Value)
+                    : null;
+                if (lastTask == null || !lastTask.Equals(newTask))
                 {
-                    GameManager.AddTask(game, newTask);
+                    newTask.Game = game;
+                    GameManager.AddTask(newTask);
 
                     foreach(var player in players.Where(x => x.Game.Id == game.Id))
                     {
@@ -34,7 +38,7 @@ namespace GC2.Daemons
                         {
                             ChatId = player.ChatId,
                             IsHtml = false,
-                            Text = player.UpdateTaskInfo == GC2DB.Data.Player.PlayerUpdateStatusInfo.UpdateText ? newTask : "UP!"
+                            Text = player.UpdateTaskInfo == GC2DB.Data.Player.PlayerUpdateStatusInfo.UpdateText ? newTask.Text : "UP!"
                         };
                         await result.Finish(bot);
                     }

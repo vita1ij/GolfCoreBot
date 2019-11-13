@@ -12,7 +12,7 @@ namespace GC2DB
         #pragma warning disable CS8618 // Non-nullable field is uninitialized.
         public DbSet<Game> Games { get; set; }
         public DbSet<Player> Players { get; set; }
-        public DbSet<Task> Tasks { get; set; }
+        public DbSet<GameTask> Tasks { get; set; }
         public DbSet<DataFile> DataFiles { get; set; }
         public DbSet<ListItem> Lists { get; set; }
         public DbSet<Location> Locations { get; set; }

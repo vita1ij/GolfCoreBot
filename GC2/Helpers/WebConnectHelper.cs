@@ -55,9 +55,9 @@ namespace GC2.Helpers
             var cookieJar = new CookieContainer();
             if (cookies != null)
             {
-                foreach(var cookie in cookies as IEnumerable<Cookie>)
+                foreach(var cookie in cookies)
                 {
-                    cookieJar.Add(cookie);
+                    cookieJar.Add(cookie as Cookie);
                 }
             }
             var uri = new Uri(url);
