@@ -87,9 +87,18 @@ namespace GC2.Engines
             var taskNodes = doc.DocumentNode?.SelectNodes("//div[@class='content']");
             string taskContent = FormatTask(taskNodes, out var imageResults);
             stuff = imageResults.Select(x => x as object).ToList();
+            string levelId = doc.DocumentNode?.SelectNodes("//input[@name='LevelId']")?.First()?.GetAttributeValue("Value", (string)null);
+            string levelNumberStr = doc.DocumentNode?.SelectNodes("//input[@name='LevelNumber']")?.First()?.GetAttributeValue("Value", (string)null);
+            long? levelNumber = null;
+            if (long.TryParse(levelNumberStr, out var lvlnum))
+            {
+                levelNumber = lvlnum;
+            }
             return new GameTask()
             {
-                Text = taskContent
+                Text = taskContent,
+                EnCxId = levelId,
+                Number = levelNumber
             };
         }
 
