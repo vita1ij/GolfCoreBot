@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Cache;
-using System.Net.Http;
 using System.Text;
 
 namespace GC2.Helpers
@@ -80,8 +78,7 @@ namespace GC2.Helpers
             request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
             IRestResponse response = client.Execute(request);
 
-            //return GetContentsFromResponse(response);
-            return null;
+            return GetContentsFromResponse(response);
         }
 
         public static string GetContentsFromResponse(IRestResponse response)

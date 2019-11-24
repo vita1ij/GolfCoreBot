@@ -46,7 +46,7 @@ namespace GC2.Engines
             List<Game> result = new List<Game>();
             string url = $"{GamesCalendarUrl}?type={type}&status={status}&zone={zone}";
 
-            var data = WebConnectHelper.MakePost(url);
+            var data = WebConnectHelper.MakeGetPost(url, null);
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(data);
             var allGames = doc.DocumentNode.SelectNodes("//td[@class='infoCell'][5]//a");
@@ -77,7 +77,14 @@ namespace GC2.Engines
             return result;
         }
 
-        public override string GetTask(out List<object> stuff)
+        public override bool IsLoginPage(HtmlDocument doc)
+            =>
+            (
+                (doc.DocumentNode?.SelectNodes("//input[@id='txtLogin']")?.Any() ?? false) &&
+                (doc.DocumentNode?.SelectNodes("//input[@id='txtPassword']")?.Any() ?? false)
+            );
+
+        public override GameTask GetTask(out List<object> stuff)
         {
             Login();
             var data = WebConnectHelper.MakeGetPost(TaskUrl, ConnectionCookie);
@@ -97,7 +104,19 @@ namespace GC2.Engines
             var taskNodes = doc.DocumentNode?.SelectNodes("//div[@class='content']");
             string taskContent = FormatTask(taskNodes, out var imageResults);
             stuff = imageResults.Select(x => x as object).ToList();
-            return taskContent;
+            string levelId = doc.DocumentNode?.SelectNodes("//input[@name='LevelId']")?.First()?.GetAttributeValue("Value", (string)null);
+            string levelNumberStr = doc.DocumentNode?.SelectNodes("//input[@name='LevelNumber']")?.First()?.GetAttributeValue("Value", (string)null);
+            long? levelNumber = null;
+            if (long.TryParse(levelNumberStr, out var lvlnum))
+            {
+                levelNumber = lvlnum;
+            }
+            return new GameTask()
+            {
+                Text = taskContent,
+                EnCxId = levelId,
+                Number = levelNumber
+            };
         }
 
         public string FormatTask(HtmlNodeCollection input, out List<ImageResult> images)
@@ -148,24 +167,12 @@ namespace GC2.Engines
                     case "a":
                         if (node?.Attributes?.Contains("href") ?? false)
                         {
-                            if (canUseTags)
-                            {
-                                //  <a href="URL">inline URL</a>
-                                result += $"<a href=\"{node.Attributes["href"].Value}\">{node.InnerText} |({GetFilename(node.Attributes["href"].Value)})</a>";
-                            }
-                            else
-                            {
-                                if (!String.IsNullOrWhiteSpace(node.InnerText))
-                                {
-                                    result += $"[Link] {node.InnerText} | {node.Attributes["href"].Value} [/Link]";
-                                }
-                                else
-                                {
-                                    result += node.Attributes["href"].Value;
-                                }
-                            }
+                            if (openITag) result += "</i>";
+                            if (openBTag) result += "</b>";
+                            result += $"<a href=\"{node.Attributes["href"].Value}\">{node.InnerText} |({GetFilename(node.Attributes["href"].Value)})</a>";
+                            if (openITag) result += "<i>";
+                            if (openBTag) result += "<b>";
                         }
-                        
                         break;
                     case "img":
                         if (node?.Attributes?.Contains("src") ?? false)
@@ -212,6 +219,40 @@ namespace GC2.Engines
             var lines = input.Split(new char[]{ '\\','/'}, StringSplitOptions.RemoveEmptyEntries);
             if (lines.Any()) return lines.Last();
             return "";
+        }
+
+        public override bool EnterCode(string code)
+        {
+            if (ConnectionCookie != null && ConnectionCookie.Count>0)
+            {
+                bool? result = PostCode(ConnectionCookie, code);
+                if (result.HasValue)
+                {
+                    return result.Value;
+                }
+            }
+            if (Login())
+            {
+                bool? result = PostCode(ConnectionCookie, code);
+                if (result.HasValue)
+                {
+                    return result.Value;
+                }
+            }
+
+            return false;
+        }
+
+        private bool? PostCode(CookieCollection connectionCookie, string code)
+        {
+            WebConnectHelper.MakeGetPost(TaskUrl, connectionCookie, new List<KeyValuePair<string, string>>()
+            {
+                
+                new KeyValuePair<string, string>("LevelId", ""),
+                new KeyValuePair<string, string>("LevelNumber", ""),
+                new KeyValuePair<string, string>("LevelAction.Answer",code)
+            });
+            return null;
         }
     }
 }
