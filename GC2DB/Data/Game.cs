@@ -15,7 +15,7 @@ namespace GC2DB.Data
         public GameType Type { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
-        public string LastTask { get; set; }
+        public long? LastTaskId { get; set; }
         public string Title { get; set; }
         public string Href { get; set; }
         public string EnCxId { get; set; }
@@ -24,6 +24,12 @@ namespace GC2DB.Data
         public long? Radius { get; set; }
         public string CenterCoordinates { get; set; }
         public bool isActive { get; set; } = true;
+        public string Cookies { get; set; } = null;
+        public bool HadErrorsWhileLogin { get; set; } = false;
+        public bool TryToLogIn { get; set; } = true;
+        public bool HadErrorsWhileReading { get; set; } = false;
+        public DateTime LatestTaskTime { get; set; } = DateTime.MinValue;
+        public DateTime PreviousTaskTime { get; set; } = DateTime.MinValue;
 
         public Game()
         {

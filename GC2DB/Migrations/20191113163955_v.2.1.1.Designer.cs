@@ -4,14 +4,16 @@ using GC2DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GC2DB.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20191113163955_v.2.1.1")]
+    partial class v211
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,23 +52,15 @@ namespace GC2DB.Migrations
 
                     b.Property<string>("CenterCoordinates");
 
-                    b.Property<string>("Cookies");
-
                     b.Property<string>("EnCxId");
 
                     b.Property<string>("EnCxType");
 
                     b.Property<string>("Guid");
 
-                    b.Property<bool>("HadErrorsWhileLogin");
-
-                    b.Property<bool>("HadErrorsWhileReading");
-
                     b.Property<string>("Href");
 
                     b.Property<long?>("LastTaskId");
-
-                    b.Property<DateTime>("LatestTaskTime");
 
                     b.Property<string>("Login");
 
@@ -74,13 +68,9 @@ namespace GC2DB.Migrations
 
                     b.Property<string>("Prefix");
 
-                    b.Property<DateTime>("PreviousTaskTime");
-
                     b.Property<long?>("Radius");
 
                     b.Property<string>("Title");
-
-                    b.Property<bool>("TryToLogIn");
 
                     b.Property<int>("Type");
 

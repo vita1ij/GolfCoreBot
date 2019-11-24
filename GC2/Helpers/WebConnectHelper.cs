@@ -1,10 +1,10 @@
-﻿using System;
+﻿using RestSharp;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace GC2.Helpers
 {
@@ -14,38 +14,36 @@ namespace GC2.Helpers
         /// For login
         /// </summary>
         /// <param name="url">url for login</param>
-        /// <param name="postData">login / pass data</param>
+        /// <param name="values">login / pass data</param>
         /// <returns></returns>
-        public static CookieCollection MakePost4Cookies(string url, string postData)
+        public static CookieCollection MakePost4Cookies(string url, List<KeyValuePair<string, string>> values)
         {
-            HttpWebRequest http = (HttpWebRequest)WebRequest.Create(url); //do we need query?
-            if (http == null) return null;
-            var cookieJar = new CookieContainer();
-            http.KeepAlive = true;
-            http.Method = "POST";
-            http.ContentType = "application/x-www-form-urlencoded";
-            http.CookieContainer = cookieJar;
-            byte[] dataBytes = UTF8Encoding.UTF8.GetBytes(postData);
-            http.ContentLength = dataBytes.Length;
-            using (Stream postStream = http.GetRequestStream())
-            {
-                postStream.Write(dataBytes, 0, dataBytes.Length);
-            }
-            HttpWebResponse httpResponse;
-            try
-            {
-                httpResponse = http.GetResponse() as HttpWebResponse;
-            }
-            catch (Exception ex)
-            {
-                Log.New(ex);
-                return null;
-            }
-            if (httpResponse == null) return null;
+            var client = new RestClient(url);
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("cache-control", "no-cache");
+            request.AddHeader("Connection", "keep-alive");
+            request.AddHeader("Accept-Encoding", "gzip, deflate");
+            request.AddHeader("Cache-Control", "no-cache");
+            request.AddHeader("Accept", "*/*");
+            request.AddHeader("User-Agent", "PostmanRuntime/7.19.0");
+            request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            var postdata = String.Join("&", values.Select(x => $"{x.Key}={x.Value}"));
+            request.AddParameter("undefined", postdata, ParameterType.RequestBody);
+            IRestResponse response = client.Execute(request);
 
-            if (httpResponse.Headers.AllKeys.ToList().Contains("Set-Cookie"))
+            if (response.Cookies?.Any() ?? false)
             {
-                return cookieJar.GetCookies(http.RequestUri);
+                var cookieJar = new CookieCollection();
+                foreach (var c in response.Cookies)
+                {
+                    cookieJar.Add(new Cookie(c.Name, c.Value)
+                    {
+                        Domain = c.Domain,
+                        Expires = c.Expires,
+                        Path = c.Path
+                    });
+                }
+                return cookieJar;
             }
             return null;
         }
@@ -56,61 +54,40 @@ namespace GC2.Helpers
         /// <param name="url"></param>
         /// <param name="cookies"></param>
         /// <returns></returns>
-        public static string MakePost(string url, CookieCollection cookies = null)
+        public static string MakeGetPost(string url, CookieCollection cookies, List<KeyValuePair<string, string>> values = null)
         {
-            // Probably want to inspect the http.Headers here first
-            HttpWebRequest http = (HttpWebRequest)WebRequest.Create(url); //do we need query?
-            if (http == null) return null;
+            var client = new RestClient(url);
+            var request = (values == null) ? new RestRequest(Method.GET) : new RestRequest(Method.POST);
+            request.AddHeader("cache-control", "no-cache");
+            request.AddHeader("Connection", "keep-alive");
+            request.AddHeader("Referer", url);
             if (cookies != null)
             {
-                http.CookieContainer = new CookieContainer();
-                foreach(Cookie c in cookies)
+                List<string> cookiesStringList = new List<string>();
+                foreach (Cookie cookie in cookies)
                 {
-                    http.CookieContainer.Add(new Cookie
-                    {
-                        Domain = c.Domain,
-                        Name = c.Name,
-                        Path = c.Path,
-                        Value = c.Value
-                    });
+                    cookiesStringList.Add($"{cookie.Name}={cookie.Value}");
                 }
+                string cookiesString = String.Join("; ", cookiesStringList);
+                request.AddHeader("Cookie", cookiesString);
             }
-            HttpWebResponse response;
-            try
-            {
-                response = http.GetResponse() as HttpWebResponse;
-            }
-            catch (Exception ex)
-            {
-                Log.New(ex);
-                return null;
-            }
-            if (response == null) return null;
+
+            request.AddHeader("Accept-Encoding", "gzip, deflate");
+            request.AddHeader("Cache-Control", "no-cache");
+            request.AddHeader("Accept", "*/*");
+            request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            IRestResponse response = client.Execute(request);
 
             return GetContentsFromResponse(response);
         }
 
-        public static string GetContentsFromResponse(HttpWebResponse response)
+        public static string GetContentsFromResponse(IRestResponse response)
         {
             string data = null;
+            if (response == null) return null;
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                Stream receiveStream = response.GetResponseStream();
-                StreamReader readStream;
-
-                if (String.IsNullOrWhiteSpace(response.CharacterSet))
-                {
-                    readStream = new StreamReader(receiveStream);
-                }
-                else
-                {
-                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-                }
-
-                data = readStream.ReadToEnd();
-
-                response.Close();
-                readStream.Close();
+                return response.Content;
             }
             return data;
         }

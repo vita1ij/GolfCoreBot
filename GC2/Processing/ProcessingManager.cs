@@ -167,6 +167,18 @@ namespace GC2
             return result;
         }
 
+        internal static ProcessingResult EnterCode(ReceivedMessage message)
+        {
+            var player = GameManager.GetActivePlayer(message.ChatId);
+            var activeGame = GameManager.GetActiveGameByChatId(message.ChatId);
+            if (player == null || activeGame == null || String.IsNullOrWhiteSpace(message.Parameter)) return null;
+
+            var engine = IGameEngine.Get(activeGame);
+
+            var result = engine.EnterCode(message.Parameter);
+            return ProcessingResult.CreateText(message, result.ToString());
+        }
+
         internal static ProcessingResult SetTaskUpdate(ReceivedMessage message)
         {
             var player = GameManager.GetActivePlayer(message.ChatId);
@@ -323,7 +335,7 @@ namespace GC2
 
             var engine = IGameEngine.Get(activeGame);
             var task = engine.GetTask(out var stuff);
-            var result = ProcessingResult.CreateHtml(message, task);
+            var result = ProcessingResult.CreateHtml(message, task.Text);
             if (stuff != null)
             {
                 result.Images = new List<ImageResult>();
@@ -424,7 +436,7 @@ namespace GC2
                 var engine = IGameEngine.Get(activeGame);
                 try
                 {
-                    if (engine.Login())
+                    if (engine.Login(activeGame))
                     {
                         //activeGame.Update();
                         GameManager.Update(activeGame);

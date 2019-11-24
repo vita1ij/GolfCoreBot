@@ -100,7 +100,7 @@ namespace GC2
                             editResult.ChatId,
                             editResult.MessageId.Value,
                             editResult.Text,
-                            editResult.IsHtml ? ParseMode.Html : ParseMode.Markdown
+                            editResult.IsHtml ? ParseMode.Html : ParseMode.Default
                             );
                     }
                     if (editResult.Markup != null && editResult.Markup is InlineKeyboardMarkup && editResult.MessageId.HasValue)
@@ -145,7 +145,7 @@ namespace GC2
                             result.ChatId,
                             result.MessageId.Value,
                             result.Text,
-                            result.IsHtml ? ParseMode.Html : ParseMode.Markdown
+                            result.IsHtml ? ParseMode.Html : ParseMode.Default
                             );
                     }
                     if (result.Markup != null && result.Markup is InlineKeyboardMarkup)
@@ -162,7 +162,7 @@ namespace GC2
                     await Bot.SendTextMessageAsync(
                         result.ChatId,
                         result.Text,
-                        result.IsHtml ? ParseMode.Html : ParseMode.Markdown,
+                        result.IsHtml ? ParseMode.Html : ParseMode.Default,
                         replyMarkup: result.Markup,
                         disableWebPagePreview: result.DisableWebPagePreview,
                         replyToMessageId: result.ReplyTo ?? 0

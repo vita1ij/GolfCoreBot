@@ -17,15 +17,21 @@ namespace GC2.Engines
 
         public override string LoginUrl
         {
-            get => "http://igra.lv/igra.php?s=login";
+            get => "https://igra.lv/igra.php?s=login";
         }
-        public override string LoginPostData
+        public override List<KeyValuePair<string, string>> LoginPostValues
         {
-            get => $"login={_login ?? ""}&password={_password ?? ""}";
+            get => (String.IsNullOrWhiteSpace(_login) || String.IsNullOrWhiteSpace(_password))
+                ? null
+                : new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("login", _login),
+                    new KeyValuePair<string, string>("password", _password)
+                };
         }
         public override string TaskUrl
         {
-            get => "http://www.igra.lv/igra.php";
+            get => "https://www.igra.lv/igra.php";
         }
         #endregion
 
@@ -58,7 +64,7 @@ namespace GC2.Engines
 
         public override bool EnterCode(string code)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public override GameStatistics GetStatistics()
@@ -66,7 +72,7 @@ namespace GC2.Engines
             throw new NotImplementedException();
         }
 
-        public override string GetTask(out List<object> stuff)
+        public override GameTask GetTask(out List<object> stuff)
         {
             stuff = null;
             try
@@ -74,8 +80,8 @@ namespace GC2.Engines
                 if (TaskUrl == null) return null;
                 if (ConnectionCookie == null)
                 {
-                    if (LoginUrl == null || LoginPostData == null) return null;
-                    ConnectionCookie = WebConnectHelper.MakePost4Cookies(LoginUrl, LoginPostData);
+                    if (LoginUrl == null || LoginPostValues == null) return null;
+                    ConnectionCookie = WebConnectHelper.MakePost4Cookies(LoginUrl, LoginPostValues);
                     if (ConnectionCookie == null) return null;
                 }
                 else
@@ -83,12 +89,15 @@ namespace GC2.Engines
                     //fix    Expires: {1/1/0001 12:00:00 AM}
                     ConnectionCookie["agt_session"].Expires = DateTime.MinValue;
                 }
-                var data = WebConnectHelper.MakePost(TaskUrl, ConnectionCookie);
+                var data = WebConnectHelper.MakeGetPost(TaskUrl, ConnectionCookie);
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(data);
                 string taskContent = (doc.GetElementbyId("general-puzzle") ?? doc.GetElementbyId("general")).InnerText;
 
-                return taskContent;
+                return new GameTask()
+                {
+                    Text = taskContent
+                };
             }
             catch (Exception ex)
             {
@@ -96,9 +105,9 @@ namespace GC2.Engines
             }
         }
 
-        public override bool IsLoginPage(string data)
+        public override bool IsLoginPage(HtmlDocument data)
         {
-            throw new NotImplementedException();
+            return false;
         }
     }
 }
