@@ -1,7 +1,19 @@
 2.1.0 Current
 
 2.2 - engines 
-		+ task structure simple analysis (img/link)
+		- Fix Login
+			+ En.cx
+				+ Get Cookies
+				+ Read
+			+ Igra.lv
+				+ Get Cookies
+				+ Read
+			- Store Cookies in DB -> optimise login
+		- Exceptions Handling
+		- Store / Analyse errors
+			- Login
+			- Task reading
+		* task structure simple analysis (img/link)
 		- task numbers / new vs update
 			- en.cx
 			- igra.lv
@@ -10,8 +22,21 @@
 			- special command
 			- prefix
 		- enter code (igra)
-		- pin actual task
-	+ Webhook
+			-
+		- Tasks has dynamic values error
+		- Check if on login page
+			+ en.cx
+			- igra.lv
+	- Check Daemons
+		- en.cx
+		- igra.lv
+	* Webhook (test)
+2.3 - coordinates 
+		- save / lists / and so on
+		- add support N\\E
+		- consider coordinate actions
+		- Baltic maps
+	- pin actual task
 	- /crack
 		- Morze
 		- Caesar
@@ -19,12 +44,6 @@
 		? Rail Fence 
 		? Route cipher
 		? Columnar
-
-2.3 - coordinates 
-		- save / lists / and so on
-		- add support N\\E
-		- consider coordinate actions
-		- Baltic maps
 2.4 - coordinates
 		- osm analyse
 		- use of radius

@@ -15,11 +15,6 @@ namespace GC2.Engines
             throw new NotImplementedException();
         }
 
-        public override bool IsLoginPage(string data)
-        {
-            throw new NotImplementedException();
-        }
-
         public DemoEnCxGameEngine(Game game)
         {
                 

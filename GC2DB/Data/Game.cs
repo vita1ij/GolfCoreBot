@@ -24,6 +24,12 @@ namespace GC2DB.Data
         public long? Radius { get; set; }
         public string CenterCoordinates { get; set; }
         public bool isActive { get; set; } = true;
+        public string Cookies { get; set; } = null;
+        public bool HadErrorsWhileLogin { get; set; } = false;
+        public bool TryToLogIn { get; set; } = true;
+        public bool HadErrorsWhileReading { get; set; } = false;
+        public DateTime LatestTaskTime { get; set; } = DateTime.MinValue;
+        public DateTime PreviousTaskTime { get; set; } = DateTime.MinValue;
 
         public Game()
         {

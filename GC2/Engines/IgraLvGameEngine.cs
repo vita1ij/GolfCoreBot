@@ -31,7 +31,7 @@ namespace GC2.Engines
         }
         public override string TaskUrl
         {
-            get => "http://www.igra.lv/igra.php";
+            get => "https://www.igra.lv/igra.php";
         }
         #endregion
 
@@ -89,7 +89,7 @@ namespace GC2.Engines
                     //fix    Expires: {1/1/0001 12:00:00 AM}
                     ConnectionCookie["agt_session"].Expires = DateTime.MinValue;
                 }
-                var data = WebConnectHelper.MakePost(TaskUrl, ConnectionCookie);
+                var data = WebConnectHelper.MakeGetPost(TaskUrl, ConnectionCookie);
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(data);
                 string taskContent = (doc.GetElementbyId("general-puzzle") ?? doc.GetElementbyId("general")).InnerText;
@@ -105,9 +105,9 @@ namespace GC2.Engines
             }
         }
 
-        public override bool IsLoginPage(string data)
+        public override bool IsLoginPage(HtmlDocument data)
         {
-            throw new NotImplementedException();
+            return false;
         }
     }
 }

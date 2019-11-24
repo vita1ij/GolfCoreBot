@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RestSharp;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,7 +7,6 @@ using System.Net;
 using System.Net.Cache;
 using System.Net.Http;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace GC2.Helpers
 {
@@ -20,28 +20,34 @@ namespace GC2.Helpers
         /// <returns></returns>
         public static CookieCollection MakePost4Cookies(string url, List<KeyValuePair<string, string>> values)
         {
-            var cookieJar = new CookieContainer();
-            var uri = new Uri(url);
-            using (var httpClientHandler = new HttpClientHandler
+            var client = new RestClient(url);
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("cache-control", "no-cache");
+            request.AddHeader("Connection", "keep-alive");
+            request.AddHeader("Accept-Encoding", "gzip, deflate");
+            request.AddHeader("Cache-Control", "no-cache");
+            request.AddHeader("Accept", "*/*");
+            request.AddHeader("User-Agent", "PostmanRuntime/7.19.0");
+            request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            var postdata = String.Join("&", values.Select(x => $"{x.Key}={x.Value}"));
+            request.AddParameter("undefined", postdata, ParameterType.RequestBody);
+            IRestResponse response = client.Execute(request);
+
+            if (response.Cookies?.Any() ?? false)
             {
-                CookieContainer = cookieJar
-            })
-            {
-                using (var client = new HttpClient(httpClientHandler))
+                var cookieJar = new CookieCollection();
+                foreach (var c in response.Cookies)
                 {
-                    // add values to data for post
-                    FormUrlEncodedContent content = new FormUrlEncodedContent(values);
-
-                    // Post data
-                    var result = client.PostAsync(uri, content).Result;
-
-                    if (result.Headers.Contains("Set-Cookie"))
+                    cookieJar.Add(new Cookie(c.Name, c.Value)
                     {
-                        return cookieJar.GetCookies(uri);
-                    }
-                    return null;
+                        Domain = c.Domain,
+                        Expires = c.Expires,
+                        Path = c.Path
+                    });
                 }
+                return cookieJar;
             }
+            return null;
         }
 
         /// <summary>
@@ -50,105 +56,41 @@ namespace GC2.Helpers
         /// <param name="url"></param>
         /// <param name="cookies"></param>
         /// <returns></returns>
-        public static string MakePost(string url, CookieCollection cookies, List<KeyValuePair<string, string>> values = null)
+        public static string MakeGetPost(string url, CookieCollection cookies, List<KeyValuePair<string, string>> values = null)
         {
-            var cookieJar = new CookieContainer();
+            var client = new RestClient(url);
+            var request = (values == null) ? new RestRequest(Method.GET) : new RestRequest(Method.POST);
+            request.AddHeader("cache-control", "no-cache");
+            request.AddHeader("Connection", "keep-alive");
+            request.AddHeader("Referer", url);
             if (cookies != null)
             {
-                foreach(var cookie in cookies)
+                List<string> cookiesStringList = new List<string>();
+                foreach (Cookie cookie in cookies)
                 {
-                    cookieJar.Add(cookie as Cookie);
+                    cookiesStringList.Add($"{cookie.Name}={cookie.Value}");
                 }
-            }
-            var uri = new Uri(url);
-            using (var httpClientHandler = new HttpClientHandler { CookieContainer = cookieJar })
-            {
-                using (var client = new HttpClient(httpClientHandler))
-                {
-                    HttpResponseMessage result; 
-
-                    if (values != null)
-                    {
-                        FormUrlEncodedContent content = new FormUrlEncodedContent(values);
-                        result = client.PostAsync(uri, content).Result;
-                    }
-                    else
-                    {
-                        result = client.GetAsync(uri).Result;
-                    }
-                    if (result != null)
-                    {
-                        try
-                        {
-                            return result.Content.ReadAsStringAsync().Result;
-                        }
-                        catch(Exception ex)
-                        {
-                            Log.New(ex);
-                            return null;
-                        }
-                    }
-                }
+                string cookiesString = String.Join("; ", cookiesStringList);
+                request.AddHeader("Cookie", cookiesString);
             }
 
-            //    if (http == null) return null;
-            //if (cookies != null)
-            //{
-            //    http.CookieContainer = new CookieContainer();
-            //    foreach(Cookie c in cookies)
-            //    {
-            //        http.CookieContainer.Add(new Cookie
-            //        {
-            //            Domain = c.Domain,
-            //            Name = c.Name,
-            //            Path = c.Path,
-            //            Value = c.Value
-            //        });
-            //    }
-            //}
-            //if (values != null)
-            //{
-            //    http.Method = "POST";
-
-            //}
-
-            //HttpWebResponse response;
-            //try
-            //{
-            //    response = http.GetResponse() as HttpWebResponse;
-            //}
-            //catch (Exception ex)
-            //{
-            //    Log.New(ex);
-            //    return null;
-            //}
-            //if (response == null) return null;
+            request.AddHeader("Accept-Encoding", "gzip, deflate");
+            request.AddHeader("Cache-Control", "no-cache");
+            request.AddHeader("Accept", "*/*");
+            request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            IRestResponse response = client.Execute(request);
 
             //return GetContentsFromResponse(response);
             return null;
         }
 
-        public static string GetContentsFromResponse(HttpWebResponse response)
+        public static string GetContentsFromResponse(IRestResponse response)
         {
             string data = null;
+            if (response == null) return null;
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                Stream receiveStream = response.GetResponseStream();
-                StreamReader readStream;
-
-                if (String.IsNullOrWhiteSpace(response.CharacterSet))
-                {
-                    readStream = new StreamReader(receiveStream);
-                }
-                else
-                {
-                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-                }
-
-                data = readStream.ReadToEnd();
-
-                response.Close();
-                readStream.Close();
+                return response.Content;
             }
             return data;
         }

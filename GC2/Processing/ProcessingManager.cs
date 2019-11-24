@@ -436,7 +436,7 @@ namespace GC2
                 var engine = IGameEngine.Get(activeGame);
                 try
                 {
-                    if (engine.Login())
+                    if (engine.Login(activeGame))
                     {
                         //activeGame.Update();
                         GameManager.Update(activeGame);
