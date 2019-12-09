@@ -1,5 +1,3 @@
-using System;
-
 namespace GC2WH.Models
 {
     public class ErrorViewModel

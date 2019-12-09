@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using GC2DB;
+using GC2WH.Models;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using GC2WH.Models;
-using GC2DB;
 
 namespace GC2WH.Controllers
 {
