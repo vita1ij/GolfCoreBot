@@ -75,7 +75,13 @@ namespace GC2.Helpers
             request.AddHeader("Accept-Encoding", "gzip, deflate");
             request.AddHeader("Cache-Control", "no-cache");
             request.AddHeader("Accept", "*/*");
-            request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            if (values != null && values.Any())
+            {
+                request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+                var postdata = String.Join("&", values.Select(x => $"{x.Key}={x.Value}"));
+                request.AddParameter("undefined", postdata, ParameterType.RequestBody);
+            }
+
             IRestResponse response = client.Execute(request);
 
             return GetContentsFromResponse(response);

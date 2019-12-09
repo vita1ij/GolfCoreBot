@@ -175,7 +175,7 @@ namespace GC2
 
             var engine = IGameEngine.Get(activeGame);
 
-            var result = engine.EnterCode(message.Parameter);
+            var result = engine.EnterCode(message.Parameter, activeGame);
             return ProcessingResult.CreateText(message, result.ToString());
         }
 

@@ -1,6 +1,7 @@
 ﻿using GC2.Classes;
 using GC2.Helpers;
 using GC2DB.Data;
+using GC2DB.Managers;
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
@@ -32,13 +33,14 @@ namespace GC2.Engines
                 };
         }
         public override string TaskUrl { get => $"{MainUrlPart}/gameengines/encounter/makefee/{_enCxId}"; }
+        public string CodeUrl { get => $"{MainUrlPart}/gameengines/encounter/play/{_enCxId}"; }
 
         public override void Init(Game game)
         {
             this._login = game.Login;
             this._password = game.Password;
             this._enCxId = game.EnCxId;
-            Login();
+            Login(game);
         }
 
         public List<Game> GetEnCxGames(string zone, string status, string type)
@@ -86,7 +88,6 @@ namespace GC2.Engines
 
         public override GameTask GetTask(out List<object> stuff)
         {
-            Login();
             var data = WebConnectHelper.MakeGetPost(TaskUrl, ConnectionCookie);
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(data);
@@ -191,6 +192,8 @@ namespace GC2.Engines
                             }); 
                         }
                         break;
+                    case "script":
+                        break;
                     default:
                         result += $"{node.InnerText}";
                         break;
@@ -221,37 +224,36 @@ namespace GC2.Engines
             return "";
         }
 
-        public override bool EnterCode(string code)
+        public override bool? EnterCode(string code, Game game)
         {
             if (ConnectionCookie != null && ConnectionCookie.Count>0)
             {
-                bool? result = PostCode(ConnectionCookie, code);
+                bool? result = PostCode(ConnectionCookie, code, game);
                 if (result.HasValue)
                 {
                     return result.Value;
                 }
             }
-            if (Login())
-            {
-                bool? result = PostCode(ConnectionCookie, code);
-                if (result.HasValue)
-                {
-                    return result.Value;
-                }
-            }
-
-            return false;
+            
+            return null;
         }
 
-        private bool? PostCode(CookieCollection connectionCookie, string code)
+        private bool? PostCode(CookieCollection connectionCookie, string code, Game game)
         {
-            WebConnectHelper.MakeGetPost(TaskUrl, connectionCookie, new List<KeyValuePair<string, string>>()
+            if (!game.LastTaskId.HasValue) return null;
+            var task = GameManager.GetTaskById(game.LastTaskId.Value);
+
+            if (String.IsNullOrWhiteSpace(task.EnCxId) || !task.Number.HasValue) return null;
+
+            var resultContents = WebConnectHelper.MakeGetPost(CodeUrl, connectionCookie, new List<KeyValuePair<string, string>>()
             {
-                
-                new KeyValuePair<string, string>("LevelId", ""),
-                new KeyValuePair<string, string>("LevelNumber", ""),
+                new KeyValuePair<string, string>("LevelId", task.EnCxId),
+                new KeyValuePair<string, string>("LevelNumber", task.Number.Value.ToString()),
                 new KeyValuePair<string, string>("LevelAction.Answer",code)
             });
+
+            //process result
+
             return null;
         }
     }

@@ -8,17 +8,16 @@ namespace GC2DB.Data
     public class GameTask
     {
         [Key]
-        [Required]
-        public long Id { get; set; }
+        public long? Id { get; set; }
         public long? Number { get; set; }
         public string EnCxId { get; set; }
         public string Title { get; set; }
         public string Text { get; set; }
-        public virtual Game Game { get; set; }
+        public long? GameId { get; set; }
 
         public GameTask(Game game, string text)
         {
-            this.Game = game;
+            this.GameId = game.Id;
             this.Text = text;
         }
 
@@ -47,7 +46,16 @@ namespace GC2DB.Data
             {
                 if (this.Number != task.Number) return false;
 
-                return (this.Text == task.Text); //todo[vg]: Implement comparison based on percentage
+                if (this.Text == null && task.Text != null) return true;
+                if (task.Text == null) return false;
+                if (Math.Abs(this.Text.Length - task.Text.Length) > 4) return true;
+                var diff = 0;
+                for(int i = 0; i < Math.Min(this.Text.Length,task.Text.Length); i++)
+                {
+                    if (this.Text[i] != task.Text[i]) diff++;
+                }
+                return (diff < 4);
+                //return (this.Text == task.Text); //todo[vg]: Implement comparison based on percentage
             }
 
             return (this.Text == task.Text);

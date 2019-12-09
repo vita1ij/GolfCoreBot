@@ -61,18 +61,16 @@ namespace GC2DB.Managers
         {
             using (var db = DBContext.Instance)
             {
-                var maxNumber = db.Tasks.Where(x => x.Game == newTask.Game).Max(x => x.Number);
+                var maxNumber = db.Tasks.Where(x => x.GameId == newTask.GameId).Max(x => x.Number);
 
                 newTask.Number = newTask.Number ?? maxNumber + 1;
 
                 var dbTask = db.Tasks.Add(newTask);
-                newTask.Id = dbTask.Entity.Id;
+                db.SaveChanges();
 
-                var game = newTask.Game;
+                var game = db.Games.Where(x => x.Id == newTask.GameId).First();
                 game.LastTaskId = newTask.Id;
-
                 db.Games.Update(game);
-
                 db.SaveChanges();
             }
         }
@@ -144,7 +142,7 @@ namespace GC2DB.Managers
             using (var db = DBContext.Instance)
             {
                 var game = db.Games.Where(x => gameId.HasValue && x.Id == gameId || guid != null && x.Guid == guid).FirstOrDefault(x => x.isActive);
-                if (xPlayerInGame(chatId, game.Id, db)) return;
+                if (xPlayerInGame(chatId, game.Id.Value, db)) return;
                 
                 var player = db.Players.Where(x => x.ChatId == chatId).Include(x => x.Game);
                 if (player != null && player.Any() && player.First().Game.Id != gameId)

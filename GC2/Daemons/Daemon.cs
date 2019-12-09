@@ -9,14 +9,16 @@ namespace GC2.Daemons
 {
     public abstract class Daemon
     {
+        public static bool CanRun = false;
         private static bool inProgress = false;
-        public static double Interval = 1000;
+        public static double Interval = 10000;
 
         public abstract Task Function(TelegramBotClient bot);
 
         private async Task RealFunction(TelegramBotClient bot)
         {
             if (inProgress) return;
+            if (!CanRun) return;
             inProgress = true;
             try
             {

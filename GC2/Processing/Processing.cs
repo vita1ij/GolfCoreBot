@@ -17,6 +17,10 @@ namespace GC2
                 {
                     switch (message.Command)
                     {
+                        case "u":
+                            if (message.Parameter == "happy?")
+                                return ProcessingResult.CreateText(message, (new Random(DateTime.Now.Second).Next(0, 2) == 1) ? "Yes" : "No");
+                            return null;
                         case "foo":
                             return ProcessingManager.Foo(message);
                         case Constants.Commands.Help:

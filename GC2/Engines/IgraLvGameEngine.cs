@@ -39,7 +39,7 @@ namespace GC2.Engines
         {
             _login = game.Login;
             _password = game.Password;
-            Login();
+            Login(game);
         }
 
         public IgraLvGameEngine(Game game)
@@ -62,9 +62,9 @@ namespace GC2.Engines
             }
         }
 
-        public override bool EnterCode(string code)
+        public override bool? EnterCode(string code, Game game)
         {
-            return false;
+            return null;
         }
 
         public override GameStatistics GetStatistics()
@@ -105,9 +105,11 @@ namespace GC2.Engines
             }
         }
 
-        public override bool IsLoginPage(HtmlDocument data)
-        {
-            return false;
-        }
+        public override bool IsLoginPage(HtmlDocument doc)
+            =>
+            (
+                (doc.DocumentNode?.SelectNodes("//input[@name='login']")?.Any() ?? false) &&
+                (doc.DocumentNode?.SelectNodes("//input[@name='password']")?.Any() ?? false)
+            );
     }
 }

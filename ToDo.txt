@@ -1,32 +1,33 @@
 2.1.0 Current
 
 2.2 - engines 
-		- Fix Login
+		+ Fix Login
+			+ Async 
 			+ En.cx
 				+ Get Cookies
 				+ Read
 			+ Igra.lv
 				+ Get Cookies
 				+ Read
-			- Store Cookies in DB -> optimise login
+			+ Store Cookies in DB -> optimise login
 		- Exceptions Handling
 		- Store / Analyse errors
-			- Login
+			+ Login
 			- Task reading
-		* task structure simple analysis (img/link)
+		+ task structure simple analysis (img/link)
 		- task numbers / new vs update
-			- en.cx
+			+ en.cx
 			- igra.lv
-		- enter code (encx) 
+		- enter code 
+			- encx
+			- igra
 			- command
 			- special command
 			- prefix
-		- enter code (igra)
-			-
-		- Tasks has dynamic values error
-		- Check if on login page
+		+ Tasks has dynamic values error (ignore scripts for now)
+		+ Check if on login page
 			+ en.cx
-			- igra.lv
+			+ igra.lv
 	- Check Daemons
 		- en.cx
 		- igra.lv

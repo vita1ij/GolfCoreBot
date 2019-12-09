@@ -9,8 +9,7 @@ namespace GC2DB.Data
     public class Game
     {
         [Key]
-        [Required]
-        public long Id { get; set; }
+        public long? Id { get; set; }
         public string Guid { get; set; }
         public GameType Type { get; set; }
         public string Login { get; set; }

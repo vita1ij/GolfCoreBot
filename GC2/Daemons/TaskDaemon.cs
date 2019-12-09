@@ -29,7 +29,7 @@ namespace GC2.Daemons
                     : null;
                 if (lastTask == null || !lastTask.Equals(newTask))
                 {
-                    newTask.Game = game;
+                    newTask.GameId = game.Id;
                     GameManager.AddTask(newTask);
 
                     foreach(var player in players.Where(x => x.Game.Id == game.Id))
@@ -37,7 +37,7 @@ namespace GC2.Daemons
                         var result = new ProcessingResult()
                         {
                             ChatId = player.ChatId,
-                            IsHtml = false,
+                            IsHtml = true,
                             Text = player.UpdateTaskInfo == GC2DB.Data.Player.PlayerUpdateStatusInfo.UpdateText ? newTask.Text : "UP!"
                         };
                         await result.Finish(bot);
