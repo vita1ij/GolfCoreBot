@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <Version>2.1.0</Version>
   </PropertyGroup>
 
@@ -20,17 +20,31 @@
     <Compile Remove="Migrations\20190715114317_v.2.0.6.Designer.cs" />
     <Compile Remove="Migrations\20190715114456_v.2.0.7.cs" />
     <Compile Remove="Migrations\20190715114456_v.2.0.7.Designer.cs" />
+    <Compile Remove="Migrations\20191113163955_v.2.1.1.cs" />
+    <Compile Remove="Migrations\20191113163955_v.2.1.1.Designer.cs" />
+    <Compile Remove="Migrations\20191124212913_v.2.1.2.cs" />
+    <Compile Remove="Migrations\20191124212913_v.2.1.2.Designer.cs" />
+    <Compile Remove="Migrations\20191124213523_v.2.1.2.1.cs" />
+    <Compile Remove="Migrations\20191124213523_v.2.1.2.1.Designer.cs" />
+    <Compile Remove="Migrations\20191205154833_v.2.1.2.2.cs" />
+    <Compile Remove="Migrations\20191205154833_v.2.1.2.2.Designer.cs" />
+    <Compile Remove="Migrations\20191209120443_v.2.2.0.cs" />
+    <Compile Remove="Migrations\20191209120443_v.2.2.0.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.4">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>

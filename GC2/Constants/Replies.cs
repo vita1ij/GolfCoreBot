@@ -6,7 +6,7 @@ namespace GC2.Constants
 {
     public static class Replies
     {
-        public const string HELP = "This is Encounter Games help bot. (v.2-alpha)\r\n"
+        public const string HELP = "This is Encounter Games help bot. (v.2.1.2.2-alpha)\r\n"
             + "Available Commands:\r\n"
             //+ "/settings - setting up bot for current chat\r\n"
             + "\r\n"

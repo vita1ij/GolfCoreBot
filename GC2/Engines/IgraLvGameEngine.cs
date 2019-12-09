@@ -101,6 +101,7 @@ namespace GC2.Engines
             }
             catch (Exception ex)
             {
+                Log.New(ex);
                 return null;
             }
         }

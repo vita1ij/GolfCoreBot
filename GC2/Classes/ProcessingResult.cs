@@ -180,7 +180,7 @@ namespace GC2
                     }
                     catch(Exception ex)
                     {
-
+                        Log.New(ex);
                     }
                 }
             }
@@ -202,7 +202,7 @@ namespace GC2
                     }
                     catch(Exception ex)
                     {
-
+                        Log.New(ex);
                     }
                 }
                 

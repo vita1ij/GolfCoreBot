@@ -9,7 +9,8 @@ namespace GC2.Constants
         public enum ExceptionCode
         {
             UniqueGame4Chat
-            ,NoActiveGame
+            ,NoActiveGame,
+            Other
         }
 
         public static readonly Dictionary<ExceptionCode, string> CodeMessages = new Dictionary<ExceptionCode, string>

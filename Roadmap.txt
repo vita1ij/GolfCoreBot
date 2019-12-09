@@ -1,6 +1,7 @@
-2.1.0 Current
+2.1.2 Current
 
-2.2 - engines 
+2.2 
+	+ engines 
 		+ Fix Login
 			+ Async 
 			+ En.cx
@@ -10,13 +11,25 @@
 				+ Get Cookies
 				+ Read
 			+ Store Cookies in DB -> optimise login
+		+ Store / Analyse errors
+			+ Login
+		+ task structure simple analysis (img/link)
+		+ task numbers / new vs update
+			+ en.cx
+		+ Tasks has dynamic values error (ignore scripts for now)
+		+ Check if on login page
+			+ en.cx
+			+ igra.lv
+		+ Webhook (test)
+	
+2.3
+	- netcore 3.0
+2.4
+	- engines 
 		- Exceptions Handling
 		- Store / Analyse errors
-			+ Login
 			- Task reading
-		+ task structure simple analysis (img/link)
 		- task numbers / new vs update
-			+ en.cx
 			- igra.lv
 		- enter code 
 			- encx
@@ -24,15 +37,11 @@
 			- command
 			- special command
 			- prefix
-		+ Tasks has dynamic values error (ignore scripts for now)
-		+ Check if on login page
-			+ en.cx
-			+ igra.lv
-	- Check Daemons
-		- en.cx
-		- igra.lv
-	* Webhook (test)
-2.3 - coordinates 
+		- Check Daemons
+			- en.cx
+			- igra.lv
+	
+2.5 - coordinates 
 		- save / lists / and so on
 		- add support N\\E
 		- consider coordinate actions
@@ -45,11 +54,11 @@
 		? Rail Fence 
 		? Route cipher
 		? Columnar
-2.4 - coordinates
+2.6 - coordinates
 		- osm analyse
 		- use of radius
 		- grausti.riga.lv
-2.5 - statistics
+2.7 - statistics
 		- get from igra.lv (standart)
 		- get from igra.lv (image)
 		- get from en.cx

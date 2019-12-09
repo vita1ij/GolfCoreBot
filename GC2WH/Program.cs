@@ -26,9 +26,6 @@ namespace GC2WH
             }
         }
 
-        
-
-
         private static void Setup()
         {
             if (Config == null) throw new Exception("No config");
