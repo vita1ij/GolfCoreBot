@@ -60,5 +60,9 @@ namespace GC2DB.Data
 
             return (this.Text == task.Text);
         }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

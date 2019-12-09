@@ -35,7 +35,7 @@ namespace GC2.Engines
         }
         #endregion
 
-        public void Init(Game game)
+        public override void Init(Game game)
         {
             _login = game.Login;
             _password = game.Password;

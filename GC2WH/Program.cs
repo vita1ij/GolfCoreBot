@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using GC2;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -68,7 +69,7 @@ namespace GC2WH
             }
             catch (Exception ex)
             {
-                //Log.New(ex);
+                Log.New(ex);
             }
 
             //Console.ReadLine();

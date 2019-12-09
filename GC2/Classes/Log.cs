@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Web.Helpers;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+//using System.Web.uHelpers;
 
 namespace GC2
 {
@@ -67,7 +69,7 @@ namespace GC2
                 ex.Message,
                 "",
                 "Message",
-                Json.Encode(message),
+                JsonSerializer.Serialize(message),
                 "",
                 "Code",
                 ex.Code,
