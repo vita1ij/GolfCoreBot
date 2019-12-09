@@ -12,7 +12,7 @@ namespace GC2DB.Data
         public long Id { get; set; }
         public virtual Game Game { get; set; }
         public long ChatId { get; set; }
-        public bool isActive { get; set; }
+        public bool IsActive { get; set; }
         public PlayerUpdateStatusInfo UpdateTaskInfo { get; set; } = 0; //0/1/2
         public PlayerUpdateStatusInfo UpdateStatisticsInfo { get; set; } = 0;
 
@@ -28,11 +28,11 @@ namespace GC2DB.Data
             UpdateStatus = 1,
             UpdateText = 2
         }
-        /// <summary>
-        /// only for EF. Do not use it
-        /// </summary>
-        public Player()
-        {
-        }
+        ///// <summary>
+        ///// only for EF. Do not use it
+        ///// </summary>
+        //public Player()
+        //{
+        //}
     }
 }

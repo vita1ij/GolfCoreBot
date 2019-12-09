@@ -49,16 +49,14 @@ namespace GC2.Engines
 
         public IgraLvGameEngine(long chatId)
         {
-            using (var db = DBContext.Instance)
+            using var db = DBContext.Instance;
+            var game = db.Players.Where(x => x.IsActive && x.ChatId == chatId)
+                .Include(x => x.Game)
+                .First()
+                .Game;
+            if (game != null && game.isActive)
             {
-                var game = db.Players.Where(x => x.isActive && x.ChatId == chatId)
-                    .Include(x => x.Game)
-                    .First()
-                    .Game;
-                if (game != null && game.isActive)
-                {
-                    Init(game);
-                }
+                Init(game);
             }
         }
 
@@ -94,10 +92,7 @@ namespace GC2.Engines
                 doc.LoadHtml(data);
                 string taskContent = (doc.GetElementbyId("general-puzzle") ?? doc.GetElementbyId("general")).InnerText;
 
-                return new GameTask()
-                {
-                    Text = taskContent
-                };
+                return new GameTask(null, taskContent);
             }
             catch (Exception ex)
             {

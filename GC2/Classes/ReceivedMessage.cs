@@ -8,12 +8,12 @@ namespace GC2
     public class ReceivedMessage
     {
         public int? ReplyTo;
-        public string ReplyToText;
+        public string? ReplyToText;
         public bool ReplyToBot;
 
-        public string Text;
-        public object Image;
-        public Coordinates Coordinates;
+        public string? Text;
+        public object? Image;
+        public Coordinates? Coordinates;
 
         public long ChatId;
         public int Id;
@@ -26,9 +26,9 @@ namespace GC2
         ///////////////////
         ///Calculated
         
-        public string Command { get; set; }
-        public string Parameter { get; set; }
-        public List<string> Parameters { get; set; }
+        public string? Command { get; set; }
+        public string? Parameter { get; set; }
+        public List<string>? Parameters { get; set; }
         
 
         public void Normalise()

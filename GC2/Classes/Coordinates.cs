@@ -11,6 +11,8 @@ namespace GC2
     {
         private float latitude;
         private float longitude;
+        public string Address
+            => Helpers.LocationsHelper.GetAddress(this);
 
         public Coordinates(float lat, float lon)
         {
@@ -23,7 +25,7 @@ namespace GC2
             longitude = loc.Longitude;
         }
 
-        public float fLat
+        public float LatF
         {
             get
             {
@@ -34,7 +36,7 @@ namespace GC2
                 latitude = value;
             }
         }
-        public float fLon
+        public float LonF
         {
             get
             {
@@ -60,9 +62,7 @@ namespace GC2
             }
         }
 
-        public string Address;//todo[gc2]
-
-        public static Coordinates ParseCoordinates(string input)
+        public static Coordinates? ParseCoordinates(string? input)
         {
             if (String.IsNullOrEmpty(input)) return null;
             try

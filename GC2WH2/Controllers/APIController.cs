@@ -72,18 +72,12 @@ namespace GC2WH2.Controllers
                         if (message.Photo.Length > 0)
                         {
                             var obj = message.Photo.GetValue(message.Photo.Length - 1);
-                            if (obj != null && obj is PhotoSize)
+                            if (obj != null && obj is PhotoSize ps)
                             {
-                                PhotoSize ps = obj as PhotoSize;
-                                if (ps != null)
-                                {
-                                    var imageId = ps.FileId;
-                                    using (var ms = new MemoryStream())
-                                    {
-                                        receivedMessage.Image = await BotReference.Bot.GetInfoAndDownloadFileAsync(imageId, ms);
-                                        receivedMessage.Image = ms.ToArray();
-                                    }
-                                }
+                                var imageId = ps.FileId;
+                                using var ms = new MemoryStream();
+                                receivedMessage.Image = await BotReference.Bot.GetInfoAndDownloadFileAsync(imageId, ms);
+                                receivedMessage.Image = ms.ToArray();
                             }
                         }
                     }

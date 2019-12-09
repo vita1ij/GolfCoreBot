@@ -15,23 +15,23 @@ namespace GC2
     public class ProcessingResult
     {
         public int? MessageId { get; set; }
-        public string Text { get; set; }
+        public string? Text { get; set; }
         public long ChatId { get; set; }
-        public IReplyMarkup Markup { get; set; }
+        public IReplyMarkup? Markup { get; set; }
         public bool DisableWebPagePreview { get; set; } = false;
         public bool Delete { get; set; } = false;
         public bool IsHtml { get; set; } = false;
         public int? ReplyTo { get; set; }
         //public Image<Rgba32>? Image { get; set; }
         public List<string> ImageUrls { get; set; } = new List<string>();
-        public List<ImageResult> Images { get; set; }
+        public List<ImageResult>? Images { get; set; }
         public bool ReplaceOriginal { get; set; } = false;
-        private List<ProcessingResult> editMessages;
-        public List<ProcessingResult> EditMessages
+        private List<ProcessingResult>? editMessages;
+        public List<ProcessingResult>? EditMessages
         {
             get
             {
-                return editMessages ?? new List<ProcessingResult>();
+                return editMessages;
             }
             set
             {
@@ -39,7 +39,7 @@ namespace GC2
             }
         }
 
-        public static ProcessingResult CreateText(ReceivedMessage message, string response)
+        public static ProcessingResult? CreateText(ReceivedMessage message, string response)
         {
             if (String.IsNullOrEmpty(response)) return null;
             return new ProcessingResult()
@@ -86,7 +86,7 @@ namespace GC2
             };
         }
 
-        public async Task Finish(TelegramBotClient Bot, ReceivedMessage receivedMessage = null)
+        public async Task Finish(TelegramBotClient Bot, ReceivedMessage? receivedMessage)
         {
             var result = this;
             //edit old messages
@@ -190,15 +190,21 @@ namespace GC2
                 {
                     try
                     {
-                        InputOnlineFile imgFile = (!String.IsNullOrWhiteSpace(img.Url)) ?
-                                                    new InputOnlineFile(img.Url) :
-                                                    (img.Stream != null) ?
-                                                    new InputOnlineFile(img.Stream, img.Name) :
-                                                    null;
-                        if (imgFile != null)
+                        InputOnlineFile imgFile;
+                        if (!String.IsNullOrWhiteSpace(img.Url))
                         {
-                            await Bot.SendPhotoAsync(result.ChatId, imgFile, img.ReferenceName);
+                            imgFile = new InputOnlineFile(img.Url);
                         }
+                        else if (img.Stream != null)
+                        {
+                            imgFile = new InputOnlineFile(img.Stream, img.Name);
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                        
+                        await Bot.SendPhotoAsync(result.ChatId, imgFile, img.ReferenceName);
                     }
                     catch(Exception ex)
                     {

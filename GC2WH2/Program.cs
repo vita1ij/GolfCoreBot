@@ -17,7 +17,7 @@ namespace GC2WH2
     {
         public static void Main(string[] args)
         {
-            Setup();
+            setup();
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -38,7 +38,7 @@ namespace GC2WH2
                     webBuilder.UseStartup<Startup>();
                 });
 
-        private static void Setup()
+        private static void setup()
         {
             if (Config == null) throw new Exception("No config");
             if (Config["API_KEY"] == null) throw new Exception("No API key");

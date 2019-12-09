@@ -88,6 +88,7 @@ namespace GC2
 
         internal static ProcessingResult SaveCoordinates(ReceivedMessage message)
         {
+            //todo[vg]
             return null;
         }
 

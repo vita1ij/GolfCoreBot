@@ -40,7 +40,7 @@ namespace GC2.Daemons
                             IsHtml = true,
                             Text = player.UpdateTaskInfo == GC2DB.Data.Player.PlayerUpdateStatusInfo.UpdateText ? newTask.Text : "UP!"
                         };
-                        await result.Finish(bot);
+                        await result.Finish(bot, null);
                     }
                 }
             }

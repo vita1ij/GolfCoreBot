@@ -18,7 +18,7 @@ namespace GC2.Engines
         protected string _password;
 
         //https://docs.microsoft.com/en-us/dotnet/api/system.threading.mutex?view=netframework-4.8
-        private static Dictionary<long, Mutex> SafeLoginDict = new Dictionary<long, Mutex>();
+        private static readonly Dictionary<long, Mutex> SafeLoginDict = new Dictionary<long, Mutex>();
         private const int MutexWaitTime = 10000;
 
         public CookieCollection ConnectionCookie { get; set; }
@@ -135,24 +135,15 @@ namespace GC2.Engines
 
         public static IGameEngine Get(Game game)
         {
-            IGameEngine engine;
-            switch(game.Type)
+            var engine = game.Type switch
             {
-                case GameType.IgraLv: 
-                    engine = new IgraLvGameEngine(game) as IGameEngine; 
-                    break;
-                case GameType.Demo:   
-                    engine = new DemoEnCxGameEngine(game); 
-                    break;
-                case GameType.EnCx:   
-                    engine = new QuestEnCxGameEngine(game); 
-                    break;
-                case GameType.LvlUp:
-                    engine = new DemoEnCxGameEngine(game);
-                    break;
-                default:
-                    throw new NotImplementedException();
+                GameType.IgraLv => new IgraLvGameEngine(game) as IGameEngine,
+                GameType.Demo => new DemoEnCxGameEngine(game),
+                GameType.EnCx => new QuestEnCxGameEngine(game),
+                GameType.LvlUp => new DemoEnCxGameEngine(game),
+                _ => throw new NotImplementedException(),
             };
+            ;
             engine.Init(game);
             return engine;
         }

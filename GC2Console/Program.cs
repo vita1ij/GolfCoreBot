@@ -29,12 +29,12 @@ namespace GC2Console
         public static User BotUser;
         private static string WebhookUrl = "";
         
-        static void Main(string[] args)
+        public static void Main()
         {
-            Setup();
+            setup();
         }
 
-        private static void Setup()
+        private static void setup()
         {
             if (Config == null) throw new Exception("No config");
             if (Config["API_KEY"] == null) throw new Exception("No API key");
@@ -55,8 +55,8 @@ namespace GC2Console
                 var whinfo = wht.Result;
                 WebhookUrl = whinfo.Url;
                 Bot.DeleteWebhookAsync();
-                Bot.OnMessage += BotOnMessageReceived;
-                Bot.OnCallbackQuery += BotOnCallBackReceived;
+                Bot.OnMessage += botOnMessageReceived;
+                Bot.OnCallbackQuery += botOnCallBackReceived;
                 BotUser = Bot.GetMeAsync().Result;
                 GC2.Constants.SpecialCommands.BotName = BotUser.Username;
                 Bot.StartReceiving();
@@ -81,7 +81,7 @@ namespace GC2Console
             Bot.SetWebhookAsync(WebhookUrl);
         }
 
-        private static async void BotOnCallBackReceived(object sender, CallbackQueryEventArgs e)
+        private static async void botOnCallBackReceived(object sender, CallbackQueryEventArgs e)
         {
             var callback = e.CallbackQuery;
             if (callback == null) return;
@@ -102,7 +102,7 @@ namespace GC2Console
             await result.Finish(Bot, receivedMessage);
         }
 
-        private static async void BotOnMessageReceived(object sender, MessageEventArgs e)
+        private static async void botOnMessageReceived(object sender, MessageEventArgs e)
         {
             var message = e.Message;
             if (message == null) return;
@@ -131,18 +131,12 @@ namespace GC2Console
                 if (message.Photo.Length > 0)
                 {
                     var obj = message.Photo.GetValue(message.Photo.Length - 1);
-                    if (obj != null && obj is PhotoSize)
+                    if (obj != null && obj is PhotoSize ps)
                     {
-                        PhotoSize ps = obj as PhotoSize;
-                        if (ps != null)
-                        {
-                            var imageId = ps.FileId;
-                            using (var ms = new MemoryStream())
-                            {
-                                receivedMessage.Image = await Bot.GetInfoAndDownloadFileAsync(imageId, ms);
-                                receivedMessage.Image = ms.ToArray();
-                            }
-                        }
+                        var imageId = ps.FileId;
+                        using var ms = new MemoryStream();
+                        receivedMessage.Image = await Bot.GetInfoAndDownloadFileAsync(imageId, ms);
+                        receivedMessage.Image = ms.ToArray();
                     }
                 }
             }

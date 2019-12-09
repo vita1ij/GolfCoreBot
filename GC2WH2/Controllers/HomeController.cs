@@ -35,7 +35,7 @@ namespace GC2WH2.Controllers
             sm.BotLocationDbLastUpdated = new DateTime(1);
 
             //Tests
-            sm.Tests.DBConnection = TestDbConnection();
+            sm.Tests.DBConnection = testDbConnection();
             
             return View("Status",sm);
         }
@@ -64,7 +64,7 @@ namespace GC2WH2.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private static string TestDbConnection()
+        private static string testDbConnection()
         {
             try
             {

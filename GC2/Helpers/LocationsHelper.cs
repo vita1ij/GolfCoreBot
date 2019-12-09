@@ -102,8 +102,8 @@ namespace GC2.Helpers
             {
                 var foo = new Nominatim.API.Models.ReverseGeocodeRequest
                 {
-                    Latitude = loc.fLat,
-                    Longitude = loc.fLon
+                    Latitude = loc.LatF,
+                    Longitude = loc.LonF
                 };
                 var c = new ReverseGeocoder();
                 var r = c.ReverseGeocode(foo);

@@ -33,7 +33,9 @@ namespace GC2DB
         {
             get
             {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 string projectPath = AppDomain.CurrentDomain.BaseDirectory.Split(new String[] { @"bin\" }, StringSplitOptions.None)[0];
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 return new ConfigurationBuilder()
                     .SetBasePath(projectPath)
                     .AddJsonFile("config.json")
@@ -43,7 +45,9 @@ namespace GC2DB
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             string connectionString = Config.GetValue(typeof(String), "CONNECTION_STRING").ToString();
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             optionsBuilder.UseSqlServer(connectionString);
         }
 

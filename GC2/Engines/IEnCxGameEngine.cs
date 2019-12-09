@@ -18,7 +18,7 @@ namespace GC2.Engines
         public string GamesCalendarUrl { get => $"{MainUrlPart}/GameCalendar.aspx"; }
 
         public override string LoginUrl { get => $"{MainUrlPart}/Login.aspx"; }
-        public override List<KeyValuePair<string, string>> LoginPostValues
+        public override List<KeyValuePair<string, string>>? LoginPostValues
         {
             get =>
                 (String.IsNullOrWhiteSpace(_login) || String.IsNullOrWhiteSpace(_password))
@@ -88,17 +88,16 @@ namespace GC2.Engines
 
         public override GameTask GetTask(out List<object> stuff)
         {
+            stuff = new List<object>();
             var data = WebConnectHelper.MakeGetPost(TaskUrl, ConnectionCookie);
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(data);
 
             if (IsLoginPage(doc))
             {
-                stuff = null;
-                return new GameTask()
+                return new GameTask(null, "Cant Log in")
                 {
-                    EnCxId = "-1",
-                    Text = "Cant Log in"
+                    EnCxId = "-1"
                 };
             }
 
@@ -112,18 +111,17 @@ namespace GC2.Engines
             {
                 levelNumber = lvlnum;
             }
-            return new GameTask()
+            return new GameTask(null, taskContent)
             {
-                Text = taskContent,
                 EnCxId = levelId,
                 Number = levelNumber
             };
         }
 
-        public string FormatTask(HtmlNodeCollection input, out List<ImageResult> images)
+        public string? FormatTask(HtmlNodeCollection input, out List<ImageResult> images)
             => FormatTask(input, 0, out images, false, false);
 
-        public string FormatTask(HtmlNodeCollection input, long imgSeed, out List<ImageResult> images, bool openBTag, bool openITag)
+        public string? FormatTask(HtmlNodeCollection input, long imgSeed, out List<ImageResult> images, bool openBTag, bool openITag)
         {
             images = new List<ImageResult>();
 
@@ -228,7 +226,7 @@ namespace GC2.Engines
         {
             if (ConnectionCookie != null && ConnectionCookie.Count>0)
             {
-                bool? result = PostCode(ConnectionCookie, code, game);
+                bool? result = postCode(ConnectionCookie, code, game);
                 if (result.HasValue)
                 {
                     return result.Value;
@@ -238,7 +236,7 @@ namespace GC2.Engines
             return null;
         }
 
-        private bool? PostCode(CookieCollection connectionCookie, string code, Game game)
+        private bool? postCode(CookieCollection connectionCookie, string code, Game game)
         {
             if (!game.LastTaskId.HasValue) return null;
             var task = GameManager.GetTaskById(game.LastTaskId.Value);
