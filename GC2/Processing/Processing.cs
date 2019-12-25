@@ -102,6 +102,17 @@ namespace GC2
                     message.Parameter = message.Text.Substring(Constants.SpecialCommands.EnterCode.Length);
                     return ProcessingManager.EnterCode(message);
                 }
+                var chatPrefix = StaticData.Prefixes.Get(message.ChatId);
+                if (chatPrefix != null 
+                    && message.Text != null
+                    && message.Text.Length > chatPrefix.Length)
+                {
+                    if (chatPrefix == message.Text.Substring(0,chatPrefix.Length))
+                    {
+                        message.Parameter = message.Text;
+                        return ProcessingManager.EnterCode(message);
+                    }
+                }
                 if (message.Coordinates != null)
                 {
                     return new ProcessingResult()
