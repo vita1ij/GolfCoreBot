@@ -124,7 +124,7 @@ namespace GC2.Engines
         /// <returns>null if error; true/false = correct code</returns>
         public abstract bool? EnterCode(string code, Game game);
 
-        public abstract GameTask? GetTask(out List<object>? stuff);
+        public abstract GameTask? GetTask(Game game, out List<object>? stuff);
         public abstract GameStatistics? GetStatistics();
 
         public virtual void Init(Game game)

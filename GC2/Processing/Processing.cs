@@ -96,6 +96,11 @@ namespace GC2
                     ListManager.AddValue(message.ChatId, message.Text.Substring(Constants.SpecialCommands.AddListValue.Length));
                     return null;
                 }
+                if (message.Text != null && message.Text.StartsWith(Constants.SpecialCommands.EnterCode))
+                {
+                    message.Parameter = message.Text.Substring(Constants.SpecialCommands.EnterCode.Length);
+                    return ProcessingManager.EnterCode(message);
+                }
                 if (message.Coordinates != null)
                 {
                     return new ProcessingResult()

@@ -185,11 +185,11 @@ namespace GC2
             }
             if (result ?? false)
             {
-                return ProcessingResult.CreateText(message, "Yay!");
+                return ProcessingResult.CreateReply(message, "Yay!");
             }
             else
             {
-                return ProcessingResult.CreateText(message, "Nope...");
+                return ProcessingResult.CreateReply(message, "Nope...");
             }
         }
 
@@ -351,8 +351,9 @@ namespace GC2
             if (activeGame == null) return null;
 
             var engine = IGameEngine.Get(activeGame);
-            var task = engine.GetTask(out var stuff);
+            var task = engine.GetTask(activeGame, out var stuff);
             if (task == null) return null;
+            GameManager.AddTask(task);
             var result = ProcessingResult.CreateHtml(message, task.Text);
             if (stuff != null)
             {

@@ -92,7 +92,7 @@ namespace GC2.Engines
         /// <param name="stuff"></param>
         /// <returns></returns>
         /// <exception cref="GCException" />
-        public override GameTask? GetTask(out List<object> stuff)
+        public override GameTask? GetTask(Game game, out List<object> stuff)
         {
             stuff = new List<object>();
             var data = WebConnectHelper.MakeGetPost(TaskUrl, ConnectionCookie);
@@ -116,7 +116,7 @@ namespace GC2.Engines
             {
                 levelNumber = lvlnum;
             }
-            return new GameTask(taskContent)
+            return new GameTask(game, taskContent)
             {
                 EnCxId = levelId,
                 Number = levelNumber
@@ -260,9 +260,21 @@ namespace GC2.Engines
                 new KeyValuePair<string, string>("LevelAction.Answer",code)
             });
 
-            //process result
-
-            return null;
+            if (resultContents == null) return null;
+            var doc = new HtmlDocument();
+            try
+            {
+                doc.LoadHtml(resultContents);
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+            if (IsLoginPage(doc)) return null;
+            var correctTags = doc.DocumentNode?.SelectNodes("//ul[@class='history']//li[@class='correct']//span[@class='color_correct']");
+            if (correctTags == null || correctTags.Count < 1) return false;
+            var correctCodes = correctTags.Select(x => x.InnerText.Replace("\r", "").Replace("\t", "").Replace("\n", "").Replace(" ", "")).ToList();
+            return correctCodes.Contains(code);
         }
     }
 }

@@ -70,7 +70,7 @@ namespace GC2.Engines
             throw new NotImplementedException();
         }
 
-        public override GameTask? GetTask(out List<object>? stuff)
+        public override GameTask? GetTask(Game game, out List<object>? stuff)
         {
             stuff = null;
             try
@@ -92,7 +92,7 @@ namespace GC2.Engines
                 doc.LoadHtml(data);
                 string taskContent = (doc.GetElementbyId("general-puzzle") ?? doc.GetElementbyId("general")).InnerText;
 
-                return new GameTask(taskContent);
+                return new GameTask(game, taskContent);
             }
             catch (Exception ex)
             {

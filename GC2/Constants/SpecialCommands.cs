@@ -8,5 +8,6 @@ namespace GC2.Constants
     {
         public const string AddListValue = "#";
         public static string BotName = "";
+        public const string EnterCode = ".";
     }
 }
