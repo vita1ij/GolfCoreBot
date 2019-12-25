@@ -145,7 +145,7 @@ namespace GC2.Engines
                         result += $"\r\n";
                         result += FormatTask(node.ChildNodes, imgSeed, out childImages, openBTag, openITag);
                         result += $"\r\n";
-                        childImages = childImages ?? new List<ImageResult>();
+                        childImages ??= new List<ImageResult>();
                         imgSeed += childImages.Count;
                         images.AddRange(childImages);
                         continue;
@@ -161,7 +161,7 @@ namespace GC2.Engines
                     case "h6":
                         childImages = new List<ImageResult>();
                         result += $"\r\n {(openITag?"</i>":"")}{(openBTag ? "": "<b>")}{FormatTask(node.ChildNodes, imgSeed, out childImages, true, openITag)?.Trim() ?? String.Empty}{(openBTag ? "" : "</b>")}{(openITag ? "<i>" : "")} \r\n";
-                        childImages = childImages ?? new List<ImageResult>();
+                        childImages ??= new List<ImageResult>();
                         imgSeed += childImages.Count;
                         images.AddRange(childImages);
                         continue;
@@ -266,7 +266,7 @@ namespace GC2.Engines
             {
                 doc.LoadHtml(resultContents);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 return null;
             }

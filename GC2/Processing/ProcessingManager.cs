@@ -368,8 +368,9 @@ namespace GC2
 
         internal static ProcessingResult? ShowGameSettings(ReceivedMessage message)
         {
-            var activeGame = GameManager.GetActiveGameByChatId(message.ChatId);
-            if (activeGame == null) return null;
+            //var activeGame = GameManager.GetActiveGameByChatId(message.ChatId);
+            var activePlayer = GameManager.GetActivePlayerAndGameByChatId(message.ChatId);
+            if (activePlayer == null) return null;
 
             return new ProcessingResult
             {
@@ -379,7 +380,7 @@ namespace GC2
                     {
                         ChatId = message.ChatId,
                         Text = Constants.Replies.GAME_FULL,
-                        Markup = Constants.Keyboards.GameSettingsAndCommands(activeGame),
+                        Markup = Constants.Keyboards.GameSettingsAndCommands(activePlayer.Game, activePlayer),
                         MessageId = message.Id
                     }
                 }

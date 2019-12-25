@@ -73,6 +73,15 @@ namespace GC2DB.Managers
             return xGetActiveGameByChatId(chatId, db);
         }
 
+        public static Player? GetActivePlayerAndGameByChatId(long chatId)
+        {
+            using var db = DBContext.Instance;
+            var result = db.Players.Where(x => x.ChatId == chatId)
+                .Include(x => x.Game)?.ToList();
+            if (result == null || result.Count != 1) return null;
+            return result.First();
+        }
+
         public static void CreateGame(long chatId, GameType type)
         {
             using var db = DBContext.Instance;

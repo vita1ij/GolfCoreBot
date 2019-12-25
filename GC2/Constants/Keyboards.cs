@@ -120,7 +120,7 @@ namespace GC2.Constants
             }
         });
 
-        public static InlineKeyboardMarkup GameSettingsAndCommands(Game game) => new InlineKeyboardMarkup(new List<List<InlineKeyboardButton>>
+        public static InlineKeyboardMarkup GameSettingsAndCommands(Game game, Player player) => new InlineKeyboardMarkup(new List<List<InlineKeyboardButton>>
         {
             new List<InlineKeyboardButton>
             {
@@ -131,9 +131,9 @@ namespace GC2.Constants
             new List<InlineKeyboardButton>()
             {
                 new InlineKeyboardButton() { Text = "Get Task", CallbackData = $"/{Commands.GetTask}" },
-                new InlineKeyboardButton() { Text = "Disabled", CallbackData = $"/{Commands.GameTaskNoUpdates}" },
-                new InlineKeyboardButton() { Text = "Up only", CallbackData = $"/{Commands.GameTaskUpdateStatus}" },
-                new InlineKeyboardButton() { Text = "With text", CallbackData = $"/{Commands.GameTaskUpdateText}" }
+                new InlineKeyboardButton() { Text = $"{((player.UpdateTaskInfo == Player.PlayerUpdateStatusInfo.DontUpdate) ? "[" : String.Empty) }Disabled{((player.UpdateTaskInfo == Player.PlayerUpdateStatusInfo.DontUpdate) ? "]" : String.Empty) }", CallbackData = $"/{Commands.GameTaskNoUpdates}" },
+                new InlineKeyboardButton() { Text = $"{((player.UpdateTaskInfo == Player.PlayerUpdateStatusInfo.UpdateStatus) ? "[" : String.Empty) }Up only{((player.UpdateTaskInfo == Player.PlayerUpdateStatusInfo.UpdateStatus) ? "]" : String.Empty) }", CallbackData = $"/{Commands.GameTaskUpdateStatus}" },
+                new InlineKeyboardButton() { Text = $"{((player.UpdateTaskInfo == Player.PlayerUpdateStatusInfo.UpdateText) ? "[" : String.Empty) }With text{((player.UpdateTaskInfo == Player.PlayerUpdateStatusInfo.UpdateText) ? "]" : String.Empty) }", CallbackData = $"/{Commands.GameTaskUpdateText}" }
             },
             //new List<InlineKeyboardButton>()
             //{

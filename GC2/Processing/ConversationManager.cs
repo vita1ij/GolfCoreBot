@@ -14,12 +14,12 @@ namespace GC2
             var match = Regex.Match(message.ReplyToText, @"\[([A-Za-z])*\]");
             if (match.Success)
             {
-                var key = match.Value.Substring(1, match.Value.Length - 2);
+                var key = match.Value[1..^1];
                 match = Regex.Match(message.ReplyToText, @"{([A-Za-z0-9])*}");
                 var parameters = new List<string>();
                 while (match.Success)
                 {
-                    parameters.Add(match.Value.Substring(1, match.Value.Length - 2));
+                    parameters.Add(match.Value[1..^1]);
                     match = match.NextMatch();
                 }
                 switch (key)
