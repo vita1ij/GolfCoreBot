@@ -19,5 +19,16 @@ namespace GC2DB.Data
             Loc = location;
             ChatId = ChatId;
         }
+
+        /// <summary>
+        /// EF. Do not use
+        /// </summary>
+        [Obsolete]
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+        public PlayersLocation()
+#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+        {
+
+        }
     }
 }

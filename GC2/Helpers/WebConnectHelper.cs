@@ -64,10 +64,11 @@ namespace GC2.Helpers
             if (cookies != null)
             {
                 List<string> cookiesStringList = new List<string>();
-                foreach (Cookie cookie in cookies)
-                {
-                    cookiesStringList.Add($"{cookie.Name}={cookie.Value}");
-                }
+                foreach (Cookie? cookie in cookies)
+                    if (cookie != null)
+                    {
+                        cookiesStringList.Add($"{cookie.Name}={cookie.Value}");
+                    }
                 string cookiesString = String.Join("; ", cookiesStringList);
                 request.AddHeader("Cookie", cookiesString);
             }
@@ -87,15 +88,14 @@ namespace GC2.Helpers
             return GetContentsFromResponse(response);
         }
 
-        public static string GetContentsFromResponse(IRestResponse response)
+        public static string? GetContentsFromResponse(IRestResponse response)
         {
-            string data = null;
             if (response == null) return null;
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 return response.Content;
             }
-            return data;
+            return null;
         }
     }
 }

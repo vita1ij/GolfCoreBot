@@ -28,11 +28,13 @@ namespace GC2DB.Data
             UpdateStatus = 1,
             UpdateText = 2
         }
-        ///// <summary>
-        ///// only for EF. Do not use it
-        ///// </summary>
-        //public Player()
-        //{
-        //}
+        /// <summary>
+        /// only for EF. Do not use it
+        /// </summary>
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+        public Player()
+#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+        {
+        }
     }
 }

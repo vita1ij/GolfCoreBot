@@ -15,6 +15,11 @@ namespace GC2DB.Data
         public string Text { get; set; }
         public long? GameId { get; set; }
 
+        public GameTask(string text)
+        {
+            this.Text = text;
+        }
+
         public GameTask(Game game, string text)
         {
             this.GameId = game.Id;
@@ -27,12 +32,12 @@ namespace GC2DB.Data
         //    this.Text = text;
         //}
 
-        // <summary>
-        // Only for EF. Do not use it
-        // </summary>
-        //public GameTask()
-        //{
-        //}
+        /// <summary>
+        /// Only for EF. Do not use it
+        /// </summary>
+        public GameTask()
+        {
+        }
 
         public override bool Equals(object? obj)
         {

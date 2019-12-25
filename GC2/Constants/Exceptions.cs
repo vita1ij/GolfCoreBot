@@ -8,15 +8,17 @@ namespace GC2.Constants
     {
         public enum ExceptionCode
         {
-            UniqueGame4Chat
-            ,NoActiveGame,
-            Other
+            UniqueGame4Chat,
+            NoActiveGame,
+            Other,
+            CantLogIn
         }
 
         public static readonly Dictionary<ExceptionCode, string> CodeMessages = new Dictionary<ExceptionCode, string>
         {
             {ExceptionCode.UniqueGame4Chat , "There can be only one active game in chat"}
             ,{ExceptionCode.NoActiveGame, "You need to be in active game for that!"}
+            ,{ExceptionCode.CantLogIn, "Can not log in."}
         };
     }
 }

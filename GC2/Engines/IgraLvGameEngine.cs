@@ -70,7 +70,7 @@ namespace GC2.Engines
             throw new NotImplementedException();
         }
 
-        public override GameTask GetTask(out List<object> stuff)
+        public override GameTask? GetTask(out List<object>? stuff)
         {
             stuff = null;
             try

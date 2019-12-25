@@ -18,6 +18,7 @@ namespace GC2
 
         public string Code { get; set; }
         public LevelType Level { get; set; }
+
         public GCException(Exception ex)
             : base(ex.Message, ex)
         {

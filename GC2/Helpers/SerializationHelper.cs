@@ -10,6 +10,7 @@ namespace GC2.Helpers
     {
         public static string SerializeObject<T>(this T toSerialize)
         {
+            if (toSerialize == null) return String.Empty;
             XmlSerializer xmlSerializer = new XmlSerializer(toSerialize.GetType());
 
             using (StringWriter textWriter = new StringWriter())

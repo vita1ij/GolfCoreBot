@@ -13,7 +13,7 @@ namespace GC2.Engines
 {
     public abstract class IEnCxGameEngine : IGameEngine
     {
-        protected string _enCxId;
+        protected string? _enCxId;
         public abstract string MainUrlPart { get; }
         public string GamesCalendarUrl { get => $"{MainUrlPart}/GameCalendar.aspx"; }
 
@@ -70,7 +70,7 @@ namespace GC2.Engines
             {
                 foreach (var p in pageNodes)
                 {
-                    pages.Add((p.Attributes["href"].ToString(), p.InnerText));
+                    pages.Add((p.Attributes["href"].ToString() ?? String.Empty, p.InnerText));
                 }
             }
             //            doc.DocumentNode.SelectNodes("//table[@class='tabCalContainer']//table//div//a")[0].InnerText
@@ -86,7 +86,13 @@ namespace GC2.Engines
                 (doc.DocumentNode?.SelectNodes("//input[@id='txtPassword']")?.Any() ?? false)
             );
 
-        public override GameTask GetTask(out List<object> stuff)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stuff"></param>
+        /// <returns></returns>
+        /// <exception cref="GCException" />
+        public override GameTask? GetTask(out List<object> stuff)
         {
             stuff = new List<object>();
             var data = WebConnectHelper.MakeGetPost(TaskUrl, ConnectionCookie);
@@ -95,23 +101,21 @@ namespace GC2.Engines
 
             if (IsLoginPage(doc))
             {
-                return new GameTask(null, "Cant Log in")
-                {
-                    EnCxId = "-1"
-                };
+                throw new GCException(Constants.Exceptions.ExceptionCode.CantLogIn, GCException.LevelType.Chat);
             }
 
             var taskNodes = doc.DocumentNode?.SelectNodes("//div[@class='content']");
-            string taskContent = FormatTask(taskNodes, out var imageResults);
+            string? taskContent = FormatTask(taskNodes, out var imageResults);
+            if (taskContent == null) return null;
             stuff = imageResults.Select(x => x as object).ToList();
-            string levelId = doc.DocumentNode?.SelectNodes("//input[@name='LevelId']")?.First()?.GetAttributeValue("Value", (string)null);
-            string levelNumberStr = doc.DocumentNode?.SelectNodes("//input[@name='LevelNumber']")?.First()?.GetAttributeValue("Value", (string)null);
+            string? levelId = doc.DocumentNode?.SelectNodes("//input[@name='LevelId']")?.First()?.GetAttributeValue("Value", null);
+            string? levelNumberStr = doc.DocumentNode?.SelectNodes("//input[@name='LevelNumber']")?.First()?.GetAttributeValue("Value", null);
             long? levelNumber = null;
             if (long.TryParse(levelNumberStr, out var lvlnum))
             {
                 levelNumber = lvlnum;
             }
-            return new GameTask(null, taskContent)
+            return new GameTask(taskContent)
             {
                 EnCxId = levelId,
                 Number = levelNumber
@@ -154,7 +158,7 @@ namespace GC2.Engines
                     case "h5":
                     case "h6":
                         childImages = new List<ImageResult>();
-                        result += $"\r\n {(openITag?"</i>":"")}{(openBTag ? "": "<b>")}{FormatTask(node.ChildNodes, imgSeed, out childImages, true, openITag).Trim()}{(openBTag ? "" : "</b>")}{(openITag ? "<i>" : "")} \r\n";
+                        result += $"\r\n {(openITag?"</i>":"")}{(openBTag ? "": "<b>")}{FormatTask(node.ChildNodes, imgSeed, out childImages, true, openITag)?.Trim() ?? String.Empty}{(openBTag ? "" : "</b>")}{(openITag ? "<i>" : "")} \r\n";
                         imgSeed += (childImages ?? new List<ImageResult>()).Count;
                         images.AddRange(childImages);
                         continue;
@@ -196,9 +200,12 @@ namespace GC2.Engines
                         result += $"{node.InnerText}";
                         break;
                 }
-                result += FormatTask(node.ChildNodes, imgSeed, out var newImgs, openBTag, openITag)?.Trim() ?? "";
-                images.AddRange(newImgs);
-                imgSeed += (newImgs ?? new List<ImageResult>()).Count;
+                if (node?.ChildNodes != null)
+                {
+                    result += FormatTask(node.ChildNodes, imgSeed, out var newImgs, openBTag, openITag)?.Trim() ?? "";
+                    images.AddRange(newImgs);
+                    imgSeed += (newImgs ?? new List<ImageResult>()).Count;
+                }
             }
 
             result = result.Replace("\t", " ");
@@ -208,7 +215,7 @@ namespace GC2.Engines
             }
             if (String.IsNullOrWhiteSpace(result)) return null;
             var lines = result.Split("\r\n").ToList();
-            lines = lines?.Where(x => !String.IsNullOrWhiteSpace(x))?.ToList();
+            lines = lines?.Where(x => !String.IsNullOrWhiteSpace(x))?.ToList() ?? new List<string>();
             if (lines == null || !lines.Any()) return null;
 
             return String.Join("\r\n", lines);
@@ -241,7 +248,7 @@ namespace GC2.Engines
             if (!game.LastTaskId.HasValue) return null;
             var task = GameManager.GetTaskById(game.LastTaskId.Value);
 
-            if (String.IsNullOrWhiteSpace(task.EnCxId) || !task.Number.HasValue) return null;
+            if (String.IsNullOrWhiteSpace(task?.EnCxId) || !task.Number.HasValue) return null;
 
             var resultContents = WebConnectHelper.MakeGetPost(CodeUrl, connectionCookie, new List<KeyValuePair<string, string>>()
             {

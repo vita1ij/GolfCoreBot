@@ -14,14 +14,14 @@ namespace GC2.Engines
 {
     public abstract class IGameEngine
     {
-        protected string _login;
-        protected string _password;
+        protected string _login = String.Empty;
+        protected string _password = String.Empty;
 
         //https://docs.microsoft.com/en-us/dotnet/api/system.threading.mutex?view=netframework-4.8
         private static readonly Dictionary<long, Mutex> SafeLoginDict = new Dictionary<long, Mutex>();
         private const int MutexWaitTime = 10000;
 
-        public CookieCollection ConnectionCookie { get; set; }
+        public CookieCollection? ConnectionCookie { get; set; }
         public abstract string LoginUrl { get; }
         public abstract string TaskUrl { get; }
         public string StatisticsUrl { get; set; }
@@ -75,9 +75,10 @@ namespace GC2.Engines
                         {
                             List<string> cookiesStringList = new List<string>();
                             foreach (Cookie cookie in ConnectionCookie)
-                            {
-                                cookiesStringList.Add($"{cookie.Name}={cookie.Value}");
-                            }
+                                if (cookie != null)
+                                {
+                                    cookiesStringList.Add($"{cookie.Name}={cookie.Value}");
+                                }
                             string cookiesString = String.Join("; ", cookiesStringList);
                             game.Cookies = cookiesString;
 
@@ -123,11 +124,15 @@ namespace GC2.Engines
         /// <returns>null if error; true/false = correct code</returns>
         public abstract bool? EnterCode(string code, Game game);
 
-        public abstract GameTask GetTask(out List<object> stuff);
+        public abstract GameTask GetTask(out List<object>? stuff);
         public abstract GameStatistics GetStatistics();
 
         public virtual void Init(Game game)
         {
+            if (game.Login == null || game.Password == null)
+            {
+                throw new GCException(Constants.Exceptions.ExceptionCode.CantLogIn, GCException.LevelType.Quiet);
+            }
             this._login = game.Login;
             this._password = game.Password;
             Login(game);

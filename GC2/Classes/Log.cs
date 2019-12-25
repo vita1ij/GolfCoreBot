@@ -15,7 +15,9 @@ namespace GC2
         {
             get
             {
-                string projectPath = AppDomain.CurrentDomain.BaseDirectory.Split(new String[] { @"bin\" }, StringSplitOptions.None)[0];
+                string? baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                if (baseDirectory == null) throw new Exception("Base path is empty.");
+                string projectPath = baseDirectory.Split(new String[] { @"bin\" }, StringSplitOptions.None)[0];
                 return new ConfigurationBuilder()
                     .SetBasePath(projectPath)
                     .AddJsonFile("config.json")

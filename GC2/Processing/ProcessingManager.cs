@@ -92,9 +92,9 @@ namespace GC2
             return null;
         }
 
-        internal static ProcessingResult GameSetup(ReceivedMessage message)
+        internal static ProcessingResult? GameSetup(ReceivedMessage message)
         {
-            ProcessingResult result = null;
+            ProcessingResult? result = null;
             var activeGame = GameManager.GetActiveGameByChatId(message.ChatId);
             if (activeGame == null)
             {
@@ -216,7 +216,7 @@ namespace GC2
             }
             else
             {
-                if (long.TryParse(message.Parameters[0], out var gameId) && long.TryParse(message.Parameters[1], out var distance))
+                if (message?.Parameters?.Count > 1 && long.TryParse(message.Parameters[0], out var gameId) && long.TryParse(message.Parameters[1], out var distance))
                 {
                     var activeGame = GameManager.GetById(gameId);
                     if (activeGame != null)
@@ -251,7 +251,7 @@ namespace GC2
             }
             else
             {
-                if (long.TryParse(message.Parameters[0], out var gameId))
+                if (message?.Parameters?.Count > 0 && long.TryParse(message.Parameters[0], out var gameId))
                 {
                     var activeGame = GameManager.GetById(gameId);
                     if (activeGame != null)
@@ -282,7 +282,7 @@ namespace GC2
             return GameSetup(message);
         }
 
-        internal static ProcessingResult FindEnCxGame(ReceivedMessage message)
+        internal static ProcessingResult? FindEnCxGame(ReceivedMessage message)
         {
             if (message.Parameter == null || message.Parameters == null || message.Parameters.Count == 0)
             {
@@ -315,7 +315,10 @@ namespace GC2
                     };
                 case 3:
                     var activeGame = GameManager.GetActiveGameByChatId(message.ChatId);
-                    IEnCxGameEngine engine = IGameEngine.Get(activeGame) as IEnCxGameEngine;
+                    if (activeGame == null) return null;
+                    IGameEngine engineObj = IGameEngine.Get(activeGame);
+                    if (!(engineObj is IEnCxGameEngine)) return null;
+                    IEnCxGameEngine engine = (IEnCxGameEngine)engineObj;
                     var games = engine.GetEnCxGames(message.Parameters[0], message.Parameters[1], message.Parameters[2]);
                     return new ProcessingResult
                     {
