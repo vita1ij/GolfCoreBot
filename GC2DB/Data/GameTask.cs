@@ -35,7 +35,9 @@ namespace GC2DB.Data
         /// <summary>
         /// Only for EF. Do not use it
         /// </summary>
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         public GameTask()
+#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {
         }
 

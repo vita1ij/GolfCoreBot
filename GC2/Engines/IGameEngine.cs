@@ -24,8 +24,8 @@ namespace GC2.Engines
         public CookieCollection? ConnectionCookie { get; set; }
         public abstract string LoginUrl { get; }
         public abstract string TaskUrl { get; }
-        public string StatisticsUrl { get; set; }
-        public abstract List<KeyValuePair<string, string>> LoginPostValues { get; }
+        public string? StatisticsUrl { get; set; }
+        public abstract List<KeyValuePair<string, string>>? LoginPostValues { get; }
 
         public bool Login(Game game)
         {
@@ -74,7 +74,7 @@ namespace GC2.Engines
                         if (game != null)
                         {
                             List<string> cookiesStringList = new List<string>();
-                            foreach (Cookie cookie in ConnectionCookie)
+                            foreach (Cookie? cookie in ConnectionCookie)
                                 if (cookie != null)
                                 {
                                     cookiesStringList.Add($"{cookie.Name}={cookie.Value}");
@@ -125,16 +125,12 @@ namespace GC2.Engines
         public abstract bool? EnterCode(string code, Game game);
 
         public abstract GameTask GetTask(out List<object>? stuff);
-        public abstract GameStatistics GetStatistics();
+        public abstract GameStatistics? GetStatistics();
 
         public virtual void Init(Game game)
         {
-            if (game.Login == null || game.Password == null)
-            {
-                throw new GCException(Constants.Exceptions.ExceptionCode.CantLogIn, GCException.LevelType.Quiet);
-            }
-            this._login = game.Login;
-            this._password = game.Password;
+            this._login = game.Login ?? String.Empty;
+            this._password = game.Password ?? String.Empty;
             Login(game);
         }
 

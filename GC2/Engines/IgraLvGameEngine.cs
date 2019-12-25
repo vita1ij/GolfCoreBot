@@ -19,7 +19,7 @@ namespace GC2.Engines
         {
             get => "https://igra.lv/igra.php?s=login";
         }
-        public override List<KeyValuePair<string, string>> LoginPostValues
+        public override List<KeyValuePair<string, string>>? LoginPostValues
         {
             get => (String.IsNullOrWhiteSpace(_login) || String.IsNullOrWhiteSpace(_password))
                 ? null
@@ -37,8 +37,8 @@ namespace GC2.Engines
 
         public override void Init(Game game)
         {
-            _login = game.Login;
-            _password = game.Password;
+            _login = game.Login ?? String.Empty;
+            _password = game.Password ?? String.Empty;
             Login(game);
         }
 

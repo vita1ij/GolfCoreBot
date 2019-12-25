@@ -10,7 +10,7 @@ namespace GC2.Engines
     {
         public override string MainUrlPart => "http://quest.en.cx";
 
-        public override GameStatistics GetStatistics()
+        public override GameStatistics? GetStatistics()
         {
             return null;
         }

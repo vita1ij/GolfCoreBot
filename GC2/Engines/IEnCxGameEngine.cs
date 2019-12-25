@@ -37,8 +37,8 @@ namespace GC2.Engines
 
         public override void Init(Game game)
         {
-            this._login = game.Login;
-            this._password = game.Password;
+            this._login = game.Login ?? String.Empty;
+            this._password = game.Password ?? String.Empty;
             this._enCxId = game.EnCxId;
             Login(game);
         }

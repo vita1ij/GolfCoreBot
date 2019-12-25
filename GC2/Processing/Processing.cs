@@ -9,10 +9,11 @@ namespace GC2
 {
     public class Processing
     {
-        public static ProcessingResult ProcessMessage(ReceivedMessage message)
+        public static ProcessingResult? ProcessMessage(ReceivedMessage message)
         {
             try
             {
+                string? resultString = null;
                 if (!String.IsNullOrWhiteSpace(message.Command))
                 {
                     switch (message.Command)
@@ -30,10 +31,20 @@ namespace GC2
                             return ProcessingManager.ProcessAddress(message);
                         case Constants.Commands.List:
                         case Constants.Commands.ListShort:
-                            return ProcessingResult.CreateText(message, ListManager.GetList(message.ChatId));
+                            resultString = ListManager.GetList(message.ChatId);
+                            if (resultString != null)
+                            {
+                                return ProcessingResult.CreateText(message, resultString);
+                            }
+                            return null;
                         case Constants.Commands.ListSorted:
                         case Constants.Commands.ListSortedShort:
-                            return ProcessingResult.CreateText(message, ListManager.GetList(message.ChatId, true));
+                            resultString = ListManager.GetList(message.ChatId, true);
+                            if (resultString != null)
+                            {
+                                return ProcessingResult.CreateText(message, resultString);
+                            }
+                            return null;
                         case Constants.Commands.ClearList:
                         case Constants.Commands.ClearListShort:
                             ListManager.ClearList(message.ChatId);
