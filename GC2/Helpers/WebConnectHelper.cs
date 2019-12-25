@@ -54,7 +54,7 @@ namespace GC2.Helpers
         /// <param name="url"></param>
         /// <param name="cookies"></param>
         /// <returns></returns>
-        public static string? MakeGetPost(string url, CookieCollection cookies, List<KeyValuePair<string, string>> values = null)
+        public static string? MakeGetPost(string url, CookieCollection? cookies, List<KeyValuePair<string, string>>? values = null)
         {
             var client = new RestClient(url);
             var request = (values == null) ? new RestRequest(Method.GET) : new RestRequest(Method.POST);

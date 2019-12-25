@@ -105,6 +105,7 @@ namespace GC2.Engines
             }
 
             var taskNodes = doc.DocumentNode?.SelectNodes("//div[@class='content']");
+            if (taskNodes == null) return null;
             string? taskContent = FormatTask(taskNodes, out var imageResults);
             if (taskContent == null) return null;
             stuff = imageResults.Select(x => x as object).ToList();
@@ -144,7 +145,8 @@ namespace GC2.Engines
                         result += $"\r\n";
                         result += FormatTask(node.ChildNodes, imgSeed, out childImages, openBTag, openITag);
                         result += $"\r\n";
-                        imgSeed += (childImages ?? new List<ImageResult>()).Count;
+                        childImages = childImages ?? new List<ImageResult>();
+                        imgSeed += childImages.Count;
                         images.AddRange(childImages);
                         continue;
                     //ignore
@@ -159,7 +161,8 @@ namespace GC2.Engines
                     case "h6":
                         childImages = new List<ImageResult>();
                         result += $"\r\n {(openITag?"</i>":"")}{(openBTag ? "": "<b>")}{FormatTask(node.ChildNodes, imgSeed, out childImages, true, openITag)?.Trim() ?? String.Empty}{(openBTag ? "" : "</b>")}{(openITag ? "<i>" : "")} \r\n";
-                        imgSeed += (childImages ?? new List<ImageResult>()).Count;
+                        childImages = childImages ?? new List<ImageResult>();
+                        imgSeed += childImages.Count;
                         images.AddRange(childImages);
                         continue;
                     //Line break

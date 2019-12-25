@@ -92,7 +92,7 @@ namespace GC2.Engines
                 doc.LoadHtml(data);
                 string taskContent = (doc.GetElementbyId("general-puzzle") ?? doc.GetElementbyId("general")).InnerText;
 
-                return new GameTask(null, taskContent);
+                return new GameTask(taskContent);
             }
             catch (Exception ex)
             {

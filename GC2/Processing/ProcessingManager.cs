@@ -71,6 +71,7 @@ namespace GC2
             {
                 try
                 {
+                    if (message.Parameter == null) return null;
                     var cords = LocationsHelper.GetCoordinates(message.Parameter);
                     if (cords != null)
                     {
@@ -351,6 +352,7 @@ namespace GC2
 
             var engine = IGameEngine.Get(activeGame);
             var task = engine.GetTask(out var stuff);
+            if (task == null) return null;
             var result = ProcessingResult.CreateHtml(message, task.Text);
             if (stuff != null)
             {
@@ -407,7 +409,7 @@ namespace GC2
                 if (!message.PrivateChat)
                 {
                     //send to private
-                    GameManager.JoinGame(activeGame.Id, null, message.ChatId, true);
+                    GameManager.JoinGame(activeGame.Id, activeGame.Guid, message.ChatId, true);
                     return new ProcessingResult()
                     {
                         ChatId = message.SenderId,
