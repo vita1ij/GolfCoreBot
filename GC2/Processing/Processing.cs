@@ -24,6 +24,7 @@ namespace GC2
                             return null;
                         case "foo":
                             return ProcessingManager.Foo(message);
+                        case Constants.Commands.Start:
                         case Constants.Commands.Help:
                         case Constants.Commands.HelpShort:
                             return ProcessingResult.CreateText(message, Constants.Replies.HELP);

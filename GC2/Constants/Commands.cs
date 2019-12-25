@@ -8,6 +8,7 @@ namespace GC2.Constants
     {
         public const string FOO = "foo";
 
+        public const string Start = "start";
         public const string Help = "help";
         public const string HelpShort = "?";
 
