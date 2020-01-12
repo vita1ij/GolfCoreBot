@@ -76,7 +76,7 @@ namespace GC2DB.Managers
         public static Player? GetActivePlayerAndGameByChatId(long chatId)
         {
             using var db = DBContext.Instance;
-            var result = db.Players.Where(x => x.ChatId == chatId)
+            var result = db.Players.Where(x => x.ChatId == chatId && x.IsActive)
                 .Include(x => x.Game)?.ToList();
             if (result == null || result.Count != 1) return null;
             return result.First();

@@ -10,5 +10,6 @@ namespace GC2.Constants
         public const string Password = "password";
         public const string Radius = "radius";
         public const string Prefix = "prefix";
+        public const string Domain = "domain";
     }
 }

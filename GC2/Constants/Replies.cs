@@ -51,5 +51,7 @@ namespace GC2.Constants
 
         public static string SET_RADIUS_FORMAT = $"Reply with [{ConversationKeywords.Radius}] for the game {{{{{{0}}}}}}";
         public static string SET_PREFIX_FORMAT = $"Reply with [{ConversationKeywords.Prefix}] for the game {{{{{{0}}}}}}";
+
+        public static string EN_CX_NO_DOMAIN = $"Reply with [{ConversationKeywords.Domain}] for the game {{{{{{0}}}}}}";
     }
 }

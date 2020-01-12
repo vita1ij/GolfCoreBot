@@ -11,10 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GC2DB", "GC2DB\GC2DB.csproj
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1376DFEF-21C8-45E2-96DC-3F260DF7547A}"
 	ProjectSection(SolutionItems) = preProject
-		Roadmap.txt = Roadmap.txt
+		Roadmap.json = Roadmap.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GC2WH2", "GC2WH2\GC2WH2.csproj", "{9A20756F-B507-4AB3-862F-B7070BB39419}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GC2WH2", "GC2WH2\GC2WH2.csproj", "{9A20756F-B507-4AB3-862F-B7070BB39419}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

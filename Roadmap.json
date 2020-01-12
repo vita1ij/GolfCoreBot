@@ -1,0 +1,70 @@
+{
+	"Current_version": 2.3,
+
+	"Future_versions": {
+		"2.4": {
+			"Engines": [
+				"Exceptions Handling",
+				"	Store / Analyse errors",
+				"	Task reading",
+				"Task numbers",
+				"	- igra.lv",
+				"Enter code",
+				"	- igra.lv"
+			]
+		},
+		"2.5": {
+			"All": [
+				"Mirror link",
+				"Non Linear Game"
+			]
+		},
+		"2.6": {
+			"Coordinates": [
+				"- save / lists / and so on",
+				"- add support N|E",
+				"- consider coordinate actions",
+				"- Baltic maps"
+			],
+			"Chat": "Pin Actual task",
+			"Crack": [
+				"Morze",
+				"Caesar",
+				"vigenere",
+				"Rail_Fence",
+				"Route_cipher",
+				"Columnar"
+			]
+		},
+		"x.y": {
+			"Coordinates": [
+				"osm_analyse",
+				"use_of_radius",
+				"grausti.riga.lv"
+			],
+			"Statistics": [
+				"get_from_igra.lv_(standart)",
+				"get_from_igra.lv_(image)",
+				"get_from_en.cx",
+				"analyse",
+				"daemons"
+			],
+			"Content": [
+				"Image processing:",
+				"QRCode",
+				"BarCode",
+				"Google Search",
+				"Olimpijka - Google spreadsheets"
+
+			],
+			"Enter Code": "Smart brute",
+			"Other": [
+				"RoiP",
+				"Online map with users",
+				"Camera"
+
+
+			]
+		}
+	}
+}

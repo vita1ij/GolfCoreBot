@@ -60,8 +60,10 @@ namespace GC2
                             return ProcessingManager.GameSetup(message);
                         case Constants.Commands.CreateDemoGame:
                             return ProcessingManager.CreateGame(message, GameType.Demo);
-                        case Constants.Commands.CreateEnCxGame:
-                            return ProcessingManager.CreateGame(message, GameType.EnCx);
+                        case Constants.Commands.CreateQuestGame:
+                            return ProcessingManager.CreateGame(message, GameType.Quest);
+                        case Constants.Commands.CreateEncxGame:
+                            return ProcessingManager.CreateGame(message, GameType.CustomEnCx);
                         case Constants.Commands.CreateIgraGame:
                             return ProcessingManager.CreateGame(message, GameType.IgraLv);
                         case Constants.Commands.SetAuth:

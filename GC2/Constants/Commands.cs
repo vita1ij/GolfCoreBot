@@ -27,7 +27,8 @@ namespace GC2.Constants
         public const string DeleteMessage = "deletethis";
 
         public const string GameSetup = "game";
-        public const string CreateEnCxGame = "createencx";
+        public const string CreateEncxGame = "createencx";
+        public const string CreateQuestGame = "createquestencx";
         public const string CreateIgraGame = "createigralv";
         public const string CreateDemoGame = "createdemo";
         public const string SetAuth = "setauth";

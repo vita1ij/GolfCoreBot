@@ -11,7 +11,8 @@ namespace GC2.Constants
             UniqueGame4Chat,
             NoActiveGame,
             Other,
-            CantLogIn
+            CantLogIn,
+            NoDomain
         }
 
         public static readonly Dictionary<ExceptionCode, string> CodeMessages = new Dictionary<ExceptionCode, string>

@@ -54,7 +54,7 @@ namespace GC2DB.Data
 
                 if (this.Text == null && task.Text != null) return true;
                 if (task.Text == null) return false;
-                if (Math.Abs(this?.Text?.Length ?? 0 - task.Text.Length) > 4) return true;
+                if (Math.Abs((this?.Text?.Length ?? 0) - task.Text.Length) > 4) return false;
                 var diff = 0;
                 for(int i = 0; i < Math.Min(this?.Text?.Length ?? 0 , task.Text.Length); i++)
                 {
@@ -63,7 +63,6 @@ namespace GC2DB.Data
 #pragma warning restore CS8602
                 }
                 return (diff < 4);
-                //return (this.Text == task.Text); //todo[vg]: Implement comparison based on percentage
             }
 
             return (this.Text == task.Text);

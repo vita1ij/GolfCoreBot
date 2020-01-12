@@ -22,9 +22,16 @@ namespace GC2.Constants
         public static InlineKeyboardMarkup CreateNewGame = new InlineKeyboardMarkup(new List<List<InlineKeyboardButton>>() {
             new List<InlineKeyboardButton>()
             {
-                new InlineKeyboardButton() { Text = "En.cx", CallbackData = $"/{Constants.Commands.CreateEnCxGame}" },
-                new InlineKeyboardButton() { Text = "Igra.lv", CallbackData = $"/{Constants.Commands.CreateIgraGame}" },
+                new InlineKeyboardButton() { Text = "Quest", CallbackData = $"/{Constants.Commands.CreateQuestGame}" },
                 new InlineKeyboardButton() { Text = "Demo", CallbackData = $"/{Constants.Commands.CreateDemoGame}" }
+            },
+            new List<InlineKeyboardButton>()
+            {
+                new InlineKeyboardButton() { Text = "En.Cx", CallbackData = $"/{Constants.Commands.CreateEncxGame}" }
+            },
+            new List<InlineKeyboardButton>()
+            {
+                new InlineKeyboardButton() { Text = "Igra.lv", CallbackData = $"/{Constants.Commands.CreateIgraGame}" },
             },
             new List<InlineKeyboardButton>()
             {

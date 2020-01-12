@@ -140,8 +140,8 @@ namespace GC2.Engines
             {
                 GameType.IgraLv => new IgraLvGameEngine(game) as IGameEngine,
                 GameType.Demo => new DemoEnCxGameEngine(game),
-                GameType.EnCx => new QuestEnCxGameEngine(game),
-                GameType.LvlUp => new DemoEnCxGameEngine(game),
+                GameType.Quest => new QuestEnCxGameEngine(game),
+                GameType.CustomEnCx => new CustomEnCxGameEngine(game),
                 _ => throw new NotImplementedException(),
             };
             ;

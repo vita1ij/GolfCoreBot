@@ -9,7 +9,7 @@ namespace GC2.Daemons
 {
     public abstract class Daemon
     {
-        public static bool CanRun = false;
+        public static bool CanRun = true;
         private static bool inProgress = false;
         public static double Interval = 10000;
 

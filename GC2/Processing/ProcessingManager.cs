@@ -106,6 +106,33 @@ namespace GC2
                     Markup = Constants.Keyboards.CreateNewGame,
                 };
             }
+            else if (activeGame.Type == GameType.CustomEnCx && String.IsNullOrEmpty(activeGame.CustomEnCxDomain))
+            {
+                if (message.Parameter == null)
+                {
+                    return ProcessingResult.CreateText(message, String.Format(Constants.Replies.EN_CX_NO_DOMAIN, activeGame.Guid));
+                }
+                else
+                {
+                    var parts = message.Parameter.Replace("/", "\\").Split("\\").ToList();
+                    if (parts.Count() > 1)
+                    {
+                        parts = parts.Where(x => x.Contains("en.cx")).Take(1).ToList();
+                    }
+                        
+                    if (parts.Count() == 1)
+                    {
+                        var domain = parts.First();
+                        if (!domain.Contains("en.cx"))
+                        {
+                            domain += ".en.cx";
+                        }
+                        activeGame.CustomEnCxDomain = $"http://{domain}";
+                        GameManager.Update(activeGame);
+                        return GameSetup(message);
+                    }
+                }
+            }
             else if (activeGame.Login == null || activeGame.Password == null)
             {
                 if (IGameEngine.Get(activeGame) is IEnCxGameEngine && activeGame.EnCxId == null)

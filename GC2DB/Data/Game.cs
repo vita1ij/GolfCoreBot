@@ -29,6 +29,7 @@ namespace GC2DB.Data
         public bool HadErrorsWhileReading { get; set; } = false;
         public DateTime LatestTaskTime { get; set; } = DateTime.MinValue;
         public DateTime PreviousTaskTime { get; set; } = DateTime.MinValue;
+        public string? CustomEnCxDomain { get; set; }
 
         public Game()
         {

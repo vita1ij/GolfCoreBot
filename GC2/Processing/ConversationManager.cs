@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GC2DB.Managers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -47,6 +48,10 @@ namespace GC2
                         message.ReplyToText = String.Empty;
                         message.Normalise();
                         return Processing.ProcessMessage(message);
+                    case Constants.ConversationKeywords.Domain:
+                        if (parameters == null || !parameters.Any()) return null;
+                        message.Parameter = message.Text;
+                        return ProcessingManager.GameSetup(message);
                 }
 
             }

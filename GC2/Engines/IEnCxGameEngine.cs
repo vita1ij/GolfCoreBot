@@ -43,7 +43,7 @@ namespace GC2.Engines
             Login(game);
         }
 
-        public List<Game> GetEnCxGames(string zone, string status, string type)
+        public List<Game> GetEnCxGames(string zone, string status, string type, string? domain = null)
         {
             List<Game> result = new List<Game>();
             string url = $"{GamesCalendarUrl}?type={type}&status={status}&zone={zone}";
@@ -51,17 +51,30 @@ namespace GC2.Engines
             var data = WebConnectHelper.MakeGetPost(url, null);
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(data);
+            //var pagesTables = doc.DocumentNode?.SelectNodes("//table[@class='tabCalContainer']/tr/td/div/div/table")?.Where(x => String.IsNullOrWhiteSpace(x.Id))?.ToList();
+
             var allGames = doc.DocumentNode.SelectNodes("//td[@class='infoCell'][5]//a");
-            for (int i = 1; i < allGames.Count; i++)
+            var newGames = GetGamesFromPage(allGames);
+            result.AddRange(newGames);
+
+            int pagenumber = 1;
+            while(newGames.Any())
             {
-                var newGame = new Game()
+                try
                 {
-                    Href = allGames[i].GetAttributeValue("href", ""),
-                    Title = allGames[i].InnerText
-                };
-                newGame.EnCxId = (String.IsNullOrEmpty(newGame.Href)) ? "" : newGame.Href.Substring(newGame.Href.IndexOf("gid=") + 4);
-                newGame.EnCxId = (newGame.EnCxId.IndexOf('=') == -1) ? newGame.EnCxId : newGame.EnCxId.Substring(0, newGame.EnCxId.IndexOf('='));
-                result.Add(newGame);
+                    newGames = new List<Game>();
+                    pagenumber++;
+                    data = WebConnectHelper.MakeGetPost($"{url}&page={pagenumber}", null);
+                    doc = new HtmlDocument();
+                    doc.LoadHtml(data);
+                    allGames = doc.DocumentNode.SelectNodes("//td[@class='infoCell'][5]//a");
+                    newGames = GetGamesFromPage(allGames);
+                    result.AddRange(newGames);
+                }
+                catch(Exception)
+                {
+                    break;
+                }
             }
 
             var pageNodes = doc.DocumentNode.SelectNodes("//table[@class='tabCalContainer']//table//div//a");
@@ -76,6 +89,25 @@ namespace GC2.Engines
             //            doc.DocumentNode.SelectNodes("//table[@class='tabCalContainer']//table//div//a")[0].InnerText
             //"2"
             //doc.DocumentNode.SelectNodes("//table[@class='tabCalContainer']//table//div//a")[0].Attributes["href"]
+            return result;
+        }
+
+        public List<Game> GetGamesFromPage(HtmlNodeCollection allGames)
+        {
+            var result = new List<Game>();
+
+            for (int i = 1; i < allGames.Count; i++)
+            {
+                var newGame = new Game()
+                {
+                    Href = allGames[i].GetAttributeValue("href", ""),
+                    Title = allGames[i].InnerText
+                };
+                newGame.EnCxId = (String.IsNullOrEmpty(newGame.Href)) ? "" : newGame.Href.Substring(newGame.Href.IndexOf("gid=") + 4);
+                newGame.EnCxId = (newGame.EnCxId.IndexOf('=') == -1) ? newGame.EnCxId : newGame.EnCxId.Substring(0, newGame.EnCxId.IndexOf('='));
+                result.Add(newGame);
+            }
+
             return result;
         }
 
@@ -198,7 +230,7 @@ namespace GC2.Engines
                         }
                         break;
                     case "script":
-                        break;
+                        return null;
                     default:
                         result += $"{node.InnerText}";
                         break;
