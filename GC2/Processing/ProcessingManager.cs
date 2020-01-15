@@ -93,12 +93,70 @@ namespace GC2
             return null;
         }
 
+        internal static ProcessingResult? StartGameByUrl(ReceivedMessage message)
+        {
+            //only from waiting list
+            ProcessingResult? result = null;
+
+            if (message.Text.Contains("igra.lv"))
+            {
+                var activeGame = GameManager.CreateGame(message.ChatId, GameType.IgraLv);
+                result = GameSetup(message);
+            }
+            else if (message.Text.Contains("en.cx"))
+            {
+                var activeGame = GameManager.CreateGame(message.ChatId, GameType.CustomEnCx);
+                var parts = message.Text.Split(new char[] { '\\', '/', '?', '&' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                if (parts[0].Trim().StartsWith("http"))
+                {
+                    parts.RemoveAt(0);
+                }
+                activeGame.CustomEnCxDomain = $"http://{parts[0]}";
+                var gidPart = parts.Where(x => x.Contains("=") && x.StartsWith("gid"))?.ToList();
+                if (gidPart == null || !gidPart.Any())
+                {
+                    gidPart = parts.SkipWhile(x => x.ToLower() != "play")?.ToList();
+                    if (gidPart != null && gidPart.Count > 1)
+                    {
+                        gidPart.RemoveAt(0);
+                    }
+                    if (gidPart == null || gidPart.Count > 1 || !long.TryParse(gidPart[0], out var _))
+                    {
+                        gidPart = null;
+                    }
+                }
+
+                if (gidPart != null && gidPart.Any())
+                {
+                    activeGame.EnCxId = gidPart.First().Split('=').Last();
+                }
+               
+                GameManager.Update(activeGame);
+
+
+                result = GameSetup(message);
+            }
+
+
+            if (result != null)
+            {
+                ConversationManager.WaitingList.RemoveAll(x => x.chatId == message.ChatId && x.sender == message.SenderId);
+            }
+            return result;
+        }
+
         internal static ProcessingResult? GameSetup(ReceivedMessage message)
         {
             ProcessingResult? result = null;
             var activeGame = GameManager.GetActiveGameByChatId(message.ChatId);
             if (activeGame == null)
             {
+                if (ConversationManager.WaitingList.Any(x => x.chatId == message.ChatId && x.sender == message.SenderId))
+                {
+                    ConversationManager.WaitingList.RemoveAll(x => x.chatId == message.ChatId && x.sender == message.SenderId);
+                }
+                ConversationManager.WaitingList.Add((message.ChatId, message.SenderId, ConversationManager.WaitingReason.GameUrl));
+
                 result = new ProcessingResult()
                 {
                     ChatId = message.ChatId,
@@ -495,13 +553,10 @@ namespace GC2
                     Log.New(ex);
                 }
 
-                return new ProcessingResult
-                {
-                    ChatId = message.ChatId,
-                    Delete = true,
-                    MessageId = message.Id
-                };
-
+                var result = GameSetup(message);
+                result.Delete = true;
+                result.MessageId = message.Id;
+                return result;
             }
             return null;
         }

@@ -4,7 +4,6 @@
 	"Future_versions": {
 		"2.4": {
 			"Engines": [
-				"Exceptions Handling",
 				"	Store / Analyse errors",
 				"	Task reading",
 				"Task numbers",

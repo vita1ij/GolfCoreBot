@@ -9,6 +9,14 @@ namespace GC2
 {
     public static class ConversationManager
     {
+        public enum WaitingReason
+        {
+            None,
+            GameUrl
+        }
+
+        public static List<(long chatId,long sender, WaitingReason waitingFor)> WaitingList = new List<(long, long, WaitingReason)>();
+
         public static ProcessingResult? Process(ReceivedMessage message)
         {
             if (!message.ReplyToBot || String.IsNullOrEmpty(message.ReplyToText)) return null;

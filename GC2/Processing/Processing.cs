@@ -4,6 +4,7 @@ using GC2DB.Managers;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace GC2
 {
@@ -103,6 +104,19 @@ namespace GC2
                 {
                     message.Parameter = message.Text.Substring(Constants.SpecialCommands.EnterCode.Length);
                     return ProcessingManager.EnterCode(message);
+                }
+                var waiting4List = ConversationManager.WaitingList.Where(x => x.chatId == message.ChatId && x.sender == message.SenderId)?.ToList();
+                var waiting4 = (waiting4List == null || !waiting4List.Any()) ? ConversationManager.WaitingReason.None : waiting4List.First().waitingFor;
+                switch(waiting4)
+                {
+                    case ConversationManager.WaitingReason.None:
+                        break;
+                    case ConversationManager.WaitingReason.GameUrl:
+                        var result = ProcessingManager.StartGameByUrl(message);
+                        if (result != null) return result;
+                        break;
+                    default:
+                        break;
                 }
                 var chatPrefix = StaticData.Prefixes.Get(message.ChatId);
                 if (chatPrefix != null 

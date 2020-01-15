@@ -82,7 +82,7 @@ namespace GC2DB.Managers
             return result.First();
         }
 
-        public static void CreateGame(long chatId, GameType type)
+        public static Game CreateGame(long chatId, GameType type)
         {
             using var db = DBContext.Instance;
             var newGame = new Game()
@@ -96,6 +96,7 @@ namespace GC2DB.Managers
             };
             db.Players.Add(newPlayer);
             db.SaveChanges();
+            return newGame;
         }
 
         private static bool xPlayerInGame(long chatId, long gameId, DBContext db)
