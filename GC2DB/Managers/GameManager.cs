@@ -20,6 +20,12 @@ namespace GC2DB.Managers
             return xGetActivePlayer(chatId, db);
         }
 
+        public static Player? GetPlayerByMirrorId(string id)
+        {
+            using var db = DBContext.Instance;
+            return db.Players.Where(x => x.MirrorId == id)?.Include(x => x.Game)?.First();
+        }
+
         public static void UpdatePlayer(Player p)
         {
             using var db = DBContext.Instance;
@@ -40,7 +46,11 @@ namespace GC2DB.Managers
             return null;
         }
 
-
+        public static List<Game> GetActiveGameByGuid(string gameId)
+        {
+            using var db = DBContext.Instance;
+            return db.Games?.Where(x => x.Guid == gameId)?.ToList() ?? new List<Game>();
+        }
 
         public static List<Player> GetAllActivePlayersWithTaskMonitoring()
         {

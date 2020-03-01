@@ -27,6 +27,7 @@ namespace GC2.Constants
         public const string DeleteMessage = "deletethis";
 
         public const string GameSetup = "game";
+        public const string MirrorLink = "mirrorlink";
         public const string CreateEncxGame = "createencx";
         public const string CreateQuestGame = "createquestencx";
         public const string CreateIgraGame = "createigralv";

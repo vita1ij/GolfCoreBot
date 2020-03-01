@@ -1,0 +1,20 @@
+﻿@model MirrorModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (Model == null || Model.Player == null)
+{
+    <h1>Are you lost?</h1>
+}
+else
+{
+    <h1>
+        Connect
+    </h1>
+    <form>
+        <input id="pass" placeholder="gimme cookie" />
+        <button action="Game">Join the Dark Side</button>
+    </form>
+}
+

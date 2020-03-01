@@ -14,6 +14,9 @@ namespace GC2DB.Data
         public string? Title { get; set; }
         public string Text { get; set; }
         public long? GameId { get; set; }
+        public string? FullHtmlMain { get; set; }
+        public string? HtmlLeft { get; set; }
+        public string? HtmlAdditional { get; set; }
 
         public GameTask(string text)
         {

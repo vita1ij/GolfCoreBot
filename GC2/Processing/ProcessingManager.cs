@@ -4,13 +4,13 @@ using GC2DB.Managers;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using static GC2.GCException;
 using Telegram.Bot.Types.ReplyMarkups;
 using GC2.Engines;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Linq;
 using GC2.Classes;
+using System.Security.Cryptography;
 
 namespace GC2
 {
@@ -254,6 +254,38 @@ namespace GC2
             return result;
         }
 
+        internal static ProcessingResult? MirrorLink(ReceivedMessage message)
+        {
+            var player = message.SenderId;
+            if (Config == null || Config.GetValue<string>("MirrorLink") == null) return null;
+            var game = GameManager.GetActiveGameByChatId(message.ChatId);
+            var mirrorLink = $"{Config.GetValue<string>("MirrorLink").TrimEnd('/','\\')}/{game.Guid}-{player}";
+            var mirrorPassword = GetSecretForMirror(game, player);
+
+            return new ProcessingResult()
+            {
+                ChatId = player,
+                Text = String.Format(Constants.Replies.MIRROR_REPLY_FORMAT, mirrorLink, mirrorPassword)
+            };
+        }
+        
+        public static bool CheckSecretForMirror(Game game, long key, string secret)
+        {
+            return GetSecretForMirror(game, key) == secret;
+        }
+        private static string GetSecretForMirror(Game game, long key)
+        {
+            var secret = game.EnCxId ?? "" + game.Login ?? "" + game.Password ?? "" + key.ToString() + "s@1t";
+
+            byte[] encodedSecret = new UTF8Encoding().GetBytes(secret);
+            byte[] hash = ((HashAlgorithm)CryptoConfig.CreateFromName("MD5")).ComputeHash(encodedSecret);
+            string secretString = BitConverter.ToString(hash)
+               .Replace("-", string.Empty)
+               .ToLower()
+               .Substring(0,8);
+            return secretString;
+        }
+
         internal static ProcessingResult? EnterCode(ReceivedMessage message)
         {
             var player = GameManager.GetActivePlayer(message.ChatId);
@@ -488,7 +520,7 @@ namespace GC2
             var activeGame = GameManager.GetActiveGameByChatId(message.ChatId);
             if (activeGame == null)
             {
-                throw new GCException(Constants.Exceptions.ExceptionCode.NoActiveGame, LevelType.Chat);
+                return null;//todo:ex
             }
             if (String.IsNullOrEmpty(message.Parameter))
             {
@@ -565,7 +597,7 @@ namespace GC2
         {
             if (GameManager.GetActiveGameByChatId(message.ChatId) != null)
             {
-                throw new GCException(Constants.Exceptions.ExceptionCode.UniqueGame4Chat, LevelType.Chat);
+                return null; //todo:ex
             }
             GameManager.CreateGame(message.ChatId, type);
             return GameSetup(message);

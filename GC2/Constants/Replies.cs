@@ -42,7 +42,7 @@ namespace GC2.Constants
         /// {0} Game Id/GUID
         /// {1} Game type
         /// </summary>
-        public const string GAME_NO_AUTH = "In game {0}. (1)";
+        public const string GAME_NO_AUTH = "In game {0}. {1}";
         public const string GAME_FULL = "In active game.";
 
         public static string AUTH_GET_LOGIN = $"Reply with [{ConversationKeywords.Login}] for the game {{0}}";
@@ -53,5 +53,7 @@ namespace GC2.Constants
         public static string SET_PREFIX_FORMAT = $"Reply with [{ConversationKeywords.Prefix}] for the game {{{{{{0}}}}}}";
 
         public static string EN_CX_NO_DOMAIN = $"Reply with [{ConversationKeywords.Domain}] for the game {{{{{{0}}}}}}";
+
+        public static string MIRROR_REPLY_FORMAT = "Your Mirror Link is:\r\n{0}\r\n\r\nYour Password is\r\n{1}";
     }
 }

@@ -4,34 +4,22 @@ using GC2DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GC2DB.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20200115171048_v.2.3.2")]
+    partial class v232
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("GC2DB.Data.AcmeData", b =>
-                {
-                    b.Property<string>("Key")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Key");
-
-                    b.ToTable("AcmeValues");
-                });
 
             modelBuilder.Entity("GC2DB.Data.DataFile", b =>
                 {
@@ -173,17 +161,8 @@ namespace GC2DB.Migrations
                     b.Property<string>("EnCxId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FullHtmlMain")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<long?>("GameId")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("HtmlAdditional")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("HtmlLeft")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("Number")
                         .HasColumnType("bigint");
@@ -198,6 +177,24 @@ namespace GC2DB.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tasks");
+                });
+
+            modelBuilder.Entity("GC2DB.Data.GcDbException", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Stack")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Exceptions");
                 });
 
             modelBuilder.Entity("GC2DB.Data.ListItem", b =>
@@ -258,14 +255,6 @@ namespace GC2DB.Migrations
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
-
-                    b.Property<string>("MirrorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MirrorPass")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UpdateStatisticsInfo")
                         .HasColumnType("int");

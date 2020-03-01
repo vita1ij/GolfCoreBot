@@ -15,11 +15,17 @@ namespace GC2DB.Data
         public bool IsActive { get; set; }
         public PlayerUpdateStatusInfo UpdateTaskInfo { get; set; } = 0; //0/1/2
         public PlayerUpdateStatusInfo UpdateStatisticsInfo { get; set; } = 0;
+        public string MirrorId { get; set; }
+        public string MirrorPass { get; set; }
 
         public Player(Game game, long chatId)
         {
             this.Game = game;
             this.ChatId = chatId;
+
+            var gid = Guid.NewGuid().ToString().Replace("-","");
+            this.MirrorId = gid[..8];
+            this.MirrorPass = gid[^8..];
         }
 
         public enum PlayerUpdateStatusInfo

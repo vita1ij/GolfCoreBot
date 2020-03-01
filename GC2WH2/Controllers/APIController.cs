@@ -90,12 +90,7 @@ namespace GC2WH2.Controllers
             }
             catch(Exception ex)
             {
-                var gex = new GCException(ex).GetForDb();
-                using (var db = DBContext.Instance)
-                {
-                    db.Exceptions.Add(gex);
-                    db.SaveChanges();
-                }
+                Log.New(ex);
                 return Ok();
             }
         }

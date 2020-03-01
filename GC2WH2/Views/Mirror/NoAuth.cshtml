@@ -1,0 +1,20 @@
+﻿@model GameInfo
+@{
+    ViewData["Title"] = "Join the Dark Side";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Tell me a secret</h1>
+<form>
+    <div class="d-none">
+        @Html.EditorFor(m => m.Guid)
+        @Html.EditorFor(m => m.Key)
+    </div>
+    <div>
+        @Html.EditorFor(model => model.Secret)
+    </div>
+
+    <button action="Game" formmethod="post">Let me in!</button>
+</form>
+
+

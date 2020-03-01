@@ -26,7 +26,8 @@ namespace GC2.Engines
         {
             if (game.CustomEnCxDomain == null)
             {
-                throw new GCException(Constants.Exceptions.ExceptionCode.NoDomain, GCException.LevelType.Quiet);
+                Log.New("No Custom domain");
+                game.CustomEnCxDomain = "demo.en.cx";
             }
             mainUrlPart = game.CustomEnCxDomain;
         }

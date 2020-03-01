@@ -110,9 +110,13 @@ namespace GC2.Constants
 
         public static InlineKeyboardMarkup GameCommands(Game game) => new InlineKeyboardMarkup(new List<List<InlineKeyboardButton>>
         {
-            new List<InlineKeyboardButton>
+            new List<InlineKeyboardButton>()
             {
-                new InlineKeyboardButton { Text = "Refresh", CallbackData = $"/{Constants.Commands.GameSetup}" },
+                new InlineKeyboardButton { Text = "Refresh", CallbackData = $"/{Constants.Commands.GameSetup}" }
+            },
+            new List<InlineKeyboardButton>()
+            {
+                new InlineKeyboardButton { Text = "Mirror", CallbackData = $"/{Constants.Commands.MirrorLink}" },
                 new InlineKeyboardButton() { Text = "Join link", SwitchInlineQuery=$"/{Constants.Commands.JoinGameLink} {game.Guid}" },
                 new InlineKeyboardButton() { Text = "Exit game", CallbackData = $"/{Constants.Commands.ExitGame}"}
             },

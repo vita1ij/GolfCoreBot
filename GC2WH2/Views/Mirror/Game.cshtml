@@ -1,0 +1,29 @@
+﻿@model GameInfo
+@{
+    ViewData["Title"] = "Join the Dark Side";
+    ViewData["FullScreen"] = "true";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Geez</h1>
+<div id="top">
+    <p>top</p>
+</div>
+<div id="LeftMain" class="w-25 d-inline-block">
+    <p>
+        Left
+    </p>
+</div><div id="RightMain" class="w-75 d-inline-block">
+          <div>
+              Right
+              <p>menu</p>
+              @foreach (var task in Model.Tasks)
+              {
+                  <span>@task.Title</span>
+              }
+              @foreach (var task in Model.Tasks)
+              {
+                  @Html.Raw(task.FullHtmlMain.Replace("\r\n","<br/"))
+              }
+          </div>
+</div>

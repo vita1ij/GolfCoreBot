@@ -133,7 +133,7 @@ namespace GC2.Engines
 
             if (IsLoginPage(doc))
             {
-                throw new GCException(Constants.Exceptions.ExceptionCode.CantLogIn, GCException.LevelType.Chat);
+                return null;//todo:ex
             }
 
             var taskNodes = doc.DocumentNode?.SelectNodes("//div[@class='content']");
@@ -151,7 +151,8 @@ namespace GC2.Engines
             return new GameTask(game, taskContent)
             {
                 EnCxId = levelId,
-                Number = levelNumber
+                Number = levelNumber,
+                FullHtmlMain = String.Join("\r\n", taskNodes.Select(x => x.InnerHtml))
             };
         }
 

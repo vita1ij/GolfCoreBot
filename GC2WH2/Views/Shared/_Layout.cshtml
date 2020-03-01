@@ -34,12 +34,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Status">Status</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Mirror" asp-action="Index">Mirror</a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="@((@ViewData["FullScreen"] == null) ? "container" : "" )">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

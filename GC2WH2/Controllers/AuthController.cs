@@ -14,8 +14,13 @@ namespace GC2WH2.Controllers
     {
         public IActionResult Index()
         {
-            
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult ForMirror()
+        {
+            return null;
         }
     }
 }

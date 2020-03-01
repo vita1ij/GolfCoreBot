@@ -17,7 +17,8 @@ namespace GC2DB
         public DbSet<ListItem> Lists { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<PlayersLocation> PlayersLocation { get; set; }
-        public DbSet<GcDbException> Exceptions { get; set; }
+        public DbSet<Error> Errors { get; set; }
+        public DbSet<AcmeData> AcmeValues { get; set; } 
 #pragma warning restore CS8618 // Non-nullable field is uninitialized.
 
         #region Methods

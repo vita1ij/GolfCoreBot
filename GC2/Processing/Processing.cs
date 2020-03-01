@@ -91,6 +91,8 @@ namespace GC2
                             return ProcessingManager.SetTaskUpdate(message);
                         case Constants.Commands.EnterCode:
                             return ProcessingManager.EnterCode(message);
+                        case Constants.Commands.MirrorLink:
+                            return ProcessingManager.MirrorLink(message);
                         default:
                             break;
                     }
@@ -150,7 +152,7 @@ namespace GC2
                     return ConversationManager.Process(message);
                 }
             }
-            catch(GCException ex)
+            catch(Exception ex)
             {
                 //switch (ex.Level)
                 //{
@@ -166,7 +168,7 @@ namespace GC2
                 //    case GCException.LevelType.Quiet:
                 //        break;
                 //}
-                return ProcessingResult.CreateText(message, $"Message: {ex.Message??""}; StackTrace: {ex.StackTrace??""};");
+                //return ProcessingResult.CreateText(message, $"Message: {ex.Message??""}; StackTrace: {ex.StackTrace??""};");
             }
             //return ProcessingResult.CreateText(message, "Nothing to see here");
             return null;

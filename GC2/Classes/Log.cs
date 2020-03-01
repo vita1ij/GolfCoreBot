@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using GC2DB.Data;
+using GC2DB.Managers;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,74 +13,17 @@ namespace GC2
 {
     public static class Log
     {
-        private static IConfiguration Config
+        public static void New(string s)
         {
-            get
-            {
-                string? baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-                if (baseDirectory == null) throw new Exception("Base path is empty.");
-                string projectPath = baseDirectory.Split(new String[] { @"bin\" }, StringSplitOptions.None)[0];
-                return new ConfigurationBuilder()
-                    .SetBasePath(projectPath)
-                    .AddJsonFile("config.json")
-                    .Build();
-            }
+            var e = new Error(text: s);
+            CommonManager.LogError(e);
         }
 
-        public static void New(Exception ex)
+        public static void New(Exception ex, ReceivedMessage? message = null)
         {
-            if (String.IsNullOrWhiteSpace(Config["ERROR_FOLDER"]?.ToString()))
-            {
-                return;
-            }
-            var folder = Config["ERROR_FOLDER"].ToString().TrimEnd('/').TrimEnd('\\');
-            if (!Directory.Exists($"{folder}/{DateTime.Today.ToString("yyyyMMdd")}"))
-            {
-                Directory.CreateDirectory($"{folder}/{DateTime.Today.ToString("yyyyMMdd")}");
-            }
-            File.AppendAllLines($"{folder}/{DateTime.Today.ToString("yyyyMMdd")}/{DateTime.Now.ToString("hh-mm-ss")}.log", new[] {
-                DateTime.Now.ToLongTimeString(),
-                "",
-                "Message",
-                ex.Message,
-                "",
-                "Stack",
-                ex.StackTrace ?? "",
-                "",
-                "Inner message",
-                ex.InnerException?.Message ?? "",
-                "",
-                "Stack",
-                ex.InnerException?.StackTrace ?? ""
-            });
+            var e = new Error(ex, chat:message?.ChatId, sender:message?.SenderId);
+            CommonManager.LogError(e);
         }
 
-        public static void New(GCException ex, ReceivedMessage message)
-        {
-            if (String.IsNullOrWhiteSpace(Config["ERROR_FOLDER"]?.ToString()))
-            {
-                return;
-            }
-            var folder = Config["ERROR_FOLDER"].ToString().TrimEnd('/').TrimEnd('\\');
-            if (!Directory.Exists($"{folder}/{DateTime.Today.ToString("yyyyMMdd")}"))
-            {
-                Directory.CreateDirectory($"{folder}/{DateTime.Today.ToString("yyyyMMdd")}");
-            }
-            File.AppendAllLines($"{folder}/{DateTime.Today.ToString("yyyyMMdd")}/{DateTime.Now.ToString("hh-mm-ss")}.log", new[] {
-                DateTime.Now.ToLongTimeString(),
-                "",
-                "ReceivedMessage",
-                ex.Message,
-                "",
-                "Message",
-                JsonSerializer.Serialize(message),
-                "",
-                "Code",
-                ex.Code,
-                "",
-                "Stack",
-                ex.StackTrace ?? "",
-            });
-        }
     }
 }
